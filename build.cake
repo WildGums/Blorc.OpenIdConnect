@@ -8,7 +8,7 @@ Parameters["SolutionName"] = "Blorc.OpenIdConnect";
 Parameters["Company"] = "WildGums";
 Parameters["RepositoryUrl"] = string.Format("https://github.com/{0}/{1}", GetBuildServerVariable("Company"), GetBuildServerVariable("SolutionName"));
 Parameters["StartYear"] = "2019";
-Parameters["TestTargetFramework"] = "netcoreapp2.2";
+Parameters["TestTargetFramework"] = "netcoreapp3.0";
 Parameters["UseVisualStudioPrerelease"] = "true";
 Parameters["SourceLinkDisabled"] = "true";
 
