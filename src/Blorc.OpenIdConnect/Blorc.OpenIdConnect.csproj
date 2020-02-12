@@ -17,11 +17,10 @@
     <ProjectGuid>E68BDD6F-F81B-4B99-A955-E5868F86227D</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0207" />
-    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.1.0-preview4.19579.2" />
+    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0223" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.2.0-preview1.20073.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.1" />
-    <PackageReference Include="Serilog" Version="2.9.0" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
