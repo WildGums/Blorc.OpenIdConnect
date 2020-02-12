@@ -28,7 +28,7 @@ Parameters["SourceLinkDisabled"] = "true";
 
 Components.Add(string.Format("{0}", GetBuildServerVariable("SolutionName")));
 
-// GitHubPages.Add(string.Format("{0}.Example", GetBuildServerVariable("SolutionName")));
+//GitHubPages.Add(string.Format("{0}.Example", GetBuildServerVariable("SolutionName")));
 
 TestProjects.Add(string.Format("{0}.Tests", GetBuildServerVariable("SolutionName")));
 
