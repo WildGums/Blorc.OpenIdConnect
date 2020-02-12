@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.1</TargetFrameworks>
+    <AssemblyName>Blorc.OpenIdConnect</AssemblyName>
+    <RootNamespace>Blorc.OpenIdConnect</RootNamespace>
+    <PackageId>Blorc.OpenIdConnect</PackageId>
+    <PackageVersion>1.0.0-alpha0000</PackageVersion>
+    <Description>Core library for Blazor libraries and apps.</Description>
+    <PackageTags>blazor;core</PackageTags>
+    <IsPackable>true</IsPackable>
+    <LangVersion>7.3</LangVersion>
+    <RazorLangVersion>3.0</RazorLangVersion>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- SonarQube requires a project guid -->
+    <ProjectGuid>ED13422D-5A52-425F-B973-958D22B04AA6</ProjectGuid>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0207" />
+    <PackageReference Include="Microsoft.AspNetCore.Blazor" Version="3.1.0-preview4.19579.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components" Version="3.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="3.1.1" />
+    <PackageReference Include="Serilog" Version="2.9.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
+</Project>
