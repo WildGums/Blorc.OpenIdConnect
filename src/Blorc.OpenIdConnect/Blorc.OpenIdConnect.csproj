@@ -14,7 +14,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <!-- SonarQube requires a project guid -->
-    <ProjectGuid>ED13422D-5A52-425F-B973-958D22B04AA6</ProjectGuid>
+    <ProjectGuid>E68BDD6F-F81B-4B99-A955-E5868F86227D</ProjectGuid>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0207" />
