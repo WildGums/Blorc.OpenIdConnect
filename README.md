@@ -6,7 +6,7 @@
 
 2) Update App.razor content like this
 
-        @using Blorc.OpenIdConnect.Authorization
+        @using Blorc.OpenIdConnect
         @using Microsoft.AspNetCore.Components.Authorization
 
         @inherits OpenIdConnectAppBase
