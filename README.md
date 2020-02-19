@@ -4,7 +4,15 @@
 
 1) Install Blorc.OpenIdConnect via NuGet.
 
-2) Update App.razor content like this
+2) Include `Blorc.Core/injector.js` the index.html file:
+
+        <head>
+                ...
+                <script src="_content/Blorc.Core/injector.js"></script>
+                ...
+        </head>        
+ 
+3) Update App.razor content like this:
 
         @using Blorc.OpenIdConnect
         @using Microsoft.AspNetCore.Components.Authorization
@@ -27,7 +35,7 @@
             </Router>
         }
 
-3) Update Program.cs
+4) Add the required service at Program.cs file.
 
         builder.Services.AddOptions();
         builder.Services.AddAuthorizationCore();
