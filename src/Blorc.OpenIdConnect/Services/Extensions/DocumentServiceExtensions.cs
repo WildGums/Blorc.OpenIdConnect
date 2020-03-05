@@ -13,7 +13,7 @@ namespace Blorc.OpenIdConnect.Services.Extensions
     public static class DocumentServiceExtensions
     {
         #region Methods
-        public static async Task InjectOpenIdConnectJS(this IDocumentService documentService)
+        public static async Task InjectOpenIdConnect(this IDocumentService documentService)
         {
             // Argument.IsNotNull(() => documentService);
 

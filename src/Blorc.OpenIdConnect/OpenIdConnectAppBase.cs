@@ -22,7 +22,7 @@
         /// </returns>
         protected override async Task OnConfiguringDocumentAsync(IDocumentService documentService)
         {
-            await documentService.InjectOpenIdConnectJS();
+            await documentService.InjectOpenIdConnect();
         }
     }
 }
