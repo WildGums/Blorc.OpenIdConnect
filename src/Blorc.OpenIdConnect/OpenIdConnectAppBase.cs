@@ -6,40 +6,23 @@
     using Blorc.OpenIdConnect.Services.Extensions;
     using Blorc.Services;
 
-    using Microsoft.AspNetCore.Components;
-
     /// <summary>
     ///     The open id connect app base.
     /// </summary>
-    public class OpenIdConnectAppBase : BlorcComponentBase
+    public class OpenIdConnectAppBase : BlorcApplicationBase
     {
         /// <summary>
-        ///     Gets a value indicating whether initialized.
+        ///     The on configuring document.
         /// </summary>
-        protected bool Initialized { get; private set; }
-
-        /// <summary>
-        ///     Gets or sets the document service.
-        /// </summary>
-        [Inject]
-        private IDocumentService DocumentService { get; set; }
-
-        /// <summary>
-        ///     The on initialized async.
-        /// </summary>
+        /// <param name="documentService">
+        ///     The document service.
+        /// </param>
         /// <returns>
         ///     The <see cref="Task" />.
         /// </returns>
-        protected override async Task OnInitializedAsync()
+        protected override async Task OnConfiguringDocumentAsync(IDocumentService documentService)
         {
-            await base.OnInitializedAsync();
-            await DocumentService.InjectOpenIdConnectJS();
-
-            if (!Initialized)
-            {
-                Initialized = true;
-                StateHasChanged();
-            }
+            await documentService.InjectOpenIdConnectJS();
         }
     }
 }
