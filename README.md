@@ -40,3 +40,14 @@
         builder.Services.AddOptions();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlocOpenIdConnect();
+        
+5) Add a configuration file  `wwwroot\api\.configuration\identityserver.json`
+
+       {
+         "response_type": "id_token token",
+         "scope": "openid profile roles",
+         "redirect_uri": "%APPLICATION_URL%",
+         "post_logout_redirect_uri": "%APPLICATION_URL%",
+         "authority": "%IDENTITY_SERVER_URL%",
+         "client_id": "%CLIENT_ID%"
+       }
