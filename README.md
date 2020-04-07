@@ -17,7 +17,7 @@
         @using Blorc.OpenIdConnect
         @using Microsoft.AspNetCore.Components.Authorization
 
-        @inherits OpenIdConnectAppBase
+        @inherits Blorc.Components.BlorcApplicationBase
 
         @if (Initialized)
         {
@@ -34,6 +34,16 @@
                 </NotFound>
             </Router>
         }
+        
+        @code{
+    
+            protected override async Task OnConfiguringDocumentAsync(IDocumentService documentService)
+            {
+                await base.OnConfiguringDocumentAsync(documentService);
+                await documentService.InjectOpenIdConnect();
+            }
+        }
+
 
 4) Add the required service at Program.cs file.
 
@@ -44,10 +54,10 @@
 5) Add a configuration file  `wwwroot\api\.configuration\identityserver.json`
 
        {
-         "response_type": "id_token token",
-         "scope": "openid profile roles",
-         "redirect_uri": "%APPLICATION_URL%",
-         "post_logout_redirect_uri": "%APPLICATION_URL%",
-         "authority": "%IDENTITY_SERVER_URL%",
-         "client_id": "%CLIENT_ID%"
+           "response_type": "id_token token",
+           "scope": "openid profile roles",
+           "redirect_uri": "%APPLICATION_URL%",
+           "post_logout_redirect_uri": "%APPLICATION_URL%",
+           "authority": "%IDENTITY_SERVER_URL%",
+           "client_id": "%CLIENT_ID%"
        }
