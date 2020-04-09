@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.Services.Interfaces
+﻿namespace Blorc.OpenIdConnect
 {
     using System;
     using System.IO;

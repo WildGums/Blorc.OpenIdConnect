@@ -1,9 +1,7 @@
-﻿namespace Blorc.OpenIdConnect.Services.Interfaces
+﻿namespace Blorc.OpenIdConnect
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-
-    using Blorc.OpenIdConnect.Models;
 
     public interface IUserManager
     {

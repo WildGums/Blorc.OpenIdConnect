@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.Services
+﻿namespace Blorc.OpenIdConnect
 {
     using System;
     using System.IO;
@@ -6,9 +6,6 @@
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
-
-    using Blorc.OpenIdConnect.Services.Extensions;
-    using Blorc.OpenIdConnect.Services.Interfaces;
 
     public class TokenBasedSecuredHttpClient : IHttpClient
     {

@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.Models
+﻿namespace Blorc.OpenIdConnect
 {
     using System;
     using System.Linq;

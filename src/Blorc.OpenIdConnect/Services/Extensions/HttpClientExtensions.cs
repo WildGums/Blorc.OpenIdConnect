@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.Services.Extensions
+﻿namespace Blorc.OpenIdConnect
 {
     using System.Net.Http;
     using System.Net.Http.Headers;

@@ -1,9 +1,5 @@
-﻿namespace Blorc.OpenIdConnect.Services.Extensions
+﻿namespace Blorc.OpenIdConnect
 {
-    using Blorc.OpenIdConnect.Services;
-    using Blorc.OpenIdConnect.Services.Interfaces;
-
-    using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.Extensions.DependencyInjection;
 
     public static class ServiceCollectionExtensions

@@ -4,7 +4,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Blorc.OpenIdConnect.Services.Extensions
+namespace Blorc.OpenIdConnect
 {
     using System.Threading.Tasks;
 

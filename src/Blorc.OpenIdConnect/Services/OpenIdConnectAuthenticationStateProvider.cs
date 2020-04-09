@@ -1,10 +1,8 @@
-﻿namespace Blorc.OpenIdConnect.Services
+﻿namespace Blorc.OpenIdConnect
 {
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
-
-    using Blorc.OpenIdConnect.Services.Interfaces;
 
     using Microsoft.AspNetCore.Components.Authorization;
 
