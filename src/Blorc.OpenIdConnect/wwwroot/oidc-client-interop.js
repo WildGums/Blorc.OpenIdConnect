@@ -16,7 +16,6 @@
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
                     }).catch(function(e) {
-                        console.log(e);
                         self.userManager.getUser().then(function(u) {
                             resolve(u != null);
                         });
