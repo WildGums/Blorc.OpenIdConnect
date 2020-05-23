@@ -1,5 +1,7 @@
 # Blorc.OpenIdConnect
 
+The right way to use OpenIdConnect on Blazor.
+
 ## Usage
 
 1) Install Blorc.OpenIdConnect via NuGet.
