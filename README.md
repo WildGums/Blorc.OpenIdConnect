@@ -49,6 +49,8 @@ The right way to use OpenIdConnect on Blazor.
 
 4) Add the required service at Program.cs file.
 
+        builder.Services.AddBlorcCore();
+        ...
         builder.Services.AddOptions();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlocOpenIdConnect();
