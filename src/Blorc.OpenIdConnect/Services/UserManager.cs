@@ -19,10 +19,6 @@
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService)
         {
-            // Argument.IsNotNull(() => httpClient);
-            // Argument.IsNotNull(() => jsRuntime);
-            // Argument.IsNotNull(() => navigationManager);
-            // Argument.IsNotNull(() => configurationService);
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
             _configurationService = configurationService;
@@ -38,8 +34,8 @@
                 var absoluteUri = _navigationManager.Uri;
                 if (absoluteUri.Contains("state=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("access_token=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("token_type=bearer"))
                 {
-                    var absoluteUrlSplitted = absoluteUri.Split('#');
-                    var baseUri = absoluteUrlSplitted.Length == 2 ? absoluteUrlSplitted[0] : _navigationManager.BaseUri;
+                    var absoluteUrlSplit = absoluteUri.Split('#');
+                    var baseUri = absoluteUrlSplit.Length == 2 ? absoluteUrlSplit[0] : _navigationManager.BaseUri;
                     _navigationManager.NavigateTo(baseUri);
                 }
 
