@@ -7,11 +7,12 @@
             Initialize: function(config) {
                 if (this.userManager === undefined) {
                     this.userManager = new UserManager(config);
+
                     var self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
                         self.userManager.signinSilent({scope: config.scope, response_type: config.response_type})
                             .then(function(u) {
-                                self.SetCurrentUser(u); // This function just set the current user
+                                self.SetCurrentUser(u);
                             })
                             .catch(function(e) {
                                 self.userManager.getUser().then(function (u) {
@@ -43,7 +44,7 @@
                 if(this.User !== undefined) {
                     return this.User;
                 }
-                
+
                 var self = this;
                 return new Promise((resolve, reject) => {
                     self.userManager.getUser().then(function(u) {
@@ -62,6 +63,7 @@
                 });
             },
             SignoutRedirect: function() {
+                this.User = undefined;
                 return new Promise((resolve, reject) => {
                     this.userManager.signoutRedirect();
                     return resolve(true);
