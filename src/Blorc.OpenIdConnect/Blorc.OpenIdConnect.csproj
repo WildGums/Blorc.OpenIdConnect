@@ -23,7 +23,7 @@
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0416" />
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0416" />
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0416" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="3.2.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="5.0.0" />
   </ItemGroup>
   
   <ItemGroup>
