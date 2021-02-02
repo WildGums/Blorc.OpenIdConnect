@@ -8,7 +8,6 @@
 
     public interface IHttpClient
     {
-        #region Methods
         Task<HttpResponseMessage> DeleteAsync(string requestUri);
         Task<HttpResponseMessage> DeleteAsync(string requestUri, CancellationToken cancellationToken);
         Task<HttpResponseMessage> DeleteAsync(Uri requestUri);
@@ -40,6 +39,5 @@
         Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken);
         Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken);
         Task<T> GetJsonAsync<T>(string requestUri);
-        #endregion
     }
 }

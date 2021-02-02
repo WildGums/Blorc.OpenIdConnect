@@ -9,21 +9,15 @@
 
     public class TokenBasedSecuredHttpClient : IHttpClient
     {
-        #region Fields
         private readonly HttpClient _httpClient;
-
         private readonly IUserManager _userManager;
-        #endregion
 
-        #region Constructors
         public TokenBasedSecuredHttpClient(HttpClient httpClient, IUserManager userManager)
         {
             _httpClient = httpClient;
             _userManager = userManager;
         }
-        #endregion
 
-        #region Methods
         public async Task<HttpResponseMessage> DeleteAsync(string requestUri)
         {
             await SetBearerToken();
@@ -222,6 +216,5 @@
                 PropertyNameCaseInsensitive = true
             });
         }
-        #endregion
     }
 }

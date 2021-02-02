@@ -9,5 +9,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/WildGums/Blorc.OpenIdConnect</RepositoryUrl>
   </PropertyGroup>
-   
+
+  <Import Project="$(MSBuildProjectDirectory)\..\Directory.Build.nullable.props"
+          Condition="$(RepositoryTemplateIgnoreBuildProjectProps) != 'true' And Exists('$(MSBuildProjectDirectory)\..\Directory.Build.nullable.props')" />
 </Project>

@@ -18,7 +18,7 @@
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
             var user = await _userManager.GetUserAsync();
-            if (user == null)
+            if (user is null)
             {
                 var principal = new ClaimsPrincipal(new ClaimsIdentity());
                 return new AuthenticationState(principal);

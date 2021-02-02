@@ -4,7 +4,6 @@
 
     public class Profile
     {
-        #region Properties
         public Guid Jti { get; set; }
 
         public Guid Sub { get; set; }
@@ -34,6 +33,5 @@
         public string FamilyName { get; set; }
 
         public string Email { get; set; }
-        #endregion
     }
 }

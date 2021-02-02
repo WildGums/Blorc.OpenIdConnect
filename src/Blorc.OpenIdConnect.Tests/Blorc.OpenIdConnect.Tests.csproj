@@ -7,7 +7,6 @@
     <PackageVersion>1.0.0-alpha0001</PackageVersion>
     <Description></Description>
     <DefaultLanguage>en-US</DefaultLanguage>
-    <LangVersion>preview</LangVersion>
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
   </PropertyGroup>
