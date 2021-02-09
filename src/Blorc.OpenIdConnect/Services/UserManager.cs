@@ -78,7 +78,7 @@
             }
             else
             {
-                await InitializeAsync(async () => await _configurationService.GetSection<Dictionary<string, string>>("identityserver"));
+                await InitializeAsync(async () => await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver"));
             }
         }
 
