@@ -24,7 +24,18 @@
                 return new AuthenticationState(principal);
             }
 
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, user.Profile.Name), new Claim(ClaimTypes.Email, user.Profile.Email) };
+            var claims = new List<Claim>();
+			
+			if (user.Profile.Name is not null)
+			{
+				claims.Add(new Claim(ClaimTypes.Name, user.Profile.Name));
+			}
+			
+			if (user.Profile.Email is not null)
+			{
+				claims.Add(new Claim(ClaimTypes.Email, user.Profile.Email));
+			}
+			
             foreach (var profileRole in user.Profile.Roles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, profileRole));
