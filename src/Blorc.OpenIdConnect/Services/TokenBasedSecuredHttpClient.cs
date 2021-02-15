@@ -4,8 +4,13 @@
     using System.IO;
     using System.Net.Http;
     using System.Text.Json;
+    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
+
+    using Newtonsoft.Json;
+
+    using JsonSerializer = System.Text.Json.JsonSerializer;
 
     public class TokenBasedSecuredHttpClient : IHttpClient
     {
@@ -211,10 +216,25 @@
         public async Task<T> GetJsonAsync<T>(string requestUri)
         {
             await SetBearerToken();
-            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri), new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true
-            });
+            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri));
+        }
+
+        public async Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options)
+        {
+            await SetBearerToken();
+            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri), options);
+        }
+
+        public async Task<T> GetNewtonSoftJsonAsync<T>(string requestUri)
+        {
+            await SetBearerToken();
+            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri));
+        }
+
+        public async Task<T> GetNewtonSoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings)
+        {
+            await SetBearerToken();
+            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri), settings);
         }
     }
 }
