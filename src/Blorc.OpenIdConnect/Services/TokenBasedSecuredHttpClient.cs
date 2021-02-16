@@ -4,7 +4,6 @@
     using System.IO;
     using System.Net.Http;
     using System.Text.Json;
-    using System.Text.Json.Serialization;
     using System.Threading;
     using System.Threading.Tasks;
 
@@ -15,6 +14,7 @@
     public class TokenBasedSecuredHttpClient : IHttpClient
     {
         private readonly HttpClient _httpClient;
+
         private readonly IUserManager _userManager;
 
         public TokenBasedSecuredHttpClient(HttpClient httpClient, IUserManager userManager)
@@ -27,16 +27,6 @@
         {
             await SetBearerToken();
             return await _httpClient.DeleteAsync(requestUri);
-        }
-
-        private async Task SetBearerToken()
-        {
-            if (await _userManager.IsAuthenticatedAsync())
-            {
-                var user = await _userManager.GetUserAsync();
-                
-                _httpClient.SetBearerToken(user.AccessToken);
-            }
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(string requestUri, CancellationToken cancellationToken)
@@ -55,6 +45,18 @@
         {
             await SetBearerToken();
             return await _httpClient.DeleteAsync(requestUri, cancellationToken);
+        }
+
+        public async Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri)
+        {
+            await SetBearerToken();
+            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri));
+        }
+
+        public async Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings)
+        {
+            await SetBearerToken();
+            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri), settings);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri)
@@ -115,6 +117,18 @@
         {
             await SetBearerToken();
             return await _httpClient.GetByteArrayAsync(requestUri);
+        }
+
+        public async Task<T> GetJsonAsync<T>(string requestUri)
+        {
+            await SetBearerToken();
+            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri));
+        }
+
+        public async Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options)
+        {
+            await SetBearerToken();
+            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri), options);
         }
 
         public async Task<Stream> GetStreamAsync(string requestUri)
@@ -213,28 +227,14 @@
             return await _httpClient.SendAsync(request, cancellationToken);
         }
 
-        public async Task<T> GetJsonAsync<T>(string requestUri)
+        private async Task SetBearerToken()
         {
-            await SetBearerToken();
-            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri));
-        }
+            if (await _userManager.IsAuthenticatedAsync())
+            {
+                var user = await _userManager.GetUserAsync();
 
-        public async Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options)
-        {
-            await SetBearerToken();
-            return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri), options);
-        }
-
-        public async Task<T> GetNewtonSoftJsonAsync<T>(string requestUri)
-        {
-            await SetBearerToken();
-            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri));
-        }
-
-        public async Task<T> GetNewtonSoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings)
-        {
-            await SetBearerToken();
-            return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri), settings);
+                _httpClient.SetBearerToken(user.AccessToken);
+            }
         }
     }
 }

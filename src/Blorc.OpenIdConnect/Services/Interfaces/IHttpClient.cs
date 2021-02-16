@@ -43,9 +43,9 @@
 
         Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options);
 
-        Task<T> GetNewtonSoftJsonAsync<T>(string requestUri);
+        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri);
 
-        Task<T> GetNewtonSoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings);
+        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings);
 
         Task<Stream> GetStreamAsync(string requestUri);
 
