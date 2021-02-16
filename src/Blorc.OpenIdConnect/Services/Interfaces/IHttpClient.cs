@@ -19,6 +19,10 @@
 
         Task<HttpResponseMessage> DeleteAsync(Uri requestUri, CancellationToken cancellationToken);
 
+        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri);
+
+        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings);
+
         Task<HttpResponseMessage> GetAsync(string requestUri);
 
         Task<HttpResponseMessage> GetAsync(string requestUri, HttpCompletionOption completionOption);
@@ -43,10 +47,6 @@
 
         Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options);
 
-        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri);
-
-        Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings);
-
         Task<Stream> GetStreamAsync(string requestUri);
 
         Task<Stream> GetStreamAsync(Uri requestUri);
@@ -55,6 +55,12 @@
 
         Task<string> GetStringAsync(Uri requestUri);
 
+        Task<HttpResponseMessage> PostAsJsonAsync<TValue>(Uri requestUri, TValue value, CancellationToken cancellationToken);
+
+        Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value);
+
+        Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings);
+
         Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content);
 
         Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content, CancellationToken cancellationToken);
@@ -62,6 +68,12 @@
         Task<HttpResponseMessage> PostAsync(Uri requestUri, HttpContent content);
 
         Task<HttpResponseMessage> PostAsync(Uri requestUri, HttpContent content, CancellationToken cancellationToken);
+
+        Task<HttpResponseMessage> PutAsJsonAsync<TValue>(Uri requestUri, TValue value, CancellationToken cancellationToken);
+
+        Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value);
+
+        Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings);
 
         Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content);
 
