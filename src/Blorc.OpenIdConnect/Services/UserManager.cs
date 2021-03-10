@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
     using Blorc.Services;
@@ -16,6 +17,14 @@
         private readonly IJSRuntime _jsRuntime;
 
         private readonly NavigationManager _navigationManager;
+
+        private OidcProviderOptions _options;
+
+        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
+            : this(jsRuntime, navigationManager, configurationService)
+        {
+            _options = options;
+        }
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService)
         {
@@ -72,7 +81,13 @@
 
         private async Task InitializeAsync()
         {
-            if (Configuration != null)
+            if (Configuration is null && _options is not null)
+            {
+                var serializedOptions = JsonSerializer.Serialize(_options);
+                Configuration = JsonSerializer.Deserialize<Dictionary<string, string>>(serializedOptions);
+            }
+
+            if (Configuration is not null)
             {
                 await InitializeAsync(() => Task.FromResult(Configuration));
             }

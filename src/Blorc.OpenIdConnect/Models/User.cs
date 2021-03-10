@@ -16,6 +16,7 @@
         public Profile Profile { get; set; }
 
         public long ExpiresAt { get; set; }
+        public long ExpiresIn { get; set; }
 
         public bool IsInRole(string role)
         {
