@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    using Blorc.OpenIdConnect.DemoApp.Pages;
     using Blorc.OpenIdConnect.DemoApp.Services;
 
     using Microsoft.AspNetCore.Authorization;

@@ -36,8 +36,6 @@
             _configurationService = configurationService;
         }
 
-        public event EventHandler AccessTokenExpiring;
-
         public Dictionary<string, string> Configuration { get; set; }
 
         public async Task<User> GetUserAsync()
@@ -91,11 +89,6 @@
         public async Task SignoutRedirectAsync()
         {
             await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SignoutRedirect");
-        }
-
-        protected virtual void OnAccessTokenExpiring()
-        {
-            AccessTokenExpiring?.Invoke(this, EventArgs.Empty);
         }
 
         private async Task InitializeAsync()
