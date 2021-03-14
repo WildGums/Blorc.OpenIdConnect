@@ -1,0 +1,19 @@
+﻿
+@page "/"
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+<SurveyPrompt Title="How is Blazor working for you?" />
+
+<AuthorizeView>
+    <Authorized>
+        You are already logged in.
+        <button @onclick="OnLogoutButtonClick">Logout</button>
+    </Authorized>
+    <NotAuthorized>
+        <button @onclick="OnLoginButtonClick">Login</button>
+    </NotAuthorized>
+</AuthorizeView>
+
