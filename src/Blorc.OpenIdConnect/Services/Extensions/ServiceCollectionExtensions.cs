@@ -1,7 +1,8 @@
 ﻿namespace Blorc.OpenIdConnect
 {
     using System;
-    using System.Text.Json.Serialization;
+
+    using Blorc.OpenIdConnect.Models;
 
     using Microsoft.Extensions.DependencyInjection;
 
@@ -19,28 +20,8 @@
                 configure(options);
                 services.AddSingleton(options);
             }
+            
         }
         #endregion
-    }
-
-    public class OidcProviderOptions
-    {
-        [JsonPropertyName("client_id")]
-        public string ClientId { get; set; }
-        
-        [JsonPropertyName("authority")]
-        public string Authority { get; set; }
-        
-        [JsonPropertyName("post_logout_redirect_uri")]
-        public string PostLogoutRedirectUri { get; set; }  
-        
-        [JsonPropertyName("redirect_uri")]
-        public string RedirectUri { get; set; }        
-        
-        [JsonPropertyName("scope")]
-        public string Scope { get; set; }
-        
-        [JsonPropertyName("response_type")]
-        public string ResponseType { get; set; }
     }
 }

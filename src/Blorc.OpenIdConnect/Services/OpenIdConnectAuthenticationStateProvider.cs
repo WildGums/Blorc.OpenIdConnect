@@ -30,8 +30,8 @@
 			{
 				claims.Add(new Claim(ClaimTypes.Name, user.Profile.Name));
 			}
-			
-			if (user.Profile.Email is not null)
+
+            if (user.Profile.Email is not null)
 			{
 				claims.Add(new Claim(ClaimTypes.Email, user.Profile.Email));
 			}

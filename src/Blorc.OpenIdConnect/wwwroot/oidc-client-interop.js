@@ -70,47 +70,7 @@
                 });
             },
             SetCurrentUser: function(u) {
-                if (u === undefined){
-                    this.User = undefined;
-                } 
-                else {
-                    this.User = {
-                        accessToken: u.access_token,
-                        tokenType: u.token_type,
-                        sessionState: u.session_state,
-                        expiresAt: u.expires_at,
-                        profile:
-                        {
-                            // sid: u.profile.sid, 
-                            jti: u.profile.jti,
-                            sub: u.profile.sub,
-                            typ: u.profile.typ,
-                            azp: u.profile.azp,
-                            authTime: u.profile.auth_time,
-                            sessionState: u.profile.session_state,
-                            acr: u.profile.acr,
-                            sHash: u.profile.s_hash,
-                            emailVerified: u.profile.email_verified,
-                            name: u.profile.name,
-                            preferredUsername: u.profile.preferred_username,
-                            givenName: u.profile.given_name,
-                            familyName: u.profile.family_name,
-                            email: u.profile.email
-                        }
-                    };
-
-                    if (u.profile.roles !== undefined) {
-                        if (!Array.isArray(u.profile.roles)) {
-                            this.User.profile.roles = new Array();
-                            this.User.profile.roles.push(u.profile.roles);
-                        } else {
-                            this.User.profile.roles = u.profile.roles;
-                        }
-                    } else {
-                        this.User.profile.roles = new Array();
-                    }
-                }
-
+                this.User = u;
                 return this.User;
             }
         }
