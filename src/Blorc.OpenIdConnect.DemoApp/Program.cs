@@ -21,9 +21,12 @@
 
             builder.Services.AddBlorcCore();
             builder.Services.AddAuthorizationCore();
+
             builder.Services.AddBlocOpenIdConnect(options =>
             {
                 builder.Configuration.Bind("IdentityServer", options);
+                options.RedirectUri = builder.HostEnvironment.BaseAddress;
+                options.PostLogoutRedirectUri = builder.HostEnvironment.BaseAddress;
             });
 
             var webAssemblyHost = builder.Build();

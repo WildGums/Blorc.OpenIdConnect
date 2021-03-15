@@ -34,14 +34,14 @@ The right way to use OpenIdConnect on Blazor.
 
 4) Add the required service and update Program.cs file as follow:
 
-        builder.Services.AddBlorcCore();
-        ...
  	builder.Services.AddBlorcCore();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlocOpenIdConnect(
 			options =>
 			{
 				builder.Configuration.Bind("IdentityServer", options);
+		                options.RedirectUri = builder.HostEnvironment.BaseAddress;
+		                options.PostLogoutRedirectUri = builder.HostEnvironment.BaseAddress;
 			});
 
 	var webAssemblyHost = builder.Build();

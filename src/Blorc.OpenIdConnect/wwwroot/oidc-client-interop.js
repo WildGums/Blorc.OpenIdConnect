@@ -25,7 +25,11 @@
                 return true;
             },
             IsAuthenticated: function() {
-                if(this.User !== undefined) {
+                if (this.userManager === undefined) {
+                    return false;
+                }
+
+                if (this.User !== undefined) {
                     return true;
                 }
 
@@ -41,7 +45,11 @@
                 });
             },
             GetUser: function () {
-                if(this.User !== undefined) {
+                if (this.userManager === undefined) {
+                    return null;
+                }
+
+                if (this.User !== undefined) {
                     return this.User;
                 }
 
@@ -56,6 +64,10 @@
                 });
             },
             SigninRedirect: function () {
+                if (this.userManager === undefined) {
+                    return false;
+                }
+
                 var self = this;
                 return new Promise((resolve, reject) => {
                     self.userManager.signinRedirect();
@@ -64,8 +76,13 @@
             },
             SignoutRedirect: function() {
                 this.User = undefined;
+                if (this.userManager === undefined) {
+                    return false;
+                }
+
+                var self = this;
                 return new Promise((resolve, reject) => {
-                    this.userManager.signoutRedirect();
+                    self.userManager.signoutRedirect();
                     return resolve(true);
                 });
             },
