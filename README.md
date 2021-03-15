@@ -56,7 +56,7 @@ The right way to use OpenIdConnect on Blazor.
 
         await webAssemblyHost.RunAsync();
         
-5) Add a configuration file `wwwroot\appsetings.json`
+5) Add a configuration file `wwwroot\appsettings.json`
 
         {
           "IdentityServer": {
