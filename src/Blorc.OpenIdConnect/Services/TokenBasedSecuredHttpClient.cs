@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Net.Http;
+    using System.Net.Http.Json;
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
@@ -155,6 +156,27 @@
             return await _httpClient.GetStringAsync(requestUri);
         }
 
+        public async Task<HttpResponseMessage> PostAsJsonAsync<TValue>(
+            Uri requestUri,
+            TValue value,
+            CancellationToken cancellationToken)
+        {
+            await SetBearerToken();
+            return await _httpClient.PostAsJsonAsync(requestUri, value, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
+        {
+            await SetBearerToken();
+            return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
+        }
+
+        public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
+        {
+            await SetBearerToken();
+            return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
+        }
+
         public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content)
         {
             await SetBearerToken();
@@ -177,6 +199,24 @@
         {
             await SetBearerToken();
             return await _httpClient.PostAsync(requestUri, content, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PutAsJsonAsync<TValue>(Uri requestUri, TValue value, CancellationToken cancellationToken)
+        {
+            await SetBearerToken();
+            return await _httpClient.PutAsJsonAsync(requestUri, value, cancellationToken);
+        }
+
+        public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
+        {
+            await SetBearerToken();
+            return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
+        }
+
+        public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
+        {
+            await SetBearerToken();
+            return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
         }
 
         public async Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content)

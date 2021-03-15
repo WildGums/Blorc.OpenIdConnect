@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.Json;
     using System.Threading.Tasks;
 
+    using Blorc.OpenIdConnect.Models;
     using Blorc.Services;
 
     using Microsoft.AspNetCore.Components;
@@ -17,6 +19,16 @@
 
         private readonly NavigationManager _navigationManager;
 
+        private readonly OidcProviderOptions _options;
+
+        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
+            : this(jsRuntime, navigationManager, configurationService)
+        {
+            _options = options;
+            var serializedOptions = JsonSerializer.Serialize(_options);
+            Configuration = JsonSerializer.Deserialize<Dictionary<string, string>>(serializedOptions);
+        }
+
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService)
         {
             _jsRuntime = jsRuntime;
@@ -28,9 +40,19 @@
 
         public async Task<User> GetUserAsync()
         {
+            var userJsonElement = await GetUserJsonElementAsync();
+            if (userJsonElement.HasValue)
+            {
+                return new User(userJsonElement.Value);
+            }
+
+            return await Task.FromResult<User>(null);
+        }
+
+        public async Task<JsonElement?> GetUserJsonElementAsync()
+        {
             if (await IsAuthenticatedAsync())
             {
-                // TODO: Improve this condition
                 var absoluteUri = _navigationManager.Uri;
                 if (absoluteUri.Contains("state=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("access_token=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("token_type=bearer"))
                 {
@@ -39,10 +61,10 @@
                     _navigationManager.NavigateTo(baseUri);
                 }
 
-                return await _jsRuntime.InvokeAsync<User>("BlorcOidc.Client.UserManager.GetUser");
+                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
             }
 
-            return await Task.FromResult<User>(null);
+            return await Task.FromResult<JsonElement?>(null);
         }
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, string>>> configurationResolver)
@@ -56,7 +78,6 @@
         public async Task<bool> IsAuthenticatedAsync()
         {
             await InitializeAsync();
-
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated");
         }
 
@@ -72,13 +93,14 @@
 
         private async Task InitializeAsync()
         {
-            if (Configuration != null)
+            if (Configuration is null && _options is null)
+            {
+                Configuration = await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver");
+            }
+
+            if (Configuration is not null)
             {
                 await InitializeAsync(() => Task.FromResult(Configuration));
-            }
-            else
-            {
-                await InitializeAsync(async () => await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver"));
             }
         }
 
