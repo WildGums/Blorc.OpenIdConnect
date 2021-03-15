@@ -20,15 +20,21 @@
                 client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
 
             builder.Services.AddBlorcCore();
-            builder.Services.AddOptions();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddBlocOpenIdConnect(options => builder.Configuration.Bind("IdentityServer", options));
+            builder.Services.AddBlocOpenIdConnect(options =>
+            {
+                builder.Configuration.Bind("IdentityServer", options);
+            });
 
             var webAssemblyHost = builder.Build();
 
-            var documentService = webAssemblyHost.Services.GetRequiredService<IDocumentService>();
-            await documentService.InjectBlorcCoreJsAsync();
-            await documentService.InjectOpenIdConnectAsync();
+            await webAssemblyHost
+                .ConfigureDocumentAsync(
+                    async documentService =>
+                    {
+                        await documentService.InjectBlorcCoreJsAsync();
+                        await documentService.InjectOpenIdConnectAsync();
+                    });
 
             await webAssemblyHost.RunAsync();
         }

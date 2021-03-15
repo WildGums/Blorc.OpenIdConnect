@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.DemoApp2.Server
+﻿namespace Blorc.OpenIdConnect.DemoApp.Server
 {
     using Microsoft.AspNetCore.Hosting;
     using Microsoft.Extensions.Hosting;
