@@ -10,6 +10,8 @@ Welcome to your new app.
 <AuthorizeView>
     <Authorized>
         You are already logged in.
+        <p>@User?.Profile?.Name</p>
+        <p>@User?.Profile?.Email</p>
         <button @onclick="OnLogoutButtonClick">Logout</button>
     </Authorized>
     <NotAuthorized>

@@ -61,7 +61,7 @@
                     _navigationManager.NavigateTo(baseUri);
                 }
 
-                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
+                return await _jsRuntime.InvokeAsync<JsonElement?>("BlorcOidc.Client.UserManager.GetUser");
             }
 
             return await Task.FromResult<JsonElement?>(null);

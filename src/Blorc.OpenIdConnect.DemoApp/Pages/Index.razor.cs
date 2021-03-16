@@ -10,6 +10,17 @@
         [Inject]
         public IUserManager UserManager { get; set; }
 
+        protected override async Task OnInitializedAsync()
+        {
+            await base.OnInitializedAsync();
+            if (UserManager is not null)
+            {
+                User = await UserManager.GetUserAsync();
+            }
+        }
+
+        public User User { get; set; }
+
         private async Task OnLoginButtonClick(MouseEventArgs obj)
         {
             await UserManager.SigninRedirectAsync();
