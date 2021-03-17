@@ -19,6 +19,4 @@
       <IncludeAssets>build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-
-
 </Project>

@@ -4,6 +4,8 @@
     using System.Text.Json;
     using System.Threading.Tasks;
 
+    using Microsoft.AspNetCore.Components.Authorization;
+
     public interface IUserManager
     {
         Dictionary<string, string> Configuration { get; }
@@ -14,8 +16,8 @@
 
         Task<bool> IsAuthenticatedAsync();
 
-        Task<User> GetUserAsync();
+        Task<User> GetUserAsync(bool reload = true);
 
-        Task<JsonElement?> GetUserJsonElementAsync();
+        Task<User> GetUserAsync(Task<AuthenticationState> authenticationStateTask);
     }
 }

@@ -4,6 +4,7 @@
 @using Blorc.OpenIdConnect.DemoApp
 @using Blorc.OpenIdConnect.DemoApp.Services
 @using Blorc.OpenIdConnect.DemoApp.Shared
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Forms
 @using Microsoft.AspNetCore.Components.Routing
@@ -13,6 +14,8 @@
 @using Microsoft.JSInterop
 
 @inject WeatherForecastHttpClient WeatherForecastHttpClient
+
+@attribute [Authorize]
 
 <h1>Weather forecast</h1>
 

@@ -56,8 +56,8 @@
                 var self = this;
                 return new Promise((resolve, reject) => {
                     self.userManager.getUser().then(function(u) {
-                        var user = self.SetCurrentUser(u);
-                        resolve(user);
+                        self.SetCurrentUser(u);
+                        resolve(u);
                     }).catch(function(e) {
                         resolve(null);
                     });
@@ -88,7 +88,6 @@
             },
             SetCurrentUser: function(u) {
                 this.User = u;
-                return this.User;
             }
         }
     }

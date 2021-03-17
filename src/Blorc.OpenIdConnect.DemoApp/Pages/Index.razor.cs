@@ -12,7 +12,6 @@
 
         protected override async Task OnInitializedAsync()
         {
-            await base.OnInitializedAsync();
             if (UserManager is not null)
             {
                 User = await UserManager.GetUserAsync();

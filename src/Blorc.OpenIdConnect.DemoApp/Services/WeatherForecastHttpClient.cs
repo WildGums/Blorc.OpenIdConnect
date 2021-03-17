@@ -21,7 +21,10 @@
         public async Task<WeatherForecast[]> GetForecastAsync()
         {
             var user = await _userManager.GetUserAsync();
-            _http.SetBearerToken(user.AccessToken);
+            if (!string.IsNullOrWhiteSpace(user?.AccessToken))
+            {
+                _http.SetBearerToken(user.AccessToken);
+            }
 
             var forecasts = new WeatherForecast[0];
 

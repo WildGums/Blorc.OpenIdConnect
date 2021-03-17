@@ -1,4 +1,4 @@
-@inherits Blorc.OpenIdConnect.Components.BlorcLayoutComponentBase
+@inherits LayoutComponentBase
 
 <div class="page">
     <div class="sidebar">
@@ -10,7 +10,10 @@
             <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
             <AuthorizeView>
                 <Authorized>
-                    <a href="https://www.linkedin.com/in/igr-alex%C3%A1nder-fern%C3%A1ndez-sa%C3%BAco-34374062/" target="_blank" class="ml-md-auto">@User?.Profile?.Name</a>
+                    @if (User is not null)
+                    {
+                        <a href="https://www.linkedin.com/in/igr-alex%C3%A1nder-fern%C3%A1ndez-sa%C3%BAco-34374062/" target="_blank" class="ml-md-auto">@User?.Profile?.Name</a>
+                    }
                 </Authorized>
             </AuthorizeView>
         </div>

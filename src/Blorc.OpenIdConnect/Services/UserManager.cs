@@ -9,6 +9,7 @@
     using Blorc.Services;
 
     using Microsoft.AspNetCore.Components;
+    using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
 
     public class UserManager : IUserManager
@@ -19,13 +20,12 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private readonly OidcProviderOptions _options;
+        private User _user;
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
             : this(jsRuntime, navigationManager, configurationService)
         {
-            _options = options;
-            var serializedOptions = JsonSerializer.Serialize(_options);
+            var serializedOptions = JsonSerializer.Serialize(options);
             Configuration = JsonSerializer.Deserialize<Dictionary<string, string>>(serializedOptions);
         }
 
@@ -36,20 +36,29 @@
             _configurationService = configurationService;
         }
 
-        public Dictionary<string, string> Configuration { get; set; }
+        public Dictionary<string, string> Configuration { get; private set; }
 
-        public async Task<User> GetUserAsync()
+        public async Task<User> GetUserAsync(bool reload = true)
         {
-            var userJsonElement = await GetUserJsonElementAsync();
-            if (userJsonElement.HasValue)
+            if (!reload && _user is not null)
             {
-                return new User(userJsonElement.Value);
+                return _user;
             }
 
-            return await Task.FromResult<User>(null);
+            if (reload)
+            {
+                _user = null;
+                var userJsonElement = await GetUserJsonElementAsync();
+                if (userJsonElement.HasValue)
+                {
+                    _user = new User(userJsonElement.Value);
+                }
+            }
+
+            return _user;
         }
 
-        public async Task<JsonElement?> GetUserJsonElementAsync()
+        private async Task<JsonElement?> GetUserJsonElementAsync()
         {
             if (await IsAuthenticatedAsync())
             {
@@ -61,10 +70,21 @@
                     _navigationManager.NavigateTo(baseUri);
                 }
 
-                return await _jsRuntime.InvokeAsync<JsonElement?>("BlorcOidc.Client.UserManager.GetUser");
+                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
             }
 
-            return await Task.FromResult<JsonElement?>(null);
+            return null;
+        }
+
+        public async Task<User> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
+        {
+            var authenticationState = await authenticationStateTask;
+            if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
+            {
+                return null;
+            }
+
+            return await GetUserAsync(false);
         }
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, string>>> configurationResolver)
@@ -93,7 +113,7 @@
 
         private async Task InitializeAsync()
         {
-            if (Configuration is null && _options is null)
+            if (Configuration is null)
             {
                 Configuration = await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver");
             }
