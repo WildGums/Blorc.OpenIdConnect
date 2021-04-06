@@ -16,8 +16,8 @@
 
         Task<bool> IsAuthenticatedAsync();
 
-        Task<User> GetUserAsync(bool reload = true);
+        Task<IUser> GetUserAsync(bool reload = true);
 
-        Task<User> GetUserAsync(Task<AuthenticationState> authenticationStateTask);
+        Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask);
     }
 }

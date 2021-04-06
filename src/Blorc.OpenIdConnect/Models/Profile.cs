@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Text.Json;
 
-    public class Profile
+    public class Profile : IProfile
     {
         private readonly JsonElement _jsonElement;
 

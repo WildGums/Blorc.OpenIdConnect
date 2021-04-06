@@ -20,7 +20,7 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private User _user;
+        private IUser _user;
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
             : this(jsRuntime, navigationManager, configurationService)
@@ -38,7 +38,7 @@
 
         public Dictionary<string, string> Configuration { get; private set; }
 
-        public async Task<User> GetUserAsync(bool reload = true)
+        public async Task<IUser> GetUserAsync(bool reload = true)
         {
             if (!reload && _user is not null)
             {
@@ -76,7 +76,7 @@
             return null;
         }
 
-        public async Task<User> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
+        public async Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
         {
             var authenticationState = await authenticationStateTask;
             if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)

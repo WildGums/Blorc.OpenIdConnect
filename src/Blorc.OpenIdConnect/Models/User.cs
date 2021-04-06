@@ -3,7 +3,7 @@
     using System.Linq;
     using System.Text.Json;
 
-    public class User
+    public class User : IUser
     {
         private readonly JsonElement _jsonElement;
 
@@ -42,7 +42,7 @@
 
         public JsonElement JsonElement => _jsonElement;
 
-        public Profile Profile
+        public IProfile Profile
         {
             get
             {
@@ -75,7 +75,7 @@
         {
             get
             {
-                if (_jsonElement.TryGetProperty("access_token", out var value))
+                if (_jsonElement.TryGetProperty("token_type", out var value))
                 {
                     return value.GetString();
                 }

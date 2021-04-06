@@ -18,7 +18,7 @@
             }
         }
 
-        public User User { get; set; }
+        public IUser User { get; set; }
 
         private async Task OnLoginButtonClick(MouseEventArgs obj)
         {

@@ -7,7 +7,7 @@
 
     public partial class MainLayout
     {
-        public User User { get; set; }
+        public IUser User { get; set; }
 
         [Inject]
         public IUserManager UserManager { get; set; }
