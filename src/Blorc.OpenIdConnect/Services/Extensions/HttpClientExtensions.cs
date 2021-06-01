@@ -12,7 +12,7 @@
 
         public static void SetToken(this HttpClient @this, string scheme, string token)
         {
-            if (!string.IsNullOrWhiteSpace(scheme) && !string.IsNullOrWhiteSpace(scheme))
+            if (!string.IsNullOrWhiteSpace(scheme) && !string.IsNullOrWhiteSpace(token))
             {
                 @this.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(scheme, token);
             }

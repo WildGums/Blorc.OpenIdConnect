@@ -26,133 +26,133 @@
 
         public async Task<HttpResponseMessage> DeleteAsync(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.DeleteAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(string requestUri, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.DeleteAsync(requestUri, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(Uri requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.DeleteAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> DeleteAsync(Uri requestUri, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.DeleteAsync(requestUri, cancellationToken);
         }
 
         public async Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri));
         }
 
         public async Task<T> GetAsNewtonsoftJsonAsync<T>(string requestUri, JsonSerializerSettings settings)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return JsonConvert.DeserializeObject<T>(await _httpClient.GetStringAsync(requestUri), settings);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri, HttpCompletionOption completionOption)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, completionOption);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri, HttpCompletionOption completionOption, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, completionOption, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string requestUri, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri);
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri, HttpCompletionOption completionOption)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, completionOption);
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri, HttpCompletionOption completionOption, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, completionOption, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> GetAsync(Uri requestUri, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetAsync(requestUri, cancellationToken);
         }
 
         public async Task<byte[]> GetByteArrayAsync(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetByteArrayAsync(requestUri);
         }
 
         public async Task<byte[]> GetByteArrayAsync(Uri requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetByteArrayAsync(requestUri);
         }
 
         public async Task<T> GetJsonAsync<T>(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri));
         }
 
         public async Task<T> GetJsonAsync<T>(string requestUri, JsonSerializerOptions options)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return JsonSerializer.Deserialize<T>(await _httpClient.GetStringAsync(requestUri), options);
         }
 
         public async Task<Stream> GetStreamAsync(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetStreamAsync(requestUri);
         }
 
         public async Task<Stream> GetStreamAsync(Uri requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetStreamAsync(requestUri);
         }
 
         public async Task<string> GetStringAsync(string requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetStringAsync(requestUri);
         }
 
         public async Task<string> GetStringAsync(Uri requestUri)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.GetStringAsync(requestUri);
         }
 
@@ -161,113 +161,113 @@
             TValue value,
             CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsJsonAsync(requestUri, value, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
         }
 
         public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
         }
 
         public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, content);
         }
 
         public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, content, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> PostAsync(Uri requestUri, HttpContent content)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, content);
         }
 
         public async Task<HttpResponseMessage> PostAsync(Uri requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PostAsync(requestUri, content, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> PutAsJsonAsync<TValue>(Uri requestUri, TValue value, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsJsonAsync(requestUri, value, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
         }
 
         public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
         }
 
         public async Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, content);
         }
 
         public async Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, content, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> PutAsync(Uri requestUri, HttpContent content)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, content);
         }
 
         public async Task<HttpResponseMessage> PutAsync(Uri requestUri, HttpContent content, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.PutAsync(requestUri, content, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.SendAsync(request);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.SendAsync(request, completionOption);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, HttpCompletionOption completionOption, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.SendAsync(request, completionOption, cancellationToken);
         }
 
         public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            await SetBearerToken();
+            await SetBearerTokenAsync();
             return await _httpClient.SendAsync(request, cancellationToken);
         }
 
-        private async Task SetBearerToken()
+        private async Task SetBearerTokenAsync()
         {
             if (await _userManager.IsAuthenticatedAsync())
             {

@@ -1,4 +1,9 @@
 ﻿window.BlorcOidc = {
+    Navigation: {
+        IsRedirected: function() {
+            return window.performance.navigation.type === 0;
+        }
+    },
     Client: {
         UserManager: {
             IsInitialized: function() {

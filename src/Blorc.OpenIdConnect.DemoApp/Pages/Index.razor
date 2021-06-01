@@ -12,10 +12,10 @@ Welcome to your new app.
         You are already logged in.
         <p>@User?.Profile?.Name</p>
         <p>@User?.Profile?.Email</p>
-        <button @onclick="OnLogoutButtonClick">Logout</button>
+        <button @onclick="OnLogoutButtonClickAsync">Logout</button>
     </Authorized>
     <NotAuthorized>
-        <button @onclick="OnLoginButtonClick">Login</button>
+        <button @onclick="OnLoginButtonClickAsync">Login</button>
     </NotAuthorized>
 </AuthorizeView>
 
