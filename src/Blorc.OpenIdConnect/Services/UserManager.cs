@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@
 
     public class UserManager : IUserManager
     {
+        private static readonly string[] ExpectedParameters = { "state", "session_state", "access_token", "id_token", "token_type" };
+
         private readonly IConfigurationService _configurationService;
 
         private readonly IJSRuntime _jsRuntime;
@@ -58,24 +61,6 @@
             return _user;
         }
 
-        private async Task<JsonElement?> GetUserJsonElementAsync()
-        {
-            if (await IsAuthenticatedAsync())
-            {
-                var absoluteUri = _navigationManager.Uri;
-                if (absoluteUri.Contains("state=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("access_token=") && absoluteUri.Contains("id_token=") && absoluteUri.Contains("token_type=bearer"))
-                {
-                    var absoluteUrlSplit = absoluteUri.Split('#');
-                    var baseUri = absoluteUrlSplit.Length == 2 ? absoluteUrlSplit[0] : _navigationManager.BaseUri;
-                    _navigationManager.NavigateTo(baseUri);
-                }
-
-                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
-            }
-
-            return null;
-        }
-
         public async Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
         {
             var authenticationState = await authenticationStateTask;
@@ -89,7 +74,7 @@
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, string>>> configurationResolver)
         {
-            if (!await IsInitialized())
+            if (!await IsInitializedAsync())
             {
                 await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.Initialize", await configurationResolver());
             }
@@ -111,6 +96,24 @@
             await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SignoutRedirect");
         }
 
+        private async Task<JsonElement?> GetUserJsonElementAsync()
+        {
+            if (await IsAuthenticatedAsync())
+            {
+                var absoluteUri = _navigationManager.Uri;
+                if (ExpectedParameters.All(parameter => absoluteUri.Contains($"{parameter}=", StringComparison.InvariantCultureIgnoreCase)) && await IsRedirectedAsync())
+                {
+                    var absoluteUrlSplit = absoluteUri.Split('#');
+                    var baseUri = absoluteUrlSplit.Length == 2 ? absoluteUrlSplit[0] : _navigationManager.BaseUri;
+                    _navigationManager.NavigateTo(baseUri);
+                }
+
+                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
+            }
+
+            return null;
+        }
+
         private async Task InitializeAsync()
         {
             if (Configuration is null)
@@ -124,9 +127,14 @@
             }
         }
 
-        private async Task<bool> IsInitialized()
+        private async Task<bool> IsInitializedAsync()
         {
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsInitialized");
+        }
+
+        private async Task<bool> IsRedirectedAsync()
+        {
+            return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected");
         }
     }
 }

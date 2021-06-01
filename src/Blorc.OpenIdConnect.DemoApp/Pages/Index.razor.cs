@@ -20,12 +20,12 @@
 
         public IUser User { get; set; }
 
-        private async Task OnLoginButtonClick(MouseEventArgs obj)
+        private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
         {
             await UserManager.SigninRedirectAsync();
         }
 
-        private async Task OnLogoutButtonClick(MouseEventArgs obj)
+        private async Task OnLogoutButtonClickAsync(MouseEventArgs obj)
         {
             await UserManager.SignoutRedirectAsync();
         }

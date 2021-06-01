@@ -86,7 +86,7 @@
 
         public bool IsInRole(string role)
         {
-            if (Profile?.Roles == null)
+            if (Profile?.Roles is null)
             {
                 return false;
             }
