@@ -8,6 +8,7 @@
     public class Environment
     {
         [Test]
+        [Explicit]
         public async Task InitializeKeycloakAsync()
         {
             var keycloakService = new KeycloakService("http://localhost:5002/", "admin", "Password123!");
