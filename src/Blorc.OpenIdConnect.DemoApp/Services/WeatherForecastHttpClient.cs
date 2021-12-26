@@ -26,7 +26,7 @@
                 _http.SetBearerToken(user.AccessToken);
             }
 
-            var forecasts = new WeatherForecast[0];
+            var forecasts = Array.Empty<WeatherForecast>();
 
             try
             {

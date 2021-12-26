@@ -56,7 +56,7 @@
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
                 options =>
                 {
-                    options.Authority = "http://localhost:18080/auth/realms/master";
+                    options.Authority = "http://localhost:5002/auth/realms/master";
                     options.RequireHttpsMetadata = false;
                     options.Audience = "demo-api";
                 });
