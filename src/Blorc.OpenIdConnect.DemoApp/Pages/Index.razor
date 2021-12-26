@@ -10,8 +10,17 @@ Welcome to your new app.
 <AuthorizeView>
     <Authorized>
         You are already logged in.
-        <p>@User?.Profile?.Name</p>
-        <p>@User?.Profile?.Email</p>
+        <p><b>PreferredUsername:</b> @User?.Profile?.PreferredUsername</p>
+        <p><b>Name:</b> @User?.Profile?.Name</p>
+        <p><b>Email:</b> @User?.Profile?.Email</p>
+        @if(User?.Profile?.Roles is not null)
+        {
+            <p><b>Roles</b></p>
+            foreach (var role in User.Profile.Roles)
+            {
+                <p>@role</p>
+            }
+        }
         <button @onclick="OnLogoutButtonClickAsync">Logout</button>
     </Authorized>
     <NotAuthorized>
