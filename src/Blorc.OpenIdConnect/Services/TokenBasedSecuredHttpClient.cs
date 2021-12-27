@@ -168,13 +168,19 @@
         public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
         {
             await SetBearerTokenAsync();
-            return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
+            using (var stringContent = new StringContent(JsonConvert.SerializeObject(value)))
+            {
+                return await _httpClient.PostAsync(requestUri, stringContent);
+            }
         }
 
         public async Task<HttpResponseMessage> PostAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
         {
             await SetBearerTokenAsync();
-            return await _httpClient.PostAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
+            using (var stringContent = new StringContent(JsonConvert.SerializeObject(value, settings)))
+            {
+                return await _httpClient.PostAsync(requestUri, stringContent);
+            }
         }
 
         public async Task<HttpResponseMessage> PostAsync(string requestUri, HttpContent content)
@@ -210,13 +216,19 @@
         public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value)
         {
             await SetBearerTokenAsync();
-            return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value)));
+            using (var stringContent = new StringContent(JsonConvert.SerializeObject(value)))
+            {
+                return await _httpClient.PutAsync(requestUri, stringContent);
+            }
         }
 
         public async Task<HttpResponseMessage> PutAsNewtonsoftJsonAsync<TValue>(string requestUri, TValue value, JsonSerializerSettings settings)
         {
             await SetBearerTokenAsync();
-            return await _httpClient.PutAsync(requestUri, new StringContent(JsonConvert.SerializeObject(value, settings)));
+            using (var stringContent = new StringContent(JsonConvert.SerializeObject(value, settings)))
+            {
+                return await _httpClient.PutAsync(requestUri, stringContent);
+            }
         }
 
         public async Task<HttpResponseMessage> PutAsync(string requestUri, HttpContent content)

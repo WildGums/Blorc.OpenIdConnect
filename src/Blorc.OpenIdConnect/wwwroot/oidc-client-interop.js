@@ -9,7 +9,7 @@
             IsInitialized: function() {
                 return this.userManager !== undefined;
             },
-            Initialize: function(config) {
+            Initialize: function (config) {
                 if (this.userManager === undefined) {
                     this.userManager = new UserManager(config);
 
@@ -19,7 +19,11 @@
                             .then(function(u) {
                                 self.SetCurrentUser(u);
                             })
-                            .catch(function(e) {
+                            .catch(function (e) {
+                                if (e.message !== "No state in response") {
+                                    console.log(e);
+                                }
+
                                 self.userManager.getUser().then(function (u) {
                                     self.SetCurrentUser(u);
                                 });
@@ -43,6 +47,10 @@
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
                     }).catch(function(e) {
+                        if (e.message !== "No state in response") {
+                            console.log(e);
+                        }
+
                         self.userManager.getUser().then(function(u) {
                             resolve(u != null);
                         });
@@ -63,7 +71,11 @@
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
                         resolve(u);
-                    }).catch(function(e) {
+                    }).catch(function (e) {
+                        if (e.message !== "No state in response") {
+                            console.log(e);
+                        }
+
                         resolve(null);
                     });
                 });

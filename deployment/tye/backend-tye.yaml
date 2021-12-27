@@ -1,0 +1,17 @@
+name: openidconnect
+network: openidconnect-network
+services:
+- name:  openidconnect-keycloak
+  image: jboss/keycloak:16.1.0
+  bindings:
+  - port: 5002
+    containerPort: 8080
+    protocol: http
+  env:
+  - name: KEYCLOAK_USER
+    value: admin
+  - name: KEYCLOAK_PASSWORD
+    value: Password123!
+  volumes:
+  - name: openidconnect-keycloak-data
+    target: /opt/jboss/keycloak/standalone/data/

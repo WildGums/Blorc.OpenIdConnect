@@ -104,9 +104,12 @@
                     if (_jsonElement.TryGetProperty("roles", out var value))
                     {
                         _roles = new List<string>();
-                        foreach (var element in value.EnumerateArray())
+                        using (var elements = value.EnumerateArray())
                         {
-                            _roles.Add(element.GetString());
+                            foreach (var element in elements)
+                            {
+                                _roles.Add(element.GetString());
+                            }
                         }
                     }
                 }
