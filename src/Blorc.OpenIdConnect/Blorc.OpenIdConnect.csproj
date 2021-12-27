@@ -17,16 +17,9 @@
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>E68BDD6F-F81B-4B99-A955-E5868F86227D</ProjectGuid>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
-    <DebugType>portable</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
   
   <ItemGroup>
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0670" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0" />
-    <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0639" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
