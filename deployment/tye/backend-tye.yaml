@@ -2,7 +2,7 @@ name: openidconnect
 network: openidconnect-network
 services:
 - name:  openidconnect-keycloak
-  image: jboss/keycloak:15.0.2
+  image: jboss/keycloak:16.1.0
   bindings:
   - port: 5002
     containerPort: 8080
