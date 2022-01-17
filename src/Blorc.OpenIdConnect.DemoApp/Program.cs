@@ -6,8 +6,9 @@ using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 
+var baseUrl = builder.HostEnvironment.BaseAddress;
 builder.Services.AddHttpClient<WeatherForecastHttpClient>(
-    client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress));
+    client => client.BaseAddress = new Uri(baseUrl));
 
 builder.Services.AddBlorcCore();
 builder.Services.AddAuthorizationCore();
@@ -16,9 +17,13 @@ builder.Services.AddBlocOpenIdConnect(
     options =>
     {
         builder.Configuration.Bind("IdentityServer", options);
-        options.RedirectUri = builder.HostEnvironment.BaseAddress;
-        options.PostLogoutRedirectUri = builder.HostEnvironment.BaseAddress;
+        options.RedirectUri = baseUrl;
+        options.PostLogoutRedirectUri = baseUrl;
+        options.AutomaticSilentRenew = true;
+        // options.SilentRedirectUri = OpenIdConnectResources.GetDefaultSilentRefreshPage(baseUrl);
     });
+
+
 
 var webAssemblyHost = builder.Build();
 

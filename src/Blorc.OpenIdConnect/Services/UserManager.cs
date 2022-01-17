@@ -29,7 +29,7 @@
             : this(jsRuntime, navigationManager, configurationService)
         {
             var serializedOptions = JsonSerializer.Serialize(options);
-            Configuration = JsonSerializer.Deserialize<Dictionary<string, string>>(serializedOptions);
+            Configuration = JsonSerializer.Deserialize<Dictionary<string, object>>(serializedOptions);
         }
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService)
@@ -39,7 +39,7 @@
             _configurationService = configurationService;
         }
 
-        public Dictionary<string, string> Configuration { get; private set; }
+        public Dictionary<string, object> Configuration { get; private set; }
 
         public async Task<IUser> GetUserAsync(bool reload = true)
         {
@@ -69,14 +69,14 @@
                 return null;
             }
 
-            return await GetUserAsync(false);
+            return await GetUserAsync();
         }
 
-        public async Task InitializeAsync(Func<Task<Dictionary<string, string>>> configurationResolver)
+        public async Task InitializeAsync(Func<Task<Dictionary<string, object>>> configurationResolver)
         {
             if (!await IsInitializedAsync())
             {
-                await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.Initialize", await configurationResolver());
+                await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver());
             }
         }
 
@@ -116,9 +116,18 @@
 
         private async Task InitializeAsync()
         {
+            // TODO: Deprecate this.
             if (Configuration is null)
             {
-                Configuration = await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver");
+                var configuration = await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver");
+                if (configuration is not null)
+                {
+                    Configuration = new Dictionary<string, object>();
+                    foreach (var pair in configuration)
+                    {
+                        configuration[pair.Key] = pair.Value;
+                    }
+                }
             }
 
             if (Configuration is not null)
