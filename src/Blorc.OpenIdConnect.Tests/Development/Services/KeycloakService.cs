@@ -62,7 +62,7 @@
                 client.BaseUrl = ingressUrl;
                 client.RedirectUris = new List<string>
                                           {
-                                              $"{ingressUrl}",
+                                              $"{ingressUrl}/*",
                                           };
                 client.WebOrigins = new List<string>
                                         {

@@ -1,0 +1,9 @@
+<body>
+	<script src="oidc-client.min.js"></script>
+	<script>
+	    new UserManager().signinSilentCallback()
+	        .catch((e) => {
+	            console.log(e);
+	        });
+	</script>
+</body>

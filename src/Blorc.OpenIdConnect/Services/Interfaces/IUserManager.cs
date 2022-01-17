@@ -8,7 +8,7 @@
 
     public interface IUserManager
     {
-        Dictionary<string, string> Configuration { get; }
+        Dictionary<string, object> Configuration { get; }
 
         Task SigninRedirectAsync();
 

@@ -9,29 +9,22 @@
             IsInitialized: function() {
                 return this.userManager !== undefined;
             },
-            Initialize: function (config) {
+            Initialize: function(config) {
+                var self = this;
                 if (this.userManager === undefined) {
                     this.userManager = new UserManager(config);
-
-                    var self = this;
-                    this.userManager.events.addAccessTokenExpiring(function() {
-                        self.userManager.signinSilent({scope: config.scope, response_type: config.response_type})
-                            .then(function(u) {
-                                self.SetCurrentUser(u);
-                            })
-                            .catch(function (e) {
-                                if (e.message !== "No state in response") {
-                                    console.log(e);
-                                }
-
-                                self.userManager.getUser().then(function (u) {
+                    if (config.automaticSilentRenew) {
+                        this.userManager.events.addAccessTokenExpiring(function() {
+                            self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
+                                .then(function(u) {
                                     self.SetCurrentUser(u);
+                                })
+                                .catch(function(e) {
+                                    console.log(e);
                                 });
-                            });
-                    });
+                        });
+                    }
                 }
-
-                return true;
             },
             IsAuthenticated: function() {
                 if (this.userManager === undefined) {
@@ -57,7 +50,7 @@
                     });
                 });
             },
-            GetUser: function () {
+            GetUser: function() {
                 if (this.userManager === undefined) {
                     return null;
                 }
@@ -71,7 +64,7 @@
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
                         resolve(u);
-                    }).catch(function (e) {
+                    }).catch(function(e) {
                         if (e.message !== "No state in response") {
                             console.log(e);
                         }
@@ -80,7 +73,7 @@
                     });
                 });
             },
-            SigninRedirect: function () {
+            SigninRedirect: function() {
                 if (this.userManager === undefined) {
                     return false;
                 }
