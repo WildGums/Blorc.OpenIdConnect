@@ -40,8 +40,6 @@ The right way to use OpenIdConnect on Blazor.
                         options =>
                         {
                                 builder.Configuration.Bind("IdentityServer", options);
-                                options.RedirectUri = builder.HostEnvironment.BaseAddress;
-                                options.PostLogoutRedirectUri = builder.HostEnvironment.BaseAddress;
                         });
 
         var webAssemblyHost = builder.Build();
@@ -65,6 +63,7 @@ The right way to use OpenIdConnect on Blazor.
             "RedirectUri": "%APPLICATION_URL%",
             "PostLogoutRedirectUri": "%APPLICATION_URL%",
             "Authority": "%IDENTITY_SERVER_URL%",
-            "ClientId": "%CLIENT_ID%"
+            "ClientId": "%CLIENT_ID%",
+            "AutomaticSilentRenew": true | false,
           }
         }
