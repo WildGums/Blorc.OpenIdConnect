@@ -10,21 +10,24 @@
                 return this.userManager !== undefined;
             },
             Initialize: function(config) {
+                if (this.userManager !== undefined)
+                    return;
+
+                this.userManager = new UserManager(config);
+                    
+                if (!config.automaticSilentRenew)
+                    return;
+
                 var self = this;
-                if (this.userManager === undefined) {
-                    this.userManager = new UserManager(config);
-                    if (config.automaticSilentRenew) {
-                        this.userManager.events.addAccessTokenExpiring(function() {
-                            self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
-                                .then(function(u) {
-                                    self.SetCurrentUser(u);
-                                })
-                                .catch(function(e) {
-                                    console.log(e);
-                                });
+                this.userManager.events.addAccessTokenExpiring(function () {
+                    self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
+                        .then(function(u) {
+                            self.SetCurrentUser(u);
+                        })
+                        .catch(function(e) {
+                            console.log(e);
                         });
-                    }
-                }
+                });
             },
             IsAuthenticated: function() {
                 if (this.userManager === undefined) {
