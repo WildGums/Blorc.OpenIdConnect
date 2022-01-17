@@ -20,7 +20,7 @@ builder.Services.AddBlocOpenIdConnect(
         options.RedirectUri = baseUrl;
         options.PostLogoutRedirectUri = baseUrl;
         options.AutomaticSilentRenew = true;
-        options.SilentRedirectUri = OpenIdConnectResources.GetDefaultSilentRefreshPage(baseUrl);
+        // options.SilentRedirectUri = OpenIdConnectResources.GetDefaultSilentRefreshPage(baseUrl);
     });
 
 

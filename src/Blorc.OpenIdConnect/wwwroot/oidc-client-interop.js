@@ -10,24 +10,32 @@
                 return this.userManager !== undefined;
             },
             Initialize: function(config) {
-                if (this.userManager !== undefined)
+                if (this.userManager !== undefined) {
                     return;
+                }
+
+                if (config.automaticSilentRenew && (config.silent_redirect_uri === null || config.silent_redirect_uri === "")) {
+                    config.silent_redirect_uri = window.location.protocol + "//" + window.location.hostname;
+                    if (window.location.port !== 80 && window.location.port !== 443) {
+                        config.silent_redirect_uri += ":" + window.location.port;
+                    }
+
+                    config.silent_redirect_uri += "/_content/Blorc.OpenIdConnect/silent-refresh.html";
+                }
 
                 this.userManager = new UserManager(config);
-                    
-                if (!config.automaticSilentRenew)
-                    return;
-
-                var self = this;
-                this.userManager.events.addAccessTokenExpiring(function () {
-                    self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
-                        .then(function(u) {
-                            self.SetCurrentUser(u);
-                        })
-                        .catch(function(e) {
-                            console.log(e);
-                        });
-                });
+                if (config.automaticSilentRenew) {
+                    var self = this;
+                    this.userManager.events.addAccessTokenExpiring(function() {
+                        self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
+                            .then(function(u) {
+                                self.SetCurrentUser(u);
+                            })
+                            .catch(function(e) {
+                                console.log(e);
+                            });
+                    });
+                }
             },
             IsAuthenticated: function() {
                 if (this.userManager === undefined) {
@@ -104,4 +112,4 @@
             }
         }
     }
-};
+}
