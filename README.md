@@ -18,19 +18,19 @@ The right way to use OpenIdConnect on Blazor.
 
         @using Microsoft.AspNetCore.Components.Authorization
 
-        <Router AppAssembly="@typeof(Program).Assembly">
-            <Found Context="routeData">
-                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-            </Found>
-            <NotFound>
-                <CascadingAuthenticationState>
-                    <LayoutView Layout="@typeof(MainLayout)">
-                        <p>Sorry, there's nothing at this address.</p>
-                    </LayoutView>
-                </CascadingAuthenticationState>
-            </NotFound>
-        </Router>
-
+        <CascadingAuthenticationState>
+                <Router AppAssembly="@typeof(Program).Assembly">
+                        <Found Context="routeData">
+                                <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+                        </Found>
+                        <NotFound>
+                                <LayoutView Layout="@typeof(MainLayout)">
+                                <p>Sorry, there's nothing at this address.</p>
+                                </LayoutView>
+                        </NotFound>
+                </Router>
+        </CascadingAuthenticationState>
+        
 
 4) Add the required service and update Program.cs file as follow:
 
