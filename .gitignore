@@ -148,5 +148,3 @@ FodyWeavers.xsd
 # ANTLR
 data/dsl/*.class
 data/dsl/*.java
-
-.tye
