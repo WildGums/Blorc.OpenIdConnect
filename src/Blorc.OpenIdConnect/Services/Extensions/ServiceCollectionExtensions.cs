@@ -12,9 +12,6 @@
         public static void AddBlocOpenIdConnect(this IServiceCollection services, Action<OidcProviderOptions> configure = null)
         {
             services.AddTransient<IHttpClient, TokenBasedSecuredHttpClient>();
-            // services.AddScoped<IUserManager, UserManager>();
-            // services.AddScoped<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
-
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
             services.AddScoped<AccessTokenDelegatingHandler>();

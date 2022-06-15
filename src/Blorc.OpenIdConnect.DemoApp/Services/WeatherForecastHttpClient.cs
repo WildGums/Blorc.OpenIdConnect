@@ -13,7 +13,6 @@
         public WeatherForecastHttpClient(HttpClient http)
         {
             _http = http;
-            // _userManager = userManager;
         }
 
         public async Task<WeatherForecast[]> GetForecastAsync()
