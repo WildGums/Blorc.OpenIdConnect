@@ -10,22 +10,14 @@
     {
         private readonly HttpClient _http;
 
-        private readonly IUserManager _userManager;
-
-        public WeatherForecastHttpClient(HttpClient http, IUserManager userManager)
+        public WeatherForecastHttpClient(HttpClient http)
         {
             _http = http;
-            _userManager = userManager;
+            // _userManager = userManager;
         }
 
         public async Task<WeatherForecast[]> GetForecastAsync()
         {
-            var user = await _userManager.GetUserAsync();
-            if (!string.IsNullOrWhiteSpace(user?.AccessToken))
-            {
-                _http.SetBearerToken(user.AccessToken);
-            }
-
             var forecasts = Array.Empty<WeatherForecast>();
 
             try

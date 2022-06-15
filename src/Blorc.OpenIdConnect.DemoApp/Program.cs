@@ -1,4 +1,5 @@
-﻿using Blorc.OpenIdConnect;
+﻿using System.Net.Http.Headers;
+using Blorc.OpenIdConnect;
 using Blorc.OpenIdConnect.DemoApp;
 using Blorc.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
@@ -7,8 +8,22 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 
 var baseUrl = builder.HostEnvironment.BaseAddress;
-builder.Services.AddHttpClient<WeatherForecastHttpClient>(
-    client => client.BaseAddress = new Uri(baseUrl));
+builder.Services
+    .AddHttpClient<WeatherForecastHttpClient>(client => client.BaseAddress = new Uri(baseUrl))
+    // Add access token using this
+    .AddAccessToken();
+
+    // Or using this 
+    // .CustomizeHttpRequestMessage(
+    //    async (provider, request) =>
+    //    {
+    //        var userManager = provider.GetRequiredService<IUserManager>();
+    //        var user = await userManager.GetUserAsync();
+    //        if (user is not null)
+    //        {
+    //            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.AccessToken);
+    //        }
+    //    });
 
 builder.Services.AddBlorcCore();
 builder.Services.AddAuthorizationCore();
@@ -21,8 +36,6 @@ builder.Services.AddBlocOpenIdConnect(
         options.PostLogoutRedirectUri = baseUrl;
         options.AutomaticSilentRenew = true;
     });
-
-
 
 var webAssemblyHost = builder.Build();
 
