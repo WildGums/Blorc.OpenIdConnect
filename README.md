@@ -34,6 +34,13 @@ The right way to use OpenIdConnect on Blazor.
 
 4) Add the required service and update Program.cs file as follow:
 
+        // Add access token delegating handler to registered http clients
+        var baseUrl = builder.HostEnvironment.BaseAddress;
+        builder.Services
+            .AddHttpClient<WeatherForecastHttpClient>(client => client.BaseAddress = new Uri(baseUrl))
+            .AddAccessToken();
+
+        // Registering required services
         builder.Services.AddBlorcCore();
         builder.Services.AddAuthorizationCore();
         builder.Services.AddBlocOpenIdConnect(
