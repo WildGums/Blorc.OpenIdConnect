@@ -9,6 +9,7 @@
 
     using Newtonsoft.Json;
 
+    [ObsoleteEx(ReplacementTypeOrMember = $"{nameof(HttpClientBuilderExtensions.AddAccessToken)} or {nameof(HttpClientBuilderExtensions.CustomizeHttpRequestMessage)} extension methods", RemoveInVersion = "2.0.0")]
     public interface IHttpClient
     {
         Task<HttpResponseMessage> DeleteAsync(string requestUri);
