@@ -12,6 +12,7 @@
 
     using JsonSerializer = System.Text.Json.JsonSerializer;
 
+    [ObsoleteEx(ReplacementTypeOrMember = $"{nameof(HttpClientBuilderExtensions.AddAccessToken)} or {nameof(HttpClientBuilderExtensions.CustomizeHttpRequestMessage)}", RemoveInVersion = "2.0.0")]
     public class TokenBasedSecuredHttpClient : IHttpClient
     {
         private readonly HttpClient _httpClient;
