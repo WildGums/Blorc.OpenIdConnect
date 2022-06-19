@@ -1,5 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
 
@@ -84,6 +85,7 @@
             }
         }
 
+        [ObsoleteEx(ReplacementTypeOrMember = $"{nameof(HasRolesExtensions.IsInRole)}", RemoveInVersion = "2.0.0")]
         public bool IsInRole(string role)
         {
             if (Profile?.Roles is null)
@@ -92,6 +94,14 @@
             }
 
             return Profile.Roles.Contains(role);
+        }
+
+        public IEnumerable<string> Roles
+        {
+            get
+            {
+                return Profile?.Roles;
+            }
         }
     }
 }

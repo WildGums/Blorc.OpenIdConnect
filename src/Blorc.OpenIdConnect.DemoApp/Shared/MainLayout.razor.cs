@@ -7,7 +7,7 @@
 
     public partial class MainLayout
     {
-        public IUser User { get; set; }
+        public Models.User User { get; set; }
 
         [Inject]
         public IUserManager UserManager { get; set; }
@@ -19,7 +19,7 @@
         {
             if (UserManager is not null)
             {
-                User = await UserManager.GetUserAsync(AuthenticationStateTask);
+                User = await UserManager.GetUserAsync<Models.User>(AuthenticationStateTask);
             }
         }
     }

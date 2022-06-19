@@ -1,6 +1,7 @@
 ﻿namespace Blorc.OpenIdConnect
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text.Json;
@@ -25,6 +26,8 @@
 
         private IUser _user;
 
+        private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
+
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
             : this(jsRuntime, navigationManager, configurationService)
         {
@@ -40,6 +43,40 @@
         }
 
         public Dictionary<string, object> Configuration { get; private set; }
+
+        public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
+        {
+            var authenticationState = await authenticationStateTask;
+            if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
+            {
+                return default;
+            }
+
+            return await GetUserAsync<TUser>(options: options);
+        }
+
+        public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
+        {
+            var userType = typeof(TUser);
+            if (!reload && _usersCache.TryGetValue(userType,  out var value) && value is TUser user)
+            {
+                return user;
+            }
+
+            if (reload)
+            {
+                _usersCache.Remove(userType, out _);
+                var userJsonElement = await GetUserJsonElementAsync();
+                if (userJsonElement.HasValue)
+                {
+                    user = userJsonElement.Value.ToObject<TUser>(options);
+                    _usersCache[userType] = user;
+                    return user;
+                }
+            }
+
+            return default;
+        }
 
         public async Task<IUser> GetUserAsync(bool reload = true)
         {
