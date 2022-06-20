@@ -1,7 +1,7 @@
 ﻿namespace Blorc.OpenIdConnect.DemoApp.Pages
 {
     using System.Threading.Tasks;
-
+    using Blorc.OpenIdConnect.DemoApp;
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Web;
 
@@ -12,13 +12,15 @@
 
         protected override async Task OnInitializedAsync()
         {
-            if (UserManager is not null)
+            if (UserManager is null)
             {
-                User = await UserManager.GetUserAsync();
+                return;
             }
+
+            User = await UserManager.GetUserAsync<User<Profile>>();
         }
 
-        public IUser User { get; set; }
+        public User<Profile> User { get; set; }
 
         private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
         {

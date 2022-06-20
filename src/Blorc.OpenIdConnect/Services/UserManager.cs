@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
-
     using Blorc.OpenIdConnect.Models;
     using Blorc.Services;
 
@@ -23,7 +22,7 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private IUser _user;
+        private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
             : this(jsRuntime, navigationManager, configurationService)
@@ -41,35 +40,39 @@
 
         public Dictionary<string, object> Configuration { get; private set; }
 
-        public async Task<IUser> GetUserAsync(bool reload = true)
-        {
-            if (!reload && _user is not null)
-            {
-                return _user;
-            }
-
-            if (reload)
-            {
-                _user = null;
-                var userJsonElement = await GetUserJsonElementAsync();
-                if (userJsonElement.HasValue)
-                {
-                    _user = new User(userJsonElement.Value);
-                }
-            }
-
-            return _user;
-        }
-
-        public async Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
+        public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
         {
             var authenticationState = await authenticationStateTask;
             if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
             {
-                return null;
+                return default;
             }
 
-            return await GetUserAsync();
+            return await GetUserAsync<TUser>(options: options);
+        }
+
+        public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
+        {
+            var userType = typeof(TUser);
+            
+            if (reload)
+            {
+                _usersCache.Remove(userType, out _);
+            }
+            else if (_usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
+            {
+                return cacheUser;
+            }
+
+            var userJsonElement = await GetUserJsonElementAsync();
+            if (userJsonElement.HasValue)
+            {
+                var user = userJsonElement.Value.ToObject<TUser>(options);
+                _usersCache[userType] = user;
+                return user;
+            }
+
+            return default;
         }
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, object>>> configurationResolver)
