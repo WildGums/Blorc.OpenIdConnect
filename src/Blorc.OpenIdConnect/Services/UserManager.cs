@@ -1,13 +1,10 @@
 ﻿namespace Blorc.OpenIdConnect
 {
     using System;
-    using System.Buffers;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Runtime.InteropServices;
     using System.Text.Json;
     using System.Threading.Tasks;
-
     using Blorc.OpenIdConnect.Models;
     using Blorc.Services;
 
@@ -59,7 +56,7 @@
         public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
         {
             var userType = typeof(TUser);
-
+            
             if (reload)
             {
                 _usersCache.Remove(userType, out _);
@@ -94,7 +91,7 @@
                 var userJsonElement = await GetUserJsonElementAsync();
                 if (userJsonElement.HasValue)
                 {
-                    _user = new User(userJsonElement.Value);
+                    _user = new LegacyUser(userJsonElement.Value);
                 }
             }
 

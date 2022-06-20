@@ -1,102 +1,46 @@
 ﻿namespace Blorc.OpenIdConnect
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text.Json;
+    using System.Text.Json.Serialization;
 
-    [ObsoleteEx(Message = "This will be removed in favor of custom user model", RemoveInVersion = "2.0.0")]
-    public class User : IUser
+    public class User<TProfile> : IHasRoles where TProfile : Profile
     {
-        private readonly JsonElement _jsonElement;
-
-        private Profile _profile;
-
-        public User(JsonElement jsonElement)
-        {
-            _jsonElement = jsonElement;
-        }
-
+        [JsonPropertyName("access_token")]
         public string AccessToken
         {
-            get
-            {
-                if (_jsonElement.TryGetProperty("access_token", out var value))
-                {
-                    return value.GetString();
-                }
-
-                return string.Empty;
-            }
+            get;
+            set;
         }
 
+        [JsonPropertyName("expires_at")]
         public long ExpiresAt
         {
-            get
-            {
-                if (_jsonElement.TryGetProperty("expires_at", out var value))
-                {
-                    return value.GetInt64();
-                }
-
-                return 0;
-            }
+            get;
+            set;
         }
 
-        public JsonElement JsonElement => _jsonElement;
-
-        public IProfile Profile
+        [JsonPropertyName("profile")]
+        public TProfile Profile
         {
-            get
-            {
-                if (_profile is null)
-                {
-                    if (_jsonElement.TryGetProperty("profile", out var value))
-                    {
-                        _profile = new Profile(value);
-                    }
-                }
-
-                return _profile;
-            }
+            get;
+            set;
         }
 
+        [JsonPropertyName("session_state")]
         public string SessionState
         {
-            get
-            {
-                if (_jsonElement.TryGetProperty("session_state", out var value))
-                {
-                    return value.GetString();
-                }
-
-                return string.Empty;
-            }
+            get;
+            set;
         }
 
+        [JsonPropertyName("token_type")]
         public string TokenType
         {
-            get
-            {
-                if (_jsonElement.TryGetProperty("token_type", out var value))
-                {
-                    return value.GetString();
-                }
-
-                return string.Empty;
-            }
+            get;
+            set;
         }
 
-        [ObsoleteEx(ReplacementTypeOrMember = $"{nameof(HasRolesExtensions.IsInRole)}", RemoveInVersion = "2.0.0")]
-        public bool IsInRole(string role)
-        {
-            if (Profile?.Roles is null)
-            {
-                return false;
-            }
-
-            return Profile.Roles.Contains(role);
-        }
-
+        [JsonIgnore]
         public IEnumerable<string> Roles
         {
             get
