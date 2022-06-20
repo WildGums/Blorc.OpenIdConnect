@@ -1,8 +1,9 @@
 ﻿namespace Blorc.OpenIdConnect.DemoApp.Models
 {
+    using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
-    public class User : IHasRoles
+    public class User<TProfile> : IHasRoles where TProfile : Profile
     {
         [JsonPropertyName("access_token")]
         public string AccessToken
@@ -19,7 +20,7 @@
         }
 
         [JsonPropertyName("profile")]
-        public Profile Profile
+        public TProfile Profile
         {
             get;
             set;

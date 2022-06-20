@@ -2,7 +2,7 @@
 {
     using System.Text.Json.Serialization;
 
-    public class Profile 
+    public class Profile
     {
         [JsonPropertyName("email")]
         public string Email
