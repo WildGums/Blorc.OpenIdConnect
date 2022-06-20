@@ -22,8 +22,6 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private IUser _user;
-
         private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
@@ -75,39 +73,6 @@
             }
 
             return default;
-        }
-
-        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync generic version to use a custom user model", RemoveInVersion = "2.0.0")]
-        public async Task<IUser> GetUserAsync(bool reload = true)
-        {
-            if (!reload && _user is not null)
-            {
-                return _user;
-            }
-
-            if (reload)
-            {
-                _user = null;
-                var userJsonElement = await GetUserJsonElementAsync();
-                if (userJsonElement.HasValue)
-                {
-                    _user = new LegacyUser(userJsonElement.Value);
-                }
-            }
-
-            return _user;
-        }
-
-        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync generic version to use a custom user model", RemoveInVersion = "2.0.0")]
-        public async Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
-        {
-            var authenticationState = await authenticationStateTask;
-            if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
-            {
-                return null;
-            }
-
-            return await GetUserAsync();
         }
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, object>>> configurationResolver)

@@ -11,7 +11,6 @@
     {
         public static void AddBlorcOpenIdConnect(this IServiceCollection services, Action<OidcProviderOptions> configure = null)
         {
-            services.AddTransient<IHttpClient, TokenBasedSecuredHttpClient>();
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
             services.AddScoped<AccessTokenDelegatingHandler>();

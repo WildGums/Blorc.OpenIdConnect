@@ -16,7 +16,7 @@
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var user = await _userManager.GetUserAsync();
+            var user = await _userManager.GetUserAsync<User<Profile>>();
             if (user is not null)
             {
                 request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", user.AccessToken);
