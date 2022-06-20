@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Blorc.OpenIdConnect.DemoApp\Blorc.OpenIdConnect.DemoApp.csproj" />
     <ProjectReference Include="..\Blorc.OpenIdConnect\Blorc.OpenIdConnect.csproj" />
   </ItemGroup>
 
