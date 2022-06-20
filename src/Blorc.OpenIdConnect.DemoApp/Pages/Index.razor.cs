@@ -17,10 +17,10 @@
                 return;
             }
 
-            User = await UserManager.GetUserAsync<User>();
+            User = await UserManager.GetUserAsync<User<Profile>>();
         }
 
-        public User User { get; set; }
+        public User<Profile> User { get; set; }
 
         private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
         {
