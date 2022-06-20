@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using Blorc.OpenIdConnect.Models;
     using Blorc.Services;
 
     using Microsoft.AspNetCore.Components;
