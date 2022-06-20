@@ -79,7 +79,7 @@
             return default;
         }
 
-        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync")]
+        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync generic version to use a custom user model", RemoveInVersion = "2.0.0")]
         public async Task<IUser> GetUserAsync(bool reload = true)
         {
             if (!reload && _user is not null)
@@ -100,6 +100,7 @@
             return _user;
         }
 
+        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync generic version to use a custom user model", RemoveInVersion = "2.0.0")]
         public async Task<IUser> GetUserAsync(Task<AuthenticationState> authenticationStateTask)
         {
             var authenticationState = await authenticationStateTask;

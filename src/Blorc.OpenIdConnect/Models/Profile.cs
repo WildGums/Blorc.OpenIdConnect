@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Text.Json;
 
+    [ObsoleteEx(Message = "This will be removed in favor of custom user model", RemoveInVersion = "2.0.0")]
     public class Profile : IProfile
     {
         private readonly JsonElement _jsonElement;
