@@ -59,21 +59,22 @@
         public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
         {
             var userType = typeof(TUser);
+
             if (reload)
             {
                 _usersCache.Remove(userType, out _);
-                var userJsonElement = await GetUserJsonElementAsync();
-                if (userJsonElement.HasValue)
-                {
-                    var user = userJsonElement.Value.ToObject<TUser>(options);
-                    _usersCache[userType] = user;
-                    return user;
-                }
             }
-
-            if (!reload && _usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
+            else if (_usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
             {
                 return cacheUser;
+            }
+
+            var userJsonElement = await GetUserJsonElementAsync();
+            if (userJsonElement.HasValue)
+            {
+                var user = userJsonElement.Value.ToObject<TUser>(options);
+                _usersCache[userType] = user;
+                return user;
             }
 
             return default;
