@@ -40,6 +40,7 @@
             set;
         }
 
+        [JsonIgnore]
         public IEnumerable<string> Roles
         {
             get
