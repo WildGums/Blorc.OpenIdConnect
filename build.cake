@@ -25,8 +25,6 @@ Parameters["SourceLinkDisabled"] = "true";
 // DEFINE COMPONENTS TO BUILD / PACKAGE
 //=======================================================
 
-Components.Add("Blorc.OpenIdConnect.DemoApp");
-
 Components.Add("Blorc.OpenIdConnect");
 
 //GitHubPages.Add(string.Format("{0}.Example", GetBuildServerVariable("SolutionName")));

@@ -2,8 +2,6 @@
 {
     using System;
 
-    using Blorc.OpenIdConnect.Models;
-
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.Extensions.DependencyInjection;
 
