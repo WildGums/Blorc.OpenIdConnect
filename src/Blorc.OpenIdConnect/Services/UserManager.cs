@@ -4,6 +4,7 @@
     using System.Buffers;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Text.Json;
     using System.Threading.Tasks;
 
@@ -58,26 +59,27 @@
         public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
         {
             var userType = typeof(TUser);
-            if (!reload && _usersCache.TryGetValue(userType,  out var value) && value is TUser user)
-            {
-                return user;
-            }
-
             if (reload)
             {
                 _usersCache.Remove(userType, out _);
                 var userJsonElement = await GetUserJsonElementAsync();
                 if (userJsonElement.HasValue)
                 {
-                    user = userJsonElement.Value.ToObject<TUser>(options);
+                    var user = userJsonElement.Value.ToObject<TUser>(options);
                     _usersCache[userType] = user;
                     return user;
                 }
             }
 
+            if (!reload && _usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
+            {
+                return cacheUser;
+            }
+
             return default;
         }
 
+        [ObsoleteEx(ReplacementTypeOrMember = "GetUserAsync")]
         public async Task<IUser> GetUserAsync(bool reload = true)
         {
             if (!reload && _user is not null)
