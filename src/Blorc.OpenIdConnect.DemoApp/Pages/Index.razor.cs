@@ -1,7 +1,7 @@
 ﻿namespace Blorc.OpenIdConnect.DemoApp.Pages
 {
     using System.Threading.Tasks;
-    using Blorc.OpenIdConnect.DemoApp.Models;
+    using Blorc.OpenIdConnect.DemoApp;
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Web;
 

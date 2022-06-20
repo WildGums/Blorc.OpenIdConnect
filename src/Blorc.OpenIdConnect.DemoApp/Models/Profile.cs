@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.DemoApp.Models
+﻿namespace Blorc.OpenIdConnect.DemoApp
 {
     using System.Text.Json.Serialization;
 

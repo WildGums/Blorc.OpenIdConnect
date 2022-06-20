@@ -3,7 +3,7 @@
 using System;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Blorc.OpenIdConnect.DemoApp.Models;
+using Blorc.OpenIdConnect.DemoApp;
 using Blorc.OpenIdConnect.Models;
 using Blorc.Services;
 using Microsoft.AspNetCore.Components;
