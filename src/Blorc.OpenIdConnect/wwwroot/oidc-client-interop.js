@@ -23,7 +23,7 @@
                     config.silent_redirect_uri += "/_content/Blorc.OpenIdConnect/silent-refresh.html";
                 }
 
-                this.userManager = new UserManager(config);
+                this.userManager = new oidc.UserManager(config);
                 if (config.automaticSilentRenew) {
                     var self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
