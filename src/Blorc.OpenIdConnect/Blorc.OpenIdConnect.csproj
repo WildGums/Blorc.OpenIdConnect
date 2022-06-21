@@ -17,7 +17,7 @@
     <!-- SonarQube requires a project guid -->
     <ProjectGuid>E68BDD6F-F81B-4B99-A955-E5868F86227D</ProjectGuid>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <PackageReference Include="Blorc.Core" Version="1.0.0-alpha0670" />
     <PackageReference Include="Fody" Version="6.6.3">
@@ -31,7 +31,12 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
   </ItemGroup>
-    
+
+  <ItemGroup>
+    <Content Remove="libman.json" />
+    <None Include="libman.json" />
+  </ItemGroup>
+
   <ItemGroup>
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
