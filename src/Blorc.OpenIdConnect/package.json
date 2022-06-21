@@ -1,0 +1,10 @@
+{
+  "version": "1.0.0",
+  "name": "Blorc.OpenIdConnect",
+  "private": true,
+  "devDependencies": {
+  },
+  "dependencies": {
+    "oidc-client-ts": "2.0.5"
+  }
+}
