@@ -10,6 +10,7 @@
                                     || type == typeof(decimal)
                                     || type == typeof(string)
                                     || type == typeof(Guid)
+                                    || type == typeof(Uri)
                                     || type == typeof(TimeSpan)
                                     || type == typeof(DateTime);
         }
