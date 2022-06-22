@@ -13,7 +13,7 @@
 
     public class UserManager : IUserManager
     {
-        private static readonly string[] ExpectedParameters = { "state", "session_state", "access_token", "id_token", "token_type" };
+        private static readonly string[] ExpectedParameters = { "state", "session_state", "code", "access_token", "id_token", "token_type" };
 
         private readonly IConfigurationService _configurationService;
 
@@ -42,7 +42,7 @@
         public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
         {
             var authenticationState = await authenticationStateTask;
-            if (authenticationState.User.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
+            if (authenticationState?.User?.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
             {
                 return default;
             }
@@ -103,7 +103,7 @@
             if (await IsAuthenticatedAsync())
             {
                 var absoluteUri = _navigationManager.Uri;
-                if (ExpectedParameters.All(parameter => absoluteUri.Contains($"{parameter}=", StringComparison.InvariantCultureIgnoreCase)) && await IsRedirectedAsync())
+                if (ExpectedParameters.Any(parameter => absoluteUri.Contains($"{parameter}=", StringComparison.InvariantCultureIgnoreCase)) && await IsRedirectedAsync())
                 {
                     var absoluteUrlSplit = absoluteUri.Split('#');
                     var baseUri = absoluteUrlSplit.Length == 2 ? absoluteUrlSplit[0] : _navigationManager.BaseUri;

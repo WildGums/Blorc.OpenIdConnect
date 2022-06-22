@@ -1,9 +1,11 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System.Security.Claims;
     using System.Text.Json.Serialization;
 
     public class Profile
     {
+        [ClaimType(ClaimTypes.Email)]
         [JsonPropertyName("email")]
         public string Email
         {
@@ -18,6 +20,7 @@
             set;
         }
 
+        [ClaimType(ClaimTypes.Surname)]
         [JsonPropertyName("family_name")]
         public string FamilyName
         {
@@ -25,6 +28,7 @@
             set;
         }
 
+        [ClaimType(ClaimTypes.GivenName)]
         [JsonPropertyName("given_name")]
         public string GivenName
         {
@@ -32,6 +36,7 @@
             set;
         }
 
+        [ClaimType(ClaimTypes.Name)]
         [JsonPropertyName("name")]
         public string Name
         {
@@ -46,6 +51,7 @@
             set;
         }
 
+        [ClaimType(ClaimTypes.Role)]
         [JsonPropertyName("roles")]
         public string[] Roles
         {

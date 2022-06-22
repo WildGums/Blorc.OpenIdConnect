@@ -5,6 +5,7 @@
     using System.Threading.Tasks;
     using Blorc.OpenIdConnect;
     using Blorc.Services;
+    using Catel.Linq;
     using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
     using Moq;

@@ -39,8 +39,9 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <Target Name="PreBuild - Copy oidc-client-ts" AfterTargets="NpmInstall" Condition="'$(Configuration)'=='Debug'">
+  <Target Name="PreBuild - Copy oidc-client-ts" AfterTargets="NpmInstall">
     <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.min.js&quot; &quot;$(ProjectDir)wwwroot\oidc-client.min.js&quot;" />
+    <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.js.map&quot; &quot;$(ProjectDir)wwwroot\oidc-client-ts.js.map&quot;" Condition="'$(Configuration)'=='Debug'" />
   </Target>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
@@ -55,7 +56,7 @@
           <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         </PropertyGroup>
      -->
-    <Exec Command="npm ci"      Condition="'$(RestorePackagesWithLockFile)' == 'true'" />
+    <Exec Command="npm ci" Condition="'$(RestorePackagesWithLockFile)' == 'true'" />
     <Exec Command="npm install" Condition="'$(RestorePackagesWithLockFile)' != 'true'" />
 
     <!-- Write the stamp file, so incremental builds work -->
