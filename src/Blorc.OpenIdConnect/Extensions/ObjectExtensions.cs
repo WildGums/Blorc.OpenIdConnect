@@ -25,11 +25,11 @@
 
                 yield return new Claim(claimType, instance?.ToString() ?? string.Empty);
             }
-            else  if (instanceType.IsCollection() && instance is IEnumerable items)
+            else if (instanceType.IsCollection() && instance is IEnumerable items)
             {
                 foreach (var item in items)
                 {
-                    foreach (var claim in item.AsClaims())
+                    foreach (var claim in item.AsClaims(claimType))
                     {
                         yield return claim;
                     }
@@ -40,37 +40,21 @@
                 var propertyInfos = instanceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertyInfos)
                 {
+                    if (propertyInfo.GetMethod is null)
+                    {
+                        continue;
+                    }
+
                     var propertyValue = propertyInfo.GetValue(instance);
                     if (propertyValue is null)
                     {
                         continue;
                     }
 
-                    var propertyValueType = propertyValue.GetType();
                     var claimTypeAttribute = propertyInfo.GetCustomAttribute<ClaimTypeAttribute>();
-                    if (claimTypeAttribute is not null)
+                    foreach (var claim in propertyValue.AsClaims(claimTypeAttribute?.ClaimType ?? string.Empty))
                     {
-                        if (propertyValueType.IsPrimitiveEx())
-                        {
-                            yield return new Claim(claimTypeAttribute.ClaimType, propertyValue?.ToString() ?? string.Empty);
-                        }
-                        else if (propertyValueType.IsCollection() && propertyValue is IEnumerable valueItems)
-                        {
-                            foreach (var item in valueItems)
-                            {
-                                foreach (var claim in item.AsClaims(claimTypeAttribute.ClaimType))
-                                {
-                                    yield return claim;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        foreach (var claim in propertyValue.AsClaims())
-                        {
-                            yield return claim;
-                        }
+                        yield return claim;
                     }
                 }
             }
