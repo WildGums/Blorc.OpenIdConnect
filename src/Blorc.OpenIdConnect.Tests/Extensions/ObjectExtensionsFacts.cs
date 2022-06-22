@@ -35,9 +35,10 @@
                 var claims = user.AsClaims().Where(claim => claim.Type == ClaimTypes.Role).ToList();
 
                 Assert.IsNotEmpty(claims);
-                foreach (var claim in claims)
+                foreach (var role in user.Profile.Roles)
                 {
-                    Assert.Contains(claim.Value, user.Profile.Roles);
+                    var claim = claims.FirstOrDefault(c => c.Value == role);
+                    Assert.IsNotNull(claim);
                 }
             }
 
