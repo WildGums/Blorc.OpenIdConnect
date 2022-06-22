@@ -41,7 +41,6 @@
 
   <Target Name="PreBuild - Copy oidc-client-ts" AfterTargets="NpmInstall">
     <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.min.js&quot; &quot;$(ProjectDir)wwwroot\oidc-client.min.js&quot;" />
-    <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.js.map&quot; &quot;$(ProjectDir)wwwroot\oidc-client-ts.js.map&quot;" Condition="'$(Configuration)'=='Debug'" />
   </Target>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />

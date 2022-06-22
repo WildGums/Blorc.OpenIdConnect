@@ -69,7 +69,7 @@
 
                 var claims = users.AsClaims().ToList();
 
-                Assert.AreEqual(10, claims.Count);
+                Assert.AreEqual(12, claims.Count);
             }
 
             [Test]
@@ -109,7 +109,7 @@
 
                 var claims = complexType.AsClaims().ToList();
 
-                Assert.AreEqual(14, claims.Count);
+                Assert.AreEqual(16, claims.Count);
             }
 
             public class ComplexType
