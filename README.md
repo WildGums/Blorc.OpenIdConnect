@@ -62,7 +62,7 @@ The right way to use OpenIdConnect on Blazor.
         
 5) Add a configuration file `wwwroot\appsettings.json`
 
-> NOTE: The Authorization Code Flow with Proof Key for Code Exchange (PKCE) to the Authorization Code flow to prevent CSRF and authorization code injection attacks and it is the only supported method. Use the configuration values as shown below.
+> NOTE: The Authorization Code Flow with Proof Key for Code Exchange (PKCE) is an authorization code flow to prevent CSRF and authorization code injection attacks and it is the only supported method. Use the configuration values as shown below.
         
         {
           "IdentityServer": {
