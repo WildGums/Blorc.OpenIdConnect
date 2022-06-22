@@ -46,7 +46,7 @@
             [Test]
             public void Collects_Claims_From_Each_Item_Of_A_Collection()
             {
-                List<User<Profile>> users = new List<User<Profile>>();
+                var users = new List<User<Profile>>();
                 var user = new User<Profile>
                 {
                     AccessToken = "1234567890",
