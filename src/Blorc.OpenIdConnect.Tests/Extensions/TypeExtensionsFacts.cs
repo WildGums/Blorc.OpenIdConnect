@@ -1,6 +1,7 @@
-﻿namespace Blorc.OpenIdConnect.Tests.Services
+﻿namespace Blorc.OpenIdConnect.Tests
 {
     using System;
+    using Blorc.OpenIdConnect.Tests.Services;
     using NUnit.Framework;
 
     [TestFixture]

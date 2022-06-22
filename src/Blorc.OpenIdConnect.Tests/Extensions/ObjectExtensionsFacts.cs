@@ -1,4 +1,4 @@
-﻿namespace Blorc.OpenIdConnect.Tests.Services
+﻿namespace Blorc.OpenIdConnect.Tests
 {
     using System;
     using System.Collections.Generic;
