@@ -31,7 +31,6 @@ The right way to use OpenIdConnect on Blazor.
                 </Router>
         </CascadingAuthenticationState>
         
-
 4) Add the required service and update Program.cs file as follow:
 
         // Add access token delegating handler to registered http clients
@@ -79,3 +78,7 @@ The right way to use OpenIdConnect on Blazor.
           }
         }
 
+6) Use the following guides as reference for identity server configuration.  
+
+- Authorization Code flow with PKCE (Keycloak) - https://www.appsdeveloperblog.com/pkce-verification-in-authorization-code-grant/
+- PKCE Verification in Authorization Code Grant (Auth0) - https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-proof-key-for-code-exchange-pkce
