@@ -76,34 +76,35 @@
             [Test]
             public void Collects_Claims_From_Complex_Type()
             {
+                var user = new User<Profile>
+                {
+                    AccessToken = "1234567890",
+                    Profile = new Profile
+                    {
+                        Roles = new[]
+                                                     {
+                                                         "Administrator", "System Administrator"
+                                                     },
+                        Email = "jane.doe@blorc.com",
+                        EmailVerified = true,
+                        FamilyName = "Doe",
+                        GivenName = "Jane",
+                        Name = "Jane Doe",
+                        PreferredUsername = "jane.doe"
+                    },
+                    ExpiresAt = 10,
+                    SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    TokenType = "Bearer"
+                };
+
                 var complexType = new ComplexType
                 {
                     Uri = "http://localhost",
                     DateTime = DateTime.Now,
                     Users = new List<User<Profile>>(),
-                    Ints = new List<int> { 1, 2 }
+                    Ints = new List<int> { 1, 2 },
+                    User = user
                 };
-
-                var user = new User<Profile>
-                           {
-                               AccessToken = "1234567890",
-                               Profile = new Profile
-                                         {
-                                             Roles = new[]
-                                                     {
-                                                         "Administrator", "System Administrator"
-                                                     },
-                                             Email = "jane.doe@blorc.com",
-                                             EmailVerified = true,
-                                             FamilyName = "Doe",
-                                             GivenName = "Jane",
-                                             Name = "Jane Doe",
-                                             PreferredUsername = "jane.doe"
-                                         },
-                               ExpiresAt = 10,
-                               SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
-                               TokenType = "Bearer"
-                           };
 
                 complexType.Users.Add(user);
                 complexType.Users.Add(user);
@@ -125,6 +126,8 @@
                 public List<int> Ints { get; set; }
 
                 public List<User<Profile>> Users { get; set; }
+
+                public User<Profile> User { private get; set; }
             }
         }
     }

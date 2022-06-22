@@ -40,7 +40,7 @@
                 var propertyInfos = instanceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
                 foreach (var propertyInfo in propertyInfos)
                 {
-                    if (propertyInfo.GetMethod is null)
+                    if (!(propertyInfo.GetMethod?.IsPublic ?? false))
                     {
                         continue;
                     }
