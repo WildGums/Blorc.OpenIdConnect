@@ -13,7 +13,7 @@
         {
             var keycloakService = new KeycloakService("http://localhost:5002/", "admin", "Password123!");
 
-            await keycloakService.CreateClientAsync(Clients.DemoApp, Clients.DemoApp, ingressUrl: "http://localhost:5001/");
+            await keycloakService.CreateClientAsync(Clients.DemoApp, Clients.DemoApp, ingressUrl: "http://localhost:5001/", pkce: true);
 
             var audiences = Scopes.From(Audiences.DemoApi);
             foreach (var audience in audiences)

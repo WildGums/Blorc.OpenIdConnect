@@ -43,8 +43,9 @@
         /// <param name="roleMappingClientName"></param>
         /// <param name="realm"></param>
         /// <param name="ingressUrl"></param>
+        /// <param name="pkce"></param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        public async Task CreateClientAsync(string clientName, string roleMappingClientName = "", string realm = "master", string ingressUrl = "")
+        public async Task CreateClientAsync(string clientName, string roleMappingClientName = "", string realm = "master", string ingressUrl = "", bool pkce = false)
         {
             FlurlHttp.ConfigureClient(_url, c => { c.Settings.HttpClientFactory = new UntrustedCertClientFactory(); });
 
@@ -54,8 +55,15 @@
             {
                 Id = clientName,
                 Name = clientName,
-                DirectAccessGrantsEnabled = true,
+                DirectAccessGrantsEnabled = !pkce,
+                PublicClient = pkce
             };
+
+            if (pkce)
+            {
+                client.Attributes = new Dictionary<string, object>();
+                client.Attributes["pkce.code.challenge.method"] = "S256";
+            }
 
             if (!string.IsNullOrEmpty(ingressUrl))
             {
@@ -70,12 +78,12 @@
                                         };
 
                 client.StandardFlowEnabled = true;
-                client.ImplicitFlowEnabled = true;
+                client.ImplicitFlowEnabled = pkce;
             }
             else
             {
                 client.StandardFlowEnabled = false;
-                client.ImplicitFlowEnabled = false;
+                client.ImplicitFlowEnabled = pkce;
             }
 
             if (!string.IsNullOrWhiteSpace(roleMappingClientName))
@@ -124,6 +132,12 @@
                 storedClient.StandardFlowEnabled = client.StandardFlowEnabled;
                 storedClient.DirectAccessGrantsEnabled = client.DirectAccessGrantsEnabled;
                 storedClient.ProtocolMappers = client.ProtocolMappers;
+                storedClient.PublicClient = client.PublicClient;
+
+                if (pkce)
+                {
+                    storedClient.Attributes["pkce.code.challenge.method"] = client.Attributes["pkce.code.challenge.method"];
+                }
 
                 await keycloakClient.UpdateClientAsync(realm, storedClient.Id, storedClient);
             }
