@@ -46,7 +46,7 @@
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
 
-  <Target Name="NpmInstall" Inputs="package.json" Outputs="node_modules/.install-stamp" BeforeTargets="BeforeBuild">
+  <Target Name="NpmInstall" Inputs="package.json" Outputs="node_modules/.install-stamp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)'=='Debug'">
     <!--
         Use npm install or npm ci depending on RestorePackagesWithLockFile value.
         Uncomment the following lines if you want to use this feature:
