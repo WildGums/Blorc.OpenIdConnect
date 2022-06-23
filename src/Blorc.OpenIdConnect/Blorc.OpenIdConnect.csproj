@@ -39,12 +39,14 @@
     <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
-  <Target Name="PreBuild - Copy oidc-client-ts" AfterTargets="NpmInstall">
-    <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.min.js&quot; &quot;$(ProjectDir)wwwroot\oidc-client.min.js&quot;" />
-  </Target>
-
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.explicit.props')" />
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.shared.mat.props')" />
+
+  <!-- Note: only copy files in debug mode, we don't want automatic actions in release mode / during publishing -->
+  
+  <Target Name="PreBuild - Copy oidc-client-ts" AfterTargets="NpmInstall" Condition="'$(Configuration)'=='Debug'">
+    <Exec Command="copy /y &quot;$(ProjectDir)node_modules\oidc-client-ts\dist\browser\oidc-client-ts.min.js&quot; &quot;$(ProjectDir)wwwroot\oidc-client.min.js&quot;" />
+  </Target>
 
   <Target Name="NpmInstall" Inputs="package.json" Outputs="node_modules/.install-stamp" BeforeTargets="BeforeBuild" Condition="'$(Configuration)'=='Debug'">
     <!--
