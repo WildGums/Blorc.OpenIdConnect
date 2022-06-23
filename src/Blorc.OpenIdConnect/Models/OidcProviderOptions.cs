@@ -27,5 +27,11 @@
 
         [JsonPropertyName("silent_redirect_uri")]
         public string SilentRedirectUri { get; set; }
+
+        [JsonPropertyName("filterProtocolClaims")]
+        public bool FilterProtocolClaims { get; set; }
+
+        [JsonPropertyName("loadUserInfo")]
+        public bool LoadUserInfo { get; set; }
     }
 }

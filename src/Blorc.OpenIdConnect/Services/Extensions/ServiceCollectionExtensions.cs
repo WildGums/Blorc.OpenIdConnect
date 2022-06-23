@@ -16,7 +16,13 @@
             if (configure is not null)
             {
                 var options = new OidcProviderOptions();
+
                 configure(options);
+                if (options.ResponseType != "code")
+                {
+                    throw new NotSupportedException("Only the authorization code flow with PKCE is supported. The expected value for ResponseType is 'code'.");
+                }
+
                 services.AddSingleton(options);
             }
         }

@@ -35,6 +35,10 @@ builder.Services.AddBlorcOpenIdConnect(
         options.RedirectUri = baseUrl;
         options.PostLogoutRedirectUri = baseUrl;
         options.AutomaticSilentRenew = true;
+        options.ResponseType = "code";
+        options.FilterProtocolClaims = true;
+        options.LoadUserInfo = true;
+        options.Scope = "openid profile demo-api";
     });
 
 var webAssemblyHost = builder.Build();
