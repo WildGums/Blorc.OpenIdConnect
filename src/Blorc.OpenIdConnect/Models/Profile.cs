@@ -44,6 +44,7 @@
             set;
         }
 
+        [ClaimType("preferred_username")]
         [JsonPropertyName("preferred_username")]
         public string PreferredUsername
         {
