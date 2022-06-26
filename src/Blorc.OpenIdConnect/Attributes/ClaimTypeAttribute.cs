@@ -2,6 +2,7 @@
 {
     using System;
 
+    [AttributeUsage(AttributeTargets.Property)]
     public class ClaimTypeAttribute : Attribute
     {
         public ClaimTypeAttribute(string claimType)
