@@ -16,7 +16,7 @@
 
                 if (config.automaticSilentRenew && (config.silent_redirect_uri === null || config.silent_redirect_uri === "")) {
                     config.silent_redirect_uri = window.location.protocol + "//" + window.location.hostname;
-                    if (window.location.port !== 80 && window.location.port !== 443) {
+                    if (window.location.port != 80 && window.location.port != 443) {
                         config.silent_redirect_uri += ":" + window.location.port;
                     }
 
