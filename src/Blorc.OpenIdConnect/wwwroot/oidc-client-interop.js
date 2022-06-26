@@ -25,7 +25,7 @@
 
                 this.userManager = new oidc.UserManager(config);
                 if (config.automaticSilentRenew) {
-                    var self = this;
+                    let self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
                         self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
                             .then(function(u) {
@@ -46,7 +46,7 @@
                     return true;
                 }
 
-                var self = this;
+                let self = this;
                 return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
@@ -70,7 +70,7 @@
                     return this.User;
                 }
 
-                var self = this;
+                let self = this;
                 return new Promise((resolve, _reject) => {
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
@@ -89,7 +89,7 @@
                     return false;
                 }
 
-                var self = this;
+                let self = this;
                 return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirect();
                     resolve(true);
@@ -101,7 +101,7 @@
                     return false;
                 }
 
-                var self = this;
+                let self = this;
                 return new Promise((resolve, _reject) => {
                     self.userManager.signoutRedirect();
                     return resolve(true);
