@@ -15,26 +15,23 @@
     {
         private static readonly string[] ExpectedParameters = { "state", "session_state", "code", "access_token", "id_token", "token_type" };
 
-        private readonly IConfigurationService _configurationService;
-
         private readonly IJSRuntime _jsRuntime;
 
         private readonly NavigationManager _navigationManager;
 
         private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
 
-        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService, OidcProviderOptions options)
-            : this(jsRuntime, navigationManager, configurationService)
+        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
+            : this(jsRuntime, navigationManager)
         {
             var serializedOptions = JsonSerializer.Serialize(options);
             Configuration = JsonSerializer.Deserialize<Dictionary<string, object>>(serializedOptions);
         }
 
-        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, IConfigurationService configurationService)
+        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager)
         {
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
-            _configurationService = configurationService;
         }
 
         public Dictionary<string, object> Configuration { get; private set; }
@@ -118,20 +115,6 @@
 
         private async Task InitializeAsync()
         {
-            // TODO: Deprecate this.
-            if (Configuration is null)
-            {
-                var configuration = await _configurationService.GetSectionAsync<Dictionary<string, string>>("identityserver");
-                if (configuration is not null)
-                {
-                    Configuration = new Dictionary<string, object>();
-                    foreach (var pair in configuration)
-                    {
-                        configuration[pair.Key] = pair.Value;
-                    }
-                }
-            }
-
             if (Configuration is not null)
             {
                 await InitializeAsync(() => Task.FromResult(Configuration));
