@@ -10,54 +10,54 @@
     {
         public static IEnumerable<Claim> AsClaims(this object instance, string claimType = null)
         {
-            if (instance is null)
+            if (instance.GetType().IsCollection() && instance is IEnumerable items)
+            {
+                return items.AsClaims(claimType);
+            }
+
+            if (instance.GetType().IsPrimitiveEx())
+            {
+                return instance.EnumClaimsFromPrimitive(claimType);
+            }
+
+            return instance.EnumClaimsFromObjectProperties();
+        }
+
+        private static IEnumerable<Claim> EnumClaimsFromObjectProperties(this object instance)
+        {
+            var propertyInfos = instance.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public);
+            foreach (var propertyInfo in propertyInfos)
+            {
+                if (!(propertyInfo.GetMethod?.IsPublic ?? false))
+                {
+                    continue;
+                }
+
+                var propertyValue = propertyInfo.GetValue(instance);
+                if (propertyValue is null)
+                {
+                    continue;
+                }
+
+                var claimTypeAttribute = propertyInfo.GetCustomAttribute<ClaimTypeAttribute>();
+                foreach (var claim in propertyValue.AsClaims(claimTypeAttribute?.ClaimType ?? string.Empty))
+                {
+                    yield return claim;
+                }
+            }
+        }
+
+        private static IEnumerable<Claim> EnumClaimsFromPrimitive(this object instance, string claimType)
+        {
+            if (string.IsNullOrWhiteSpace(claimType))
             {
                 yield break;
             }
 
-            var instanceType = instance.GetType();
-            if (instanceType.IsPrimitiveEx())
-            {
-                if (string.IsNullOrWhiteSpace(claimType))
-                {
-                    yield break;
-                }
-
-                yield return new Claim(claimType, instance?.ToString() ?? string.Empty);
-            }
-            else if (instanceType.IsCollection() && instance is IEnumerable items)
-            {
-                foreach (var item in items)
-                {
-                    foreach (var claim in item.AsClaims(claimType))
-                    {
-                        yield return claim;
-                    }
-                }
-            }
-            else
-            {
-                var propertyInfos = instanceType.GetProperties(BindingFlags.Instance | BindingFlags.Public);
-                foreach (var propertyInfo in propertyInfos)
-                {
-                    if (!(propertyInfo.GetMethod?.IsPublic ?? false))
-                    {
-                        continue;
-                    }
-
-                    var propertyValue = propertyInfo.GetValue(instance);
-                    if (propertyValue is null)
-                    {
-                        continue;
-                    }
-
-                    var claimTypeAttribute = propertyInfo.GetCustomAttribute<ClaimTypeAttribute>();
-                    foreach (var claim in propertyValue.AsClaims(claimTypeAttribute?.ClaimType ?? string.Empty))
-                    {
-                        yield return claim;
-                    }
-                }
-            }
+            yield return new Claim(claimType, instance?.ToString() ?? string.Empty);
         }
     }
 }
+
+
+
