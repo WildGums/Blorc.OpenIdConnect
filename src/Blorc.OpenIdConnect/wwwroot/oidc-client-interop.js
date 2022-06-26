@@ -1,7 +1,7 @@
 ﻿window.BlorcOidc = {
     Navigation: {
-        IsRedirected: function() {
-            return window.performance.navigation.type === 0;
+        IsRedirected: function () {
+            return performance.getEntriesByType("navigation")[0].type === "navigate";
         }
     },
     Client: {
