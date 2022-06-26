@@ -47,7 +47,7 @@
                 }
 
                 var self = this;
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
                     }).catch(function(e) {
@@ -71,7 +71,7 @@
                 }
 
                 var self = this;
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve, _reject) => {
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
                         resolve(u);
@@ -90,7 +90,7 @@
                 }
 
                 var self = this;
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirect();
                     resolve(true);
                 });
@@ -102,7 +102,7 @@
                 }
 
                 var self = this;
-                return new Promise((resolve, reject) => {
+                return new Promise((resolve, _reject) => {
                     self.userManager.signoutRedirect();
                     return resolve(true);
                 });
