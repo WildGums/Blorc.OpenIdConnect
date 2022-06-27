@@ -104,7 +104,7 @@
                 let self = this;
                 return new Promise((resolve, _reject) => {
                     self.userManager.signoutRedirect();
-                    return resolve(true);
+                    resolve(true);
                 });
             },
             SetCurrentUser: function(u) {
