@@ -70,7 +70,7 @@
 
                 var claims = users.AsClaims().ToList();
 
-                Assert.AreEqual(12, claims.Count);
+                Assert.AreEqual(14, claims.Count);
             }
 
             [Test]
@@ -82,9 +82,9 @@
                     Profile = new Profile
                     {
                         Roles = new[]
-                                                     {
-                                                         "Administrator", "System Administrator"
-                                                     },
+                        {
+                            "Administrator", "System Administrator"
+                        },
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -108,10 +108,11 @@
 
                 complexType.Users.Add(user);
                 complexType.Users.Add(user);
+                complexType.Users.Add(null);
 
                 var claims = complexType.AsClaims().ToList();
 
-                Assert.AreEqual(16, claims.Count);
+                Assert.AreEqual(18, claims.Count);
             }
 
             public class ComplexType

@@ -33,7 +33,7 @@
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost");
 
-                var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, new Mock<IConfigurationService>().Object, oidcProviderOptions);
+                var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 
@@ -76,7 +76,7 @@
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost");
 
-                var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, new Mock<IConfigurationService>().Object, oidcProviderOptions);
+                var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 

@@ -1,7 +1,7 @@
 ﻿window.BlorcOidc = {
     Navigation: {
-        IsRedirected: function() {
-            return window.performance.navigation.type === 0;
+        IsRedirected: function () {
+            return performance.getEntriesByType("navigation")[0].type === "navigate";
         }
     },
     Client: {
@@ -16,7 +16,7 @@
 
                 if (config.automaticSilentRenew && (config.silent_redirect_uri === null || config.silent_redirect_uri === "")) {
                     config.silent_redirect_uri = window.location.protocol + "//" + window.location.hostname;
-                    if (window.location.port !== 80 && window.location.port !== 443) {
+                    if (window.location.port != 80 && window.location.port != 443) {
                         config.silent_redirect_uri += ":" + window.location.port;
                     }
 
@@ -25,7 +25,7 @@
 
                 this.userManager = new oidc.UserManager(config);
                 if (config.automaticSilentRenew) {
-                    var self = this;
+                    let self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
                         self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
                             .then(function(u) {
@@ -46,8 +46,8 @@
                     return true;
                 }
 
-                var self = this;
-                return new Promise((resolve, reject) => {
+                let self = this;
+                return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
                     }).catch(function(e) {
@@ -70,8 +70,8 @@
                     return this.User;
                 }
 
-                var self = this;
-                return new Promise((resolve, reject) => {
+                let self = this;
+                return new Promise((resolve, _reject) => {
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
                         resolve(u);
@@ -89,8 +89,8 @@
                     return false;
                 }
 
-                var self = this;
-                return new Promise((resolve, reject) => {
+                let self = this;
+                return new Promise((resolve, _reject) => {
                     self.userManager.signinRedirect();
                     resolve(true);
                 });
@@ -101,10 +101,10 @@
                     return false;
                 }
 
-                var self = this;
-                return new Promise((resolve, reject) => {
+                let self = this;
+                return new Promise((resolve, _reject) => {
                     self.userManager.signoutRedirect();
-                    return resolve(true);
+                    resolve(true);
                 });
             },
             SetCurrentUser: function(u) {

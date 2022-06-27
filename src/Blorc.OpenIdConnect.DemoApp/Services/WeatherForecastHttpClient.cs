@@ -25,6 +25,7 @@
             }
             catch
             {
+                // ignored
             }
 
             return forecasts;
