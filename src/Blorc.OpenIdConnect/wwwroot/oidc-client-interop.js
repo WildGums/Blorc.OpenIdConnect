@@ -16,8 +16,10 @@
 
                 if (config.automaticSilentRenew && (config.silent_redirect_uri === null || config.silent_redirect_uri === "")) {
                     config.silent_redirect_uri = window.location.protocol + "//" + window.location.hostname;
-                    if (window.location.port != 80 && window.location.port != 443) {
-                        config.silent_redirect_uri += ":" + window.location.port;
+                    let port = Number(window.location.port);
+                    let portsToIgnore = [NaN, 0, 80, 443];
+                    if (!portsToIgnore.includes(port)) {
+                        config.silent_redirect_uri += ":" + port;
                     }
 
                     config.silent_redirect_uri += "/_content/Blorc.OpenIdConnect/silent-refresh.html";
