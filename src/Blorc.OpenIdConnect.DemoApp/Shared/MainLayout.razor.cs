@@ -19,7 +19,7 @@
         {
             if (UserManager is not null)
             {
-                User = await UserManager.GetUserAsync<User<Profile>>(AuthenticationStateTask);
+                User = await UserManager.GetUserAsync(AuthenticationStateTask);
             }
         }
     }
