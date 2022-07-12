@@ -4,6 +4,13 @@
 
     public class OidcProviderOptions
     {
+        public OidcProviderOptions()
+        {
+            // Default values according to docs
+            CheckSessionIntervalInSeconds = 2;
+            AccessTokenExpiringNotificationTimeInSeconds = 60;
+        }
+
         [JsonPropertyName("authority")]
         public string Authority { get; set; }
 
@@ -33,5 +40,11 @@
 
         [JsonPropertyName("loadUserInfo")]
         public bool LoadUserInfo { get; set; }
+
+        [JsonPropertyName("checkSessionIntervalInSeconds")]
+        public int CheckSessionIntervalInSeconds { get; set; }
+
+        [JsonPropertyName("accessTokenExpiringNotificationTimeInSeconds")]
+        public int AccessTokenExpiringNotificationTimeInSeconds { get; set; }
     }
 }

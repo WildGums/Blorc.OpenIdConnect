@@ -26,6 +26,7 @@
                 }
 
                 this.userManager = new oidc.UserManager(config);
+
                 if (config.automaticSilentRenew) {
                     let self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
