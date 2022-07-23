@@ -5,7 +5,7 @@
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Web;
 
-    public partial class Index
+    public sealed partial class Index : IDisposable
     {
         [Inject]
         public IUserManager UserManager { get; set; }
@@ -18,7 +18,24 @@
             }
 
             User = await UserManager.GetUserAsync<User<Profile>>();
+
+            UserManager.UserActivity += OnUserManagerUserActivity;
+            UserManager.UserInactivity += OnUserManagerUserInactivity;
         }
+
+        private void OnUserManagerUserInactivity(object sender, UserInactivityEventArgs args)
+        {
+            SignoutTimeSpan = args.SignoutTimeSpan;
+            StateHasChanged();
+        }
+
+        private void OnUserManagerUserActivity(object sender, EventArgs e)
+        {
+            SignoutTimeSpan = null;
+            StateHasChanged();
+        }
+
+        public TimeSpan? SignoutTimeSpan { get; set; }
 
         public User<Profile> User { get; set; }
 
@@ -30,6 +47,12 @@
         private async Task OnLogoutButtonClickAsync(MouseEventArgs obj)
         {
             await UserManager.SignoutRedirectAsync();
+        }
+
+        public void Dispose()
+        {
+            UserManager.UserActivity -= OnUserManagerUserActivity;
+            UserManager.UserInactivity -= OnUserManagerUserInactivity;
         }
     }
 }

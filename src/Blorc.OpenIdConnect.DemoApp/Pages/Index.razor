@@ -24,7 +24,16 @@ Welcome to your new app.
             }
         }
         <br/>
+
+        
         <button @onclick="OnLogoutButtonClickAsync">Logout</button>
+
+        @if (SignoutTimeSpan is not null)
+        {
+            <div class="alert alert-danger mt-4" role="alert">
+                The user will be automatically signed out in @SignoutTimeSpan
+            </div>
+        }
     </Authorized>
     <NotAuthorized>
         <button @onclick="OnLoginButtonClickAsync">Login</button>

@@ -9,7 +9,7 @@
             IsInitialized: function() {
                 return this.userManager !== undefined;
             },
-            Initialize: function(config) {
+            Initialize: function (config, userManagerHelper) {
                 if (this.userManager !== undefined) {
                     return;
                 }
@@ -27,15 +27,49 @@
 
                 let self = this;
 
-                if (config.timeForAutomaticLogoutOnUserInactivity > 0) {
-                    var inactivityTimer = setTimeout(trySignoutRedirect, config.timeForAutomaticLogoutOnUserInactivity);
+                if (config.timeForUserInactivityAutomaticLogout > 0) {
+                    var userInactivityLogoutTimer = setTimeout(trySignoutRedirect, config.timeForUserInactivityAutomaticLogout);
 
-                    document.onmousemove = resetInactivityTimer;
-                    document.onkeypress = resetInactivityTimer;
+                    var userInactivityTimer;
+                    if (config.timeForUserInactivityNotification > 0) {
+                        userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
+                    }
 
-                    function resetInactivityTimer() {
-                        clearTimeout(inactivityTimer);
-                        inactivityTimer = setTimeout(trySignoutRedirect, config.timeForAutomaticLogoutOnUserInactivity);
+                    document.addEventListener('mousemove', function (event) { resetInactivityTimers(); });
+                    document.addEventListener('keypress', function (event) { resetInactivityTimers(); });
+
+                    var notifiedByUserInactivity = false;
+
+                    function resetInactivityTimers() {
+                        clearTimeout(userInactivityLogoutTimer);
+                        userInactivityLogoutTimer = setTimeout(trySignoutRedirect, config.timeForUserInactivityAutomaticLogout);
+
+                        if (config.timeForUserInactivityNotification > 0) {
+                            clearTimeout(userInactivityTimer);
+                            userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
+                        }
+
+                        if (notifiedByUserInactivity) {
+                            notifiedByUserInactivity = false;
+                            userManagerHelper.invokeMethodAsync('OnUserActivity');
+                        }
+                    }
+
+                    function notifyUserInactivity() {
+                        if (self.userManager === undefined) {
+                            return;
+                        }
+
+                        self.userManager.getUser().then(function (u) {
+                            if (u !== null) {
+                                if (config.timeForUserInactivityNotification > 0) {
+                                    userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
+                                }
+
+                                notifiedByUserInactivity = true;
+                                userManagerHelper.invokeMethodAsync('OnUserInactivity');
+                            }
+                        });
                     }
 
                     function trySignoutRedirect() {

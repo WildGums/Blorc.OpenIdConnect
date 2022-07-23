@@ -20,6 +20,16 @@
             if (UserManager is not null)
             {
                 User = await UserManager.GetUserAsync(AuthenticationStateTask);
+
+                UserManager.UserActivity += (sender, args) =>
+                {
+                    Console.WriteLine("User activity");
+                };
+                
+                UserManager.UserInactivity += (sender, args) =>
+                {
+                    Console.WriteLine($"User inactivity, will be signed out in {args.SignoutTimeSpan}");
+                };
             }
         }
     }
