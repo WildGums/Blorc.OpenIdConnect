@@ -25,10 +25,35 @@
                     config.silent_redirect_uri += "/_content/Blorc.OpenIdConnect/silent-refresh.html";
                 }
 
+                let self = this;
+
+                if (config.timeForAutomaticLogoutOnUserInactivity > 0) {
+                    var inactivityTimer = setTimeout(trySignoutRedirect, config.timeForAutomaticLogoutOnUserInactivity);
+
+                    document.onmousemove = resetInactivityTimer;
+                    document.onkeypress = resetInactivityTimer;
+
+                    function resetInactivityTimer() {
+                        clearTimeout(inactivityTimer);
+                        inactivityTimer = setTimeout(trySignoutRedirect, config.timeForAutomaticLogoutOnUserInactivity);
+                    }
+
+                    function trySignoutRedirect() {
+                        if (self.userManager === undefined) {
+                            return;
+                        }
+
+                        self.userManager.getUser().then(function (u) {
+                            if (u !== null) {
+                                self.userManager.signoutRedirect();
+                            }
+                        });
+                    }
+                }
+
                 this.userManager = new oidc.UserManager(config);
 
                 if (config.automaticSilentRenew) {
-                    let self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
                         self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
                             .then(function(u) {

@@ -39,6 +39,7 @@ builder.Services.AddBlorcOpenIdConnect(
         options.FilterProtocolClaims = true;
         options.LoadUserInfo = true;
         options.Scope = "openid profile demo-api";
+        options.TimeForAutomaticLogoutOnUserInactivity = 5000;
     });
 
 var webAssemblyHost = builder.Build();
