@@ -28,10 +28,9 @@
                 let self = this;
 
                 if (config.timeForUserInactivityAutomaticLogout > 0) {
-
-                    var inactivityTime = config.timeForUserInactivityAutomaticLogout;
+                    var nextTimerTick = config.timeForUserInactivityAutomaticLogout;
                     if (config.timeForUserInactivityNotification > 0) {
-                        inactivityTime = Math.min(config.timeForUserInactivityAutomaticLogout, config.timeForUserInactivityNotification);
+                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticLogout, config.timeForUserInactivityNotification);
                     }
 
                     var userInactivityTimer;
@@ -46,8 +45,8 @@
                             clearTimeout(userInactivityTimer);
                         }
 
-                        if (inactivityTime > 0) {
-                            userInactivityTimer = setTimeout(notifyUserInactivity, inactivityTime);
+                        if (nextTimerTick > 0) {
+                            userInactivityTimer = setTimeout(notifyUserInactivity, nextTimerTick);
                         }
                     }
 

@@ -9,7 +9,7 @@
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
 
-    public sealed class UserManager : IUserManager
+    public class UserManager : IUserManager
     {
         private readonly OidcProviderOptions _options;
 
@@ -120,7 +120,7 @@
                 }
                 else
                 {
-                    OnUserInactivity(new UserInactivityEventArgs(remainingTime));
+                    RaiseUserInactivity(new UserInactivityEventArgs(remainingTime));
                 }
             }
         }
@@ -130,7 +130,7 @@
         {
             var userActivityEventArgs = new UserActivityEventArgs(_inactivityStartTime ?? DateTime.Now, DateTime.Now);
 
-            OnUserActivity(userActivityEventArgs);
+            RaiseUserActivity(userActivityEventArgs);
 
             if (userActivityEventArgs.ResetTime)
             {
@@ -138,7 +138,7 @@
             }
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             if (_disposed)
             {
@@ -183,12 +183,12 @@
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected");
         }
 
-        private void OnUserInactivity(UserInactivityEventArgs e)
+        protected virtual void RaiseUserInactivity(UserInactivityEventArgs e)
         {
             UserInactivity?.Invoke(this, e);
         }
 
-        private void OnUserActivity(UserActivityEventArgs e)
+        protected virtual void RaiseUserActivity(UserActivityEventArgs e)
         {
             UserActivity?.Invoke(this, e);
         }
