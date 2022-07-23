@@ -29,7 +29,7 @@
             StateHasChanged();
         }
 
-        private void OnUserManagerUserActivity(object sender, EventArgs e)
+        private void OnUserManagerUserActivity(object sender, UserActivityEventArgs args)
         {
             SignoutTimeSpan = null;
             StateHasChanged();

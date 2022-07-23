@@ -28,31 +28,33 @@
                 let self = this;
 
                 if (config.timeForUserInactivityAutomaticLogout > 0) {
-                    var userInactivityLogoutTimer; 
-                    var userInactivityTimer;
 
-                    setupTimers();
-
-                    document.addEventListener('mousemove', function (event) { resetTimers(); });
-                    document.addEventListener('keypress', function (event) { resetTimers(); });
-
-                    function setupTimers() {
-                        clearTimeout(userInactivityLogoutTimer);
-                        userInactivityLogoutTimer = setTimeout(trySignoutRedirect, config.timeForUserInactivityAutomaticLogout);
-                        setupUserInactivityTimer();
+                    var inactivityTime = config.timeForUserInactivityAutomaticLogout;
+                    if (config.timeForUserInactivityNotification > 0) {
+                        inactivityTime = Math.min(config.timeForUserInactivityAutomaticLogout, config.timeForUserInactivityNotification);
                     }
 
-                    function setupUserInactivityTimer() {
-                        if (config.timeForUserInactivityNotification > 0) {
+                    var userInactivityTimer;
+
+                    setupTimer();
+
+                    document.addEventListener('mousemove', function (event) { resetTimer(); });
+                    document.addEventListener('keypress', function (event) { resetTimer(); });
+
+                    function setupTimer() {
+                        if (userInactivityTimer !== null) {
                             clearTimeout(userInactivityTimer);
-                            userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
+                        }
+
+                        if (config.timeForUserInactivityNotification > 0) {
+                            
+                            userInactivityTimer = setTimeout(notifyUserInactivity, inactivityTime);
                         }
                     }
 
                     var notifiedByUserInactivity = false;
-                    function resetTimers() {
-                        setupTimers();
-
+                    function resetTimer() {
+                        setupTimer();
                         if (notifiedByUserInactivity) {
                             notifiedByUserInactivity = false;
                             userManagerHelper.invokeMethodAsync('OnUserActivity');
@@ -66,21 +68,9 @@
 
                         self.userManager.getUser().then(function (u) {
                             if (u !== null) {
-                                setupUserInactivityTimer();
+                                setupTimer();
                                 notifiedByUserInactivity = true;
                                 userManagerHelper.invokeMethodAsync('OnUserInactivity');
-                            }
-                        });
-                    }
-
-                    function trySignoutRedirect() {
-                        if (self.userManager === undefined) {
-                            return;
-                        }
-
-                        self.userManager.getUser().then(function (u) {
-                            if (u !== null) {
-                                self.userManager.signoutRedirect();
                             }
                         });
                     }

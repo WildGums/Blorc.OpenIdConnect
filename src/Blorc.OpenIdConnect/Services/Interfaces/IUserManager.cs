@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
     using Microsoft.AspNetCore.Components.Authorization;
 
-    public interface IUserManager
+    public interface IUserManager : IDisposable
     {
         Task SigninRedirectAsync();
 
@@ -17,8 +17,8 @@
 
         Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null);
 
+        event EventHandler<UserActivityEventArgs> UserActivity;
+        
         event EventHandler<UserInactivityEventArgs> UserInactivity;
-
-        event EventHandler UserActivity;
     }
 }

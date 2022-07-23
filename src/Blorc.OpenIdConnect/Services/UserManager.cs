@@ -5,12 +5,11 @@
     using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
-
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
 
-    public sealed class UserManager : IUserManager, IDisposable
+    public sealed class UserManager : IUserManager
     {
         private readonly OidcProviderOptions _options;
 
@@ -26,11 +25,7 @@
 
         private bool _disposed;
 
-        private TimeSpan? _signoutTimeSpan;
-
-        public event EventHandler UserActivity;
-
-        public event EventHandler<UserInactivityEventArgs> UserInactivity;
+        private DateTime? _inactivityStartTime;
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
             : this(jsRuntime, navigationManager)
@@ -43,6 +38,10 @@
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
         }
+
+        public event EventHandler<UserActivityEventArgs> UserActivity;
+
+        public event EventHandler<UserInactivityEventArgs> UserInactivity;
 
         public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
         {
@@ -108,22 +107,35 @@
         [JSInvokable]
         public void OnUserInactivity()
         {
-            if (_options.TimeForUserInactivityAutomaticLogout > 0 && 
-                _options.TimeForUserInactivityNotification > 0 && 
-                _options.TimeForUserInactivityAutomaticLogout > _options.TimeForUserInactivityNotification)
-            {
-                _signoutTimeSpan ??= TimeSpan.FromMilliseconds(_options.TimeForUserInactivityAutomaticLogout);
-                _signoutTimeSpan -= TimeSpan.FromMilliseconds(_options.TimeForUserInactivityNotification);
+            var now = DateTime.Now;
+            _inactivityStartTime ??= now.Subtract(_options.GetTimeForUserInactivityNotification());
 
-                OnInactivity(new UserInactivityEventArgs(_signoutTimeSpan.Value));
+            if (_inactivityStartTime is not null)
+            {
+                var elapsedTime = now.Subtract(_inactivityStartTime.Value);
+                var remainingTime = _options.GetTimeForUserInactivityAutomaticLogout()  - elapsedTime;
+                if (remainingTime <= TimeSpan.Zero)
+                {
+                    _ = Task.Run(SignoutRedirectAsync);
+                }
+                else
+                {
+                    OnUserInactivity(new UserInactivityEventArgs(remainingTime));
+                }
             }
         }
 
         [JSInvokable]
         public void OnUserActivity()
         {
-            _signoutTimeSpan = null;
-            UserActivity?.Invoke(this, EventArgs.Empty);
+            var userActivityEventArgs = new UserActivityEventArgs(_inactivityStartTime ?? DateTime.Now, DateTime.Now);
+
+            OnUserActivity(userActivityEventArgs);
+
+            if (userActivityEventArgs.ResetTime)
+            {
+                _inactivityStartTime = null;
+            }
         }
 
         public void Dispose()
@@ -171,17 +183,14 @@
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected");
         }
 
-        private void ThrowIfDisposed()
-        {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException(GetType().FullName);
-            }
-        }
-
-        private void OnInactivity(UserInactivityEventArgs e)
+        private void OnUserInactivity(UserInactivityEventArgs e)
         {
             UserInactivity?.Invoke(this, e);
+        }
+
+        private void OnUserActivity(UserActivityEventArgs e)
+        {
+            UserActivity?.Invoke(this, e);
         }
     }
 }
