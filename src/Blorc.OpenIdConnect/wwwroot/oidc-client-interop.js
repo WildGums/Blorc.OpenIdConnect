@@ -28,26 +28,30 @@
                 let self = this;
 
                 if (config.timeForUserInactivityAutomaticLogout > 0) {
-                    var userInactivityLogoutTimer = setTimeout(trySignoutRedirect, config.timeForUserInactivityAutomaticLogout);
-
+                    var userInactivityLogoutTimer; 
                     var userInactivityTimer;
-                    if (config.timeForUserInactivityNotification > 0) {
-                        userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
-                    }
 
-                    document.addEventListener('mousemove', function (event) { resetInactivityTimers(); });
-                    document.addEventListener('keypress', function (event) { resetInactivityTimers(); });
+                    setupTimers();
 
-                    var notifiedByUserInactivity = false;
+                    document.addEventListener('mousemove', function (event) { resetTimers(); });
+                    document.addEventListener('keypress', function (event) { resetTimers(); });
 
-                    function resetInactivityTimers() {
+                    function setupTimers() {
                         clearTimeout(userInactivityLogoutTimer);
                         userInactivityLogoutTimer = setTimeout(trySignoutRedirect, config.timeForUserInactivityAutomaticLogout);
+                        setupUserInactivityTimer();
+                    }
 
+                    function setupUserInactivityTimer() {
                         if (config.timeForUserInactivityNotification > 0) {
                             clearTimeout(userInactivityTimer);
                             userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
                         }
+                    }
+
+                    var notifiedByUserInactivity = false;
+                    function resetTimers() {
+                        setupTimers();
 
                         if (notifiedByUserInactivity) {
                             notifiedByUserInactivity = false;
@@ -62,10 +66,7 @@
 
                         self.userManager.getUser().then(function (u) {
                             if (u !== null) {
-                                if (config.timeForUserInactivityNotification > 0) {
-                                    userInactivityTimer = setTimeout(notifyUserInactivity, config.timeForUserInactivityNotification);
-                                }
-
+                                setupUserInactivityTimer();
                                 notifiedByUserInactivity = true;
                                 userManagerHelper.invokeMethodAsync('OnUserInactivity');
                             }
