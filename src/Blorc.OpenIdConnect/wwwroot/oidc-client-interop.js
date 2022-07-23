@@ -46,7 +46,7 @@
                             clearTimeout(userInactivityTimer);
                         }
 
-                        if (config.timeForUserInactivityNotification > 0) {
+                        if (inactivityTime > 0) {
                             userInactivityTimer = setTimeout(notifyUserInactivity, inactivityTime);
                         }
                     }
