@@ -9,7 +9,7 @@
             IsInitialized: function() {
                 return this.userManager !== undefined;
             },
-            Initialize: function(config) {
+            Initialize: function (config, userManagerHelper) {
                 if (this.userManager !== undefined) {
                     return;
                 }
@@ -25,10 +25,58 @@
                     config.silent_redirect_uri += "/_content/Blorc.OpenIdConnect/silent-refresh.html";
                 }
 
+                let self = this;
+
+                if (config.timeForUserInactivityAutomaticLogout > 0) {
+                    var nextTimerTick = config.timeForUserInactivityAutomaticLogout;
+                    if (config.timeForUserInactivityNotification > 0) {
+                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticLogout, config.timeForUserInactivityNotification);
+                    }
+
+                    var userInactivityTimer;
+
+                    setupTimer();
+
+                    document.addEventListener('mousemove', function (_event) { notifyUserActivity(); });
+                    document.addEventListener('keypress', function (_event) { notifyUserActivity(); });
+
+                    function setupTimer() {
+                        if (userInactivityTimer !== null) {
+                            clearTimeout(userInactivityTimer);
+                        }
+
+                        if (nextTimerTick > 0) {
+                            userInactivityTimer = setTimeout(notifyUserInactivity, nextTimerTick);
+                        }
+                    }
+
+                    var notifiedByUserInactivity = false;
+                    function notifyUserActivity() {
+                        setupTimer();
+                        if (notifiedByUserInactivity) {
+                            notifiedByUserInactivity = false;
+                            userManagerHelper.invokeMethodAsync('OnUserActivity');
+                        }
+                    }
+
+                    function notifyUserInactivity() {
+                        if (self.userManager === undefined) {
+                            return;
+                        }
+
+                        self.userManager.getUser().then(function (u) {
+                            if (u !== null) {
+                                setupTimer();
+                                notifiedByUserInactivity = true;
+                                userManagerHelper.invokeMethodAsync('OnUserInactivity');
+                            }
+                        });
+                    }
+                }
+
                 this.userManager = new oidc.UserManager(config);
 
                 if (config.automaticSilentRenew) {
-                    let self = this;
                     this.userManager.events.addAccessTokenExpiring(function() {
                         self.userManager.signinSilent({ scope: config.scope, response_type: config.response_type })
                             .then(function(u) {

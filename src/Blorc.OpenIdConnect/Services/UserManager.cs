@@ -5,14 +5,14 @@
     using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
-    using Blorc.Services;
-
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
 
     public class UserManager : IUserManager
     {
+        private readonly OidcProviderOptions _options;
+
         private static readonly string[] ExpectedParameters = { "state", "session_state", "code", "access_token", "id_token", "token_type" };
 
         private readonly IJSRuntime _jsRuntime;
@@ -21,11 +21,16 @@
 
         private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
 
+        private DotNetObjectReference<UserManager> _objRef;
+
+        private bool _disposed;
+
+        private DateTime? _inactivityStartTime;
+
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
             : this(jsRuntime, navigationManager)
         {
-            var serializedOptions = JsonSerializer.Serialize(options);
-            Configuration = JsonSerializer.Deserialize<Dictionary<string, object>>(serializedOptions);
+            _options = options;
         }
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager)
@@ -34,7 +39,9 @@
             _navigationManager = navigationManager;
         }
 
-        public Dictionary<string, object> Configuration { get; private set; }
+        public event EventHandler<UserActivityEventArgs> UserActivity;
+
+        public event EventHandler<UserInactivityEventArgs> UserInactivity;
 
         public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
         {
@@ -71,11 +78,13 @@
             return default;
         }
 
-        public async Task InitializeAsync(Func<Task<Dictionary<string, object>>> configurationResolver)
+        public async Task InitializeAsync(Func<Task<Dictionary<string, JsonElement>>> configurationResolver)
         {
             if (!await IsInitializedAsync())
             {
-                await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver());
+                _objRef?.Dispose();
+                _objRef = DotNetObjectReference.Create(this);
+                await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
             }
         }
 
@@ -93,6 +102,52 @@
         public async Task SignoutRedirectAsync()
         {
             await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SignoutRedirect");
+        }
+
+        [JSInvokable]
+        public void OnUserInactivity()
+        {
+            var now = DateTime.Now;
+            _inactivityStartTime ??= now.Subtract(_options.GetTimeForUserInactivityNotification());
+
+            if (_inactivityStartTime is not null)
+            {
+                var elapsedTime = now.Subtract(_inactivityStartTime.Value);
+                var remainingTime = _options.GetTimeForUserInactivityAutomaticLogout() - elapsedTime;
+                if (remainingTime <= TimeSpan.Zero)
+                {
+                    _ = Task.Run(SignoutRedirectAsync);
+                }
+                else
+                {
+                    RaiseUserInactivity(new UserInactivityEventArgs(remainingTime));
+                }
+            }
+        }
+
+        [JSInvokable]
+        public void OnUserActivity()
+        {
+            var userActivityEventArgs = new UserActivityEventArgs(_inactivityStartTime ?? DateTime.Now, DateTime.Now);
+
+            RaiseUserActivity(userActivityEventArgs);
+
+            if (userActivityEventArgs.ResetTime)
+            {
+                _inactivityStartTime = null;
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            if (_disposed)
+            {
+                return;
+            }
+
+            _objRef?.Dispose();
+
+            _disposed = true;
         }
 
         private async Task<JsonElement?> GetUserJsonElementAsync()
@@ -115,10 +170,7 @@
 
         private async Task InitializeAsync()
         {
-            if (Configuration is not null)
-            {
-                await InitializeAsync(() => Task.FromResult(Configuration));
-            }
+            await InitializeAsync(() => Task.FromResult(JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(JsonSerializer.Serialize(_options))));
         }
 
         private async Task<bool> IsInitializedAsync()
@@ -129,6 +181,16 @@
         private async Task<bool> IsRedirectedAsync()
         {
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected");
+        }
+
+        protected virtual void RaiseUserInactivity(UserInactivityEventArgs e)
+        {
+            UserInactivity?.Invoke(this, e);
+        }
+
+        protected virtual void RaiseUserActivity(UserActivityEventArgs e)
+        {
+            UserActivity?.Invoke(this, e);
         }
     }
 }
