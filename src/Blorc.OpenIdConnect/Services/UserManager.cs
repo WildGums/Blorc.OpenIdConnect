@@ -130,9 +130,7 @@
         public void OnUserActivity()
         {
             var userActivityEventArgs = new UserActivityEventArgs(_inactivityStartTime ?? DateTime.Now, DateTime.Now);
-
             RaiseUserActivity(userActivityEventArgs);
-
             if (userActivityEventArgs.ResetTime)
             {
                 _inactivityStartTime = null;
