@@ -113,7 +113,7 @@
             if (_inactivityStartTime is not null)
             {
                 var elapsedTime = now.Subtract(_inactivityStartTime.Value);
-                var remainingTime = _options.GetTimeForUserInactivityAutomaticLogout()  - elapsedTime;
+                var remainingTime = _options.GetTimeForUserInactivityAutomaticLogout() - elapsedTime;
                 if (remainingTime <= TimeSpan.Zero)
                 {
                     _ = Task.Run(SignoutRedirectAsync);
