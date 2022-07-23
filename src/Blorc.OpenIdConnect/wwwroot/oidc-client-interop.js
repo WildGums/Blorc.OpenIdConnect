@@ -38,8 +38,8 @@
 
                     setupTimer();
 
-                    document.addEventListener('mousemove', function (event) { resetTimer(); });
-                    document.addEventListener('keypress', function (event) { resetTimer(); });
+                    document.addEventListener('mousemove', function (_event) { notifyUserActivity(); });
+                    document.addEventListener('keypress', function (_event) { notifyUserActivity(); });
 
                     function setupTimer() {
                         if (userInactivityTimer !== null) {
@@ -47,13 +47,12 @@
                         }
 
                         if (config.timeForUserInactivityNotification > 0) {
-                            
                             userInactivityTimer = setTimeout(notifyUserInactivity, inactivityTime);
                         }
                     }
 
                     var notifiedByUserInactivity = false;
-                    function resetTimer() {
+                    function notifyUserActivity() {
                         setupTimer();
                         if (notifiedByUserInactivity) {
                             notifiedByUserInactivity = false;
