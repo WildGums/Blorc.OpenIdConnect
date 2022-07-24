@@ -39,8 +39,8 @@ builder.Services.AddBlorcOpenIdConnect(
         options.FilterProtocolClaims = true;
         options.LoadUserInfo = true;
         options.Scope = "openid profile demo-api";
-        options.TimeForUserInactivityAutomaticSignout = 10000;
-        options.TimeForUserInactivityNotification = 2000;
+        options.TimeForUserInactivityAutomaticSignout = 15000;
+        options.TimeForUserInactivityNotification = 10000;
     });
 
 var webAssemblyHost = builder.Build();
