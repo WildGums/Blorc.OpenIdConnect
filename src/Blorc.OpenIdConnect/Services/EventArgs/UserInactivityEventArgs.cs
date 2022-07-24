@@ -10,5 +10,7 @@
         }
 
         public TimeSpan SignoutTimeSpan { get; }
+
+        public TimeSpan? InactivityNotificationTimeSpan { get; set; } = null;
     }
 }

@@ -105,33 +105,32 @@
         }
 
         [JSInvokable]
-        public void OnUserInactivity()
+        public double OnUserInactivity()
         {
             var now = DateTime.Now;
             _inactivityStartTime ??= now.Subtract(_options.GetTimeForUserInactivityNotification());
-
-            if (_inactivityStartTime is not null)
+            var elapsedTime = now.Subtract(_inactivityStartTime.Value);
+            var remainingTime = _options.GetTimeForUserInactivityAutomaticSignout() - elapsedTime;
+            if (remainingTime <= TimeSpan.Zero)
             {
-                var elapsedTime = now.Subtract(_inactivityStartTime.Value);
-                var remainingTime = _options.GetTimeForUserInactivityAutomaticLogout() - elapsedTime;
-                if (remainingTime <= TimeSpan.Zero)
-                {
-                    _ = Task.Run(SignoutRedirectAsync);
-                }
-                else
-                {
-                    RaiseUserInactivity(new UserInactivityEventArgs(remainingTime));
-                }
+                _ = Task.Run(SignoutRedirectAsync);
             }
+
+            var userInactivityEventArgs = new UserInactivityEventArgs(remainingTime);
+            RaiseUserInactivity(userInactivityEventArgs);
+            if (userInactivityEventArgs.InactivityNotificationTimeSpan is not null && userInactivityEventArgs.InactivityNotificationTimeSpan >= TimeSpan.Zero)
+            {
+                return Math.Min(remainingTime.TotalMilliseconds, userInactivityEventArgs.InactivityNotificationTimeSpan.Value.TotalMilliseconds);
+            }
+
+            return remainingTime.TotalMilliseconds;
         }
 
         [JSInvokable]
         public void OnUserActivity()
         {
             var userActivityEventArgs = new UserActivityEventArgs(_inactivityStartTime ?? DateTime.Now, DateTime.Now);
-
             RaiseUserActivity(userActivityEventArgs);
-
             if (userActivityEventArgs.ResetTime)
             {
                 _inactivityStartTime = null;

@@ -7,6 +7,8 @@
 
     public partial class MainLayout
     {
+        private TimeSpan? _signoutTimeSpan;
+
         public User<Profile> User { get; set; }
 
         [Inject]
@@ -23,12 +25,21 @@
 
                 UserManager.UserActivity += (sender, args) =>
                 {
+                    _signoutTimeSpan = null;
                     Console.WriteLine("User activity");
+                    StateHasChanged();
                 };
                 
                 UserManager.UserInactivity += (sender, args) =>
                 {
-                    Console.WriteLine($"User inactivity, will be signed out in {args.SignoutTimeSpan}");
+                    _signoutTimeSpan = args.SignoutTimeSpan;
+                    if (_signoutTimeSpan <= TimeSpan.FromSeconds(5))
+                    {
+                        args.InactivityNotificationTimeSpan = TimeSpan.FromSeconds(1);
+                    }
+
+                    Console.WriteLine($"User inactivity, will be signed out in {_signoutTimeSpan}");
+                    StateHasChanged();
                 };
             }
         }

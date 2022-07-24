@@ -27,36 +27,37 @@
 
                 let self = this;
 
-                if (config.timeForUserInactivityAutomaticLogout > 0) {
-                    var nextTimerTick = config.timeForUserInactivityAutomaticLogout;
+                if (config.timeForUserInactivityAutomaticSignout > 0) {
+                    var nextTimerTick = config.timeForUserInactivityAutomaticSignout;
                     if (config.timeForUserInactivityNotification > 0) {
-                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticLogout, config.timeForUserInactivityNotification);
+                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticSignout, config.timeForUserInactivityNotification);
                     }
 
                     var userInactivityTimer;
 
-                    setupTimer();
+                    setupUserInactivityTimer(nextTimerTick);
 
                     document.addEventListener('mousemove', function (_event) { notifyUserActivity(); });
                     document.addEventListener('keypress', function (_event) { notifyUserActivity(); });
 
-                    function setupTimer() {
+                    function setupUserInactivityTimer(timeout) {
                         if (userInactivityTimer !== null) {
                             clearTimeout(userInactivityTimer);
                         }
 
-                        if (nextTimerTick > 0) {
-                            userInactivityTimer = setTimeout(notifyUserInactivity, nextTimerTick);
+                        if (timeout > 0) {
+                            userInactivityTimer = setTimeout(notifyUserInactivity, timeout);
                         }
                     }
 
                     var notifiedByUserInactivity = false;
                     function notifyUserActivity() {
-                        setupTimer();
                         if (notifiedByUserInactivity) {
                             notifiedByUserInactivity = false;
                             userManagerHelper.invokeMethodAsync('OnUserActivity');
                         }
+
+                        setupUserInactivityTimer(nextTimerTick);
                     }
 
                     function notifyUserInactivity() {
@@ -64,11 +65,13 @@
                             return;
                         }
 
-                        self.userManager.getUser().then(function (u) {
+                        self.userManager.getUser().then(function(u) {
                             if (u !== null) {
-                                setupTimer();
                                 notifiedByUserInactivity = true;
-                                userManagerHelper.invokeMethodAsync('OnUserInactivity');
+                                userManagerHelper.invokeMethodAsync("OnUserInactivity")
+                                    .then(function(remainingTimerTick) {
+                                        setupUserInactivityTimer(Math.min(remainingTimerTick, nextTimerTick));
+                                    });
                             }
                         });
                     }

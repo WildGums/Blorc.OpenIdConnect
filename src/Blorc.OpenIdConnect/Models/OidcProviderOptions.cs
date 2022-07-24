@@ -17,8 +17,8 @@
         [JsonPropertyName("automaticSilentRenew")]
         public bool AutomaticSilentRenew { get; set; }
 
-        [JsonPropertyName("timeForUserInactivityAutomaticLogout")]
-        public int TimeForUserInactivityAutomaticLogout { get; set; }
+        [JsonPropertyName("timeForUserInactivityAutomaticSignout")]
+        public int TimeForUserInactivityAutomaticSignout { get; set; }
 
         [JsonPropertyName("timeForUserInactivityNotification")]
         public int TimeForUserInactivityNotification { get; set; }
