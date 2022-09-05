@@ -1,0 +1,30 @@
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu />
+    </div>
+
+    <div class="main">
+        <div class="top-row px-4">
+            <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+            <AuthorizeView>
+                <Authorized>
+                    <a href="https://www.linkedin.com/in/igr-alex%C3%A1nder-fern%C3%A1ndez-sa%C3%BAco-34374062/" target="_blank" class="ml-md-auto">@User?.Profile?.Name</a>
+                </Authorized>
+            </AuthorizeView>
+        </div>
+
+        <div class="content px-4">
+            @Body
+        </div>
+
+        @if (_signoutTimeSpan is not null && _signoutTimeSpan.Value.TotalSeconds < 5)
+        {
+            <div class="alert alert-danger mt-4" style="position: fixed; bottom: 0; width: 100%" role="alert">
+                    The user will be automatically signed out in @_signoutTimeSpan
+            </div>
+        }
+    </div>
+</div>
+

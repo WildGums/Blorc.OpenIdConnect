@@ -1,0 +1,62 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29006.145
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{A338093C-46C7-455C-B65B-5F5F795A496B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{C0E4057A-36CA-41D2-8394-FA5BBB5B8FD7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{DF6B0A44-B0A4-430C-A1A9-9954A7A3FB1D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{128F1351-9DCB-4CC1-94BB-D062AB1B7802}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blorc.OpenIdConnect", "Blorc.OpenIdConnect\Blorc.OpenIdConnect.csproj", "{E68BDD6F-F81B-4B99-A955-E5868F86227D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blorc.OpenIdConnect.Tests", "Blorc.OpenIdConnect.Tests\Blorc.OpenIdConnect.Tests.csproj", "{74237849-7614-44A4-8EB9-7F91B0799AF7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blorc.OpenIdConnect.DemoApp", "Blorc.OpenIdConnect.DemoApp\Blorc.OpenIdConnect.DemoApp.csproj", "{315C9404-3438-4E72-9155-E3D68B9775D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blorc.OpenIdConnect.DemoApp.Server", "Blorc.OpenIdConnect.DemoApp.Server\Blorc.OpenIdConnect.DemoApp.Server.csproj", "{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Demo", "Demo", "{6ED09517-65F8-45C2-8848-768B73D244C2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E68BDD6F-F81B-4B99-A955-E5868F86227D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E68BDD6F-F81B-4B99-A955-E5868F86227D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E68BDD6F-F81B-4B99-A955-E5868F86227D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E68BDD6F-F81B-4B99-A955-E5868F86227D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{74237849-7614-44A4-8EB9-7F91B0799AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{74237849-7614-44A4-8EB9-7F91B0799AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{74237849-7614-44A4-8EB9-7F91B0799AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{74237849-7614-44A4-8EB9-7F91B0799AF7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{315C9404-3438-4E72-9155-E3D68B9775D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{315C9404-3438-4E72-9155-E3D68B9775D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{315C9404-3438-4E72-9155-E3D68B9775D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{315C9404-3438-4E72-9155-E3D68B9775D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C0E4057A-36CA-41D2-8394-FA5BBB5B8FD7} = {A338093C-46C7-455C-B65B-5F5F795A496B}
+		{DF6B0A44-B0A4-430C-A1A9-9954A7A3FB1D} = {A338093C-46C7-455C-B65B-5F5F795A496B}
+		{E68BDD6F-F81B-4B99-A955-E5868F86227D} = {C0E4057A-36CA-41D2-8394-FA5BBB5B8FD7}
+		{74237849-7614-44A4-8EB9-7F91B0799AF7} = {DF6B0A44-B0A4-430C-A1A9-9954A7A3FB1D}
+		{315C9404-3438-4E72-9155-E3D68B9775D7} = {6ED09517-65F8-45C2-8848-768B73D244C2}
+		{D52F66FD-DE7E-4163-A0E5-0EC604FBEDE9} = {6ED09517-65F8-45C2-8848-768B73D244C2}
+		{6ED09517-65F8-45C2-8848-768B73D244C2} = {A338093C-46C7-455C-B65B-5F5F795A496B}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6F9C672C-F689-4200-BF37-205919057F17}
+	EndGlobalSection
+EndGlobal

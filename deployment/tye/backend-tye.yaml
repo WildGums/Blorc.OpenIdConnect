@@ -1,0 +1,28 @@
+name: openidconnect
+network: openidconnect-network
+services:
+- name:  openidconnect-keycloak
+  image: quay.io/keycloak/keycloak:18.0.0
+  args: start-dev
+  bindings:
+  - port: 5002
+    containerPort: 8080
+    protocol: http
+  env:
+  - name: KEYCLOAK_ADMIN
+    value: admin
+  - name: KEYCLOAK_ADMIN_PASSWORD
+    value: Password123!
+  - name: KC_HOSTNAME_STRICT
+    value: false
+  - name: KC_HTTP_ENABLED
+    value: true
+  - name: KC_HTTP_PORT
+    value: 8080
+  - name: KC_HTTP_RELATIVE_PATH
+    value: /auth
+  - name: KC_PROXY
+    value: passthrough
+  volumes:
+  - name: openidconnect-keycloak-data
+    target: /opt/jboss/keycloak/standalone/data/
