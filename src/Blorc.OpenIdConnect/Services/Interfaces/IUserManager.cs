@@ -7,7 +7,7 @@
 
     public interface IUserManager : IDisposable
     {
-        Task SigninRedirectAsync();
+        Task SigninRedirectAsync(string redirectUri = "");
 
         Task SignoutRedirectAsync();
 

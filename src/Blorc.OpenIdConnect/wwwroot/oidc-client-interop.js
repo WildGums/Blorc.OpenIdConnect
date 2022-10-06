@@ -138,14 +138,19 @@
                     });
                 });
             },
-            SigninRedirect: function() {
+            SigninRedirect: function (redirectUri) {
                 if (this.userManager === undefined) {
                     return false;
                 }
 
                 let self = this;
                 return new Promise((resolve, _reject) => {
-                    self.userManager.signinRedirect();
+                    let extraSigninRequestParams = {};
+                    if (redirectUri != "" && redirectUri != null) {
+                        extraSigninRequestParams.redirect_uri = redirectUri;
+                    }
+
+                    self.userManager.signinRedirect(extraSigninRequestParams);
                     resolve(true);
                 });
             },
