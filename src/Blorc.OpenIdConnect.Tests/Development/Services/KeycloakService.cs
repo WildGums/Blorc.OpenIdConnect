@@ -243,7 +243,7 @@
                 {
                     role = await keycloakClient.GetRoleByNameAsync(realm, clientId, roleName);
                 }
-                catch 
+                catch
                 {
                 }
 
@@ -253,9 +253,9 @@
                         realm,
                         clientId,
                         new Role
-                            {
-                                Name = roleName
-                            });
+                        {
+                            Name = roleName
+                        });
                 }
             }
         }
