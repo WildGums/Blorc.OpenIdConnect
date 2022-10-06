@@ -82,3 +82,26 @@ The right way to use OpenIdConnect on Blazor.
 
 - Authorization Code flow with PKCE (Keycloak) - https://www.appsdeveloperblog.com/pkce-verification-in-authorization-code-grant/
 - PKCE Verification in Authorization Code Grant (Auth0) - https://auth0.com/docs/get-started/authentication-and-authorization-flow/authorization-code-flow-with-proof-key-for-code-exchange-pkce
+
+
+## Run demo app
+
+1) Prerequisites
+
+   - Docker
+   - [Tye](https://github.com/dotnet/tye)
+
+2) Open a command line console a run the following commands
+
+        > cd %CLONE_DIR%\deployment\tye
+        > tye run .\backend-tye.yaml
+
+3) Run the InitializeKeycloakAsync test of the Environment class in the test project. This will setup the required clients, and client scope for the demo.
+
+4) Run the `Blorc.OpenIdConnect.DemoApp.Server` project.
+
+5) Use the following credentials when prompted by Keycloak.
+
+| UserName | Password     |
+|----------|--------------|
+| admin    | Password123! |
