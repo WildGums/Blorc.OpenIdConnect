@@ -168,7 +168,6 @@
                 }
 
                 var redirectRequired = false;
-                var absoluteUri = _navigationManager.Uri;
                 var uri = new Uri(_navigationManager.Uri);
                 var parameters = uri.Query.TrimStart('?').Split('&').Select(s =>
                 {
