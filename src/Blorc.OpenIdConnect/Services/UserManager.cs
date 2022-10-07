@@ -57,12 +57,12 @@
         public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
         {
             var userType = typeof(TUser);
-            
+
             if (reload)
             {
                 _usersCache.Remove(userType, out _);
             }
-            else if (_usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
+            else if (_usersCache.TryGetValue(userType, out var value) && value is TUser cacheUser)
             {
                 return cacheUser;
             }
@@ -169,18 +169,12 @@
 
                 var redirectRequired = false;
                 var uri = new Uri(_navigationManager.Uri);
-                var parameters = uri.Query.TrimStart('?').Split('&').Select(s =>
-                {
-                    var assigment = s.Split('=');
-                    if (assigment.Length == 2)
-                    {
-                        return (Name: assigment[0], Value: assigment[1]);
-                    }
+                var parameters = uri.Query.TrimStart('?').Split('&')
+                    .Select(s => s.Split('='))
+                    .Where(assigments => assigments.Length == 2)
+                    .Select(assigments => (Name: assigments[0], Value: assigments[1]))
+                    .ToList();
 
-                    // Not sure why? 
-                    return (Name: null, Value: null);
-                }).ToList();
-                
                 for (var i = parameters.Count - 1; i >= 0; i--)
                 {
                     if (ExpectedParameters.Contains(parameters[i].Name, StringComparer.InvariantCultureIgnoreCase))
