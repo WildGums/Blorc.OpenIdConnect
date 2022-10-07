@@ -147,6 +147,7 @@
                 var navigationManagerStub = new Stub<NavigationManager>(new NavigationManagerStub());
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost:5000/counter");
+                navigationManagerStub.SetField("_baseUri", new Uri("http://localhost:5000/"));
 
                 using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance);
                 await userManager.SigninRedirectAsync("/fetchdata");

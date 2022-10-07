@@ -101,7 +101,7 @@
                 var uri = new Uri(redirectUri, UriKind.RelativeOrAbsolute);
                 if (!uri.IsAbsoluteUri)
                 {
-                    redirectUri = new Uri(new Uri(new Uri(_navigationManager.Uri).GetLeftPart(UriPartial.Authority)), uri).AbsoluteUri;
+                    redirectUri = _navigationManager.ToAbsoluteUri(redirectUri).AbsoluteUri;
                 }
             }
 

@@ -5,19 +5,19 @@
 
     public class NavigationManagerStub : NavigationManager
     {
-        public event EventHandler<NavigateEventArgs> Navigate;
+        public event EventHandler<NavigationEventArgs> Navigate;
 
         protected override void NavigateToCore(string uri, bool forceLoad)
         {
-            OnNavigate(new NavigateEventArgs(uri, forceLoad));
+            OnNavigate(new NavigationEventArgs(uri, forceLoad));
         }
 
         protected override void NavigateToCore(string uri, NavigationOptions options)
         {
-            OnNavigate(new NavigateEventArgs(uri, options));
+            OnNavigate(new NavigationEventArgs(uri, options));
         }
 
-        protected virtual void OnNavigate(NavigateEventArgs e)
+        protected virtual void OnNavigate(NavigationEventArgs e)
         {
             Navigate?.Invoke(this, e);
         }
