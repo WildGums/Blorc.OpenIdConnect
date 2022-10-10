@@ -1,5 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System;
     using System.Net.Http;
     using System.Net.Http.Headers;
     using System.Threading;
@@ -11,11 +12,15 @@
 
         public AccessTokenDelegatingHandler(IUserManager userManager)
         {
+            ArgumentNullException.ThrowIfNull(userManager);
+
             _userManager = userManager;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             var user = await _userManager.GetUserAsync<User<Profile>>();
             if (user is not null)
             {
