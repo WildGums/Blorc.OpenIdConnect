@@ -9,17 +9,17 @@
     <DefaultLanguage>en-US</DefaultLanguage>
     <IsPackable>false</IsPackable>
     <SonarQubeExclude>true</SonarQubeExclude>
+    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="11.0.1" />
-    <PackageReference Include="Catel.Core" Version="5.12.22" />
-    <PackageReference Include="Catel.Fody" Version="4.7.0" PrivateAssets="all" />
-    <PackageReference Include="Fody" Version="6.6.3" PrivateAssets="all">
+    <PackageReference Include="ApprovalTests" Version="5.7.3" />
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="Fody" Version="6.6.4" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Keycloak.Net" Version="1.0.18" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.2" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Moq" Version="4.18.2" />
     <PackageReference Include="NUnit" Version="3.13.3" PrivateAssets="all" />
@@ -28,6 +28,8 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit.DeepObjectCompare" Version="2.0.1" />
+    <PackageReference Include="PublicApiGenerator" Version="10.3.0" PrivateAssets="all" />
+    <PackageReference Include="Verify.NUnit" Version="17.10.2" />
   </ItemGroup>
 
   <ItemGroup>

@@ -7,8 +7,10 @@
 
     public static class ServiceCollectionExtensions
     {
-        public static void AddBlorcOpenIdConnect(this IServiceCollection services, Action<OidcProviderOptions> configure = null)
+        public static void AddBlorcOpenIdConnect(this IServiceCollection services, Action<OidcProviderOptions>? configure = null)
         {
+            ArgumentNullException.ThrowIfNull(services);
+
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
             services.AddScoped<AccessTokenDelegatingHandler>();

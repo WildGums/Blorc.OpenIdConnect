@@ -19,31 +19,30 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object?> _usersCache = new Dictionary<Type, object?>();
 
-        private DotNetObjectReference<UserManager> _objRef;
+        private DotNetObjectReference<UserManager>? _objRef;
 
         private bool _disposed;
 
         private DateTime? _inactivityStartTime;
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
-            : this(jsRuntime, navigationManager)
         {
+            ArgumentNullException.ThrowIfNull(jsRuntime);
+            ArgumentNullException.ThrowIfNull(navigationManager);
+            ArgumentNullException.ThrowIfNull(options);
+
+            _jsRuntime = jsRuntime;
+            _navigationManager = navigationManager;
             _options = options;
         }
 
-        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager)
-        {
-            _jsRuntime = jsRuntime;
-            _navigationManager = navigationManager;
-        }
+        public event EventHandler<UserActivityEventArgs>? UserActivity;
 
-        public event EventHandler<UserActivityEventArgs> UserActivity;
+        public event EventHandler<UserInactivityEventArgs>? UserInactivity;
 
-        public event EventHandler<UserInactivityEventArgs> UserInactivity;
-
-        public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
+        public async Task<TUser?> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions? options = null)
         {
             var authenticationState = await authenticationStateTask;
             if (authenticationState?.User?.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
@@ -54,15 +53,15 @@
             return await GetUserAsync<TUser>(options: options);
         }
 
-        public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
+        public async Task<TUser?> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions? options = null)
         {
             var userType = typeof(TUser);
-            
+
             if (reload)
             {
                 _usersCache.Remove(userType, out _);
             }
-            else if (_usersCache.TryGetValue(userType,  out var value) && value is TUser cacheUser)
+            else if (_usersCache.TryGetValue(userType, out var value) && value is TUser cacheUser)
             {
                 return cacheUser;
             }
@@ -80,6 +79,8 @@
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, JsonElement>>> configurationResolver)
         {
+            ArgumentNullException.ThrowIfNull(configurationResolver);
+
             if (!await IsInitializedAsync())
             {
                 _objRef?.Dispose();
@@ -94,9 +95,18 @@
             return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated");
         }
 
-        public async Task SigninRedirectAsync()
+        public async Task SigninRedirectAsync(string redirectUri = "")
         {
-            await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect");
+            if (!string.IsNullOrWhiteSpace(redirectUri))
+            {
+                var uri = new Uri(redirectUri, UriKind.RelativeOrAbsolute);
+                if (!uri.IsAbsoluteUri)
+                {
+                    redirectUri = _navigationManager.ToAbsoluteUri(redirectUri).AbsoluteUri;
+                }
+            }
+
+            await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect", redirectUri);
         }
 
         public async Task SignoutRedirectAsync()
@@ -153,12 +163,45 @@
         {
             if (await IsAuthenticatedAsync())
             {
-                var absoluteUri = _navigationManager.Uri;
-                if (ExpectedParameters.Any(parameter => absoluteUri.Contains($"{parameter}=", StringComparison.InvariantCultureIgnoreCase)) && await IsRedirectedAsync())
+                if (!await IsRedirectedAsync())
                 {
-                    var absoluteUrlSplit = absoluteUri.Split('#');
-                    var baseUri = absoluteUrlSplit.Length == 2 ? absoluteUrlSplit[0] : _navigationManager.BaseUri;
-                    _navigationManager.NavigateTo(baseUri);
+                    return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
+                }
+
+                var redirectRequired = false;
+                var uri = new Uri(_navigationManager.Uri);
+                var parameters = uri.Query.TrimStart('?').Split('&')
+                    .Select(s => s.Split('='))
+                    .Where(assigments => assigments.Length == 2)
+                    .Select(assigments => (Name: assigments[0], Value: assigments[1]))
+                    .ToList();
+
+                for (var i = parameters.Count - 1; i >= 0; i--)
+                {
+                    if (ExpectedParameters.Contains(parameters[i].Name, StringComparer.InvariantCultureIgnoreCase))
+                    {
+                        parameters.RemoveAt(i);
+                        redirectRequired = true;
+                    }
+                }
+
+                if (redirectRequired)
+                {
+                    var url = new Uri(_navigationManager.Uri).GetLeftPart(UriPartial.Path);
+                    if (parameters.Count > 0)
+                    {
+                        foreach (var parameter in parameters)
+                        {
+                            if (parameter.Name is not null)
+                            {
+                                url += $"{parameter.Name}={parameter.Value}&";
+                            }
+                        }
+
+                        url = url.TrimEnd('&');
+                    }
+
+                    _navigationManager.NavigateTo(url);
                 }
 
                 return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
@@ -169,7 +212,17 @@
 
         private async Task InitializeAsync()
         {
-            await InitializeAsync(() => Task.FromResult(JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(JsonSerializer.Serialize(_options))));
+            await InitializeAsync(() =>
+            {
+                var serializedOptions = JsonSerializer.Serialize(_options);
+                var deserializedOptions = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(serializedOptions);
+                if (deserializedOptions is null)
+                {
+                    throw new InvalidOperationException("Cannot initialize user manager");
+                }
+
+                return Task.FromResult(deserializedOptions);
+            });
         }
 
         private async Task<bool> IsInitializedAsync()

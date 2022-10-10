@@ -70,7 +70,7 @@
                 client.BaseUrl = ingressUrl;
                 client.RedirectUris = new List<string>
                                           {
-                                              $"{ingressUrl}/*",
+                                              $"{ingressUrl.TrimEnd('/')}/*",
                                           };
                 client.WebOrigins = new List<string>
                                         {
@@ -243,7 +243,7 @@
                 {
                     role = await keycloakClient.GetRoleByNameAsync(realm, clientId, roleName);
                 }
-                catch 
+                catch
                 {
                 }
 
@@ -253,9 +253,9 @@
                         realm,
                         clientId,
                         new Role
-                            {
-                                Name = roleName
-                            });
+                        {
+                            Name = roleName
+                        });
                 }
             }
         }

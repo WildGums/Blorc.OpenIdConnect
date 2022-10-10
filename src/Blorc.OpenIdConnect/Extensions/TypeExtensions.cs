@@ -6,6 +6,8 @@
     {
         public static bool IsPrimitiveEx(this Type type)
         {
+            ArgumentNullException.ThrowIfNull(type);
+            
             return type.IsPrimitive || type.IsEnum
                                     || type == typeof(decimal)
                                     || type == typeof(string)
