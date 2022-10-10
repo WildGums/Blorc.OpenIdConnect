@@ -1,7 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect.DemoApp.Pages
 {
     using System.Threading.Tasks;
-    using Blorc.OpenIdConnect.DemoApp;
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Web;
 
@@ -42,6 +41,11 @@
         private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
         {
             await UserManager.SigninRedirectAsync();
+        }
+
+        private async Task OnLoginAndRedirectFetchDataButtonClickAsync(MouseEventArgs obj)
+        {
+            await UserManager.SigninRedirectAsync("/fetchdata");
         }
 
         private async Task OnLogoutButtonClickAsync(MouseEventArgs obj)
