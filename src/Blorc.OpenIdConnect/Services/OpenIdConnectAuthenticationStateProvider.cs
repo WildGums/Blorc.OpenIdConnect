@@ -1,5 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System;
     using System.Collections.Generic;
     using System.Security.Claims;
     using System.Threading.Tasks;
@@ -11,6 +12,8 @@
 
         public OpenIdConnectAuthenticationStateProvider(IUserManager userManager)
         {
+            ArgumentNullException.ThrowIfNull(userManager);
+
             _userManager = userManager;
         }
 
@@ -24,6 +27,7 @@
             }
 
             var claims = new List<Claim>();
+
             claims.AddRange(user.AsClaims());
 
             var claimsPrincipal = new ClaimsPrincipal(new ClaimsIdentity(claims, "Blorc.OpenIdConnect"));

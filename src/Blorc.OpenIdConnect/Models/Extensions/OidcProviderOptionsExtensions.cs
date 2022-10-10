@@ -6,11 +6,15 @@
     {
         public static TimeSpan GetTimeForUserInactivityAutomaticSignout(this OidcProviderOptions options)
         {
+            ArgumentNullException.ThrowIfNull(options);
+
             return TimeSpan.FromMilliseconds(options.TimeForUserInactivityAutomaticSignout);
         }
 
         public static TimeSpan GetTimeForUserInactivityNotification(this OidcProviderOptions options)
         {
+            ArgumentNullException.ThrowIfNull(options);
+
             var time = options.TimeForUserInactivityAutomaticSignout;
             if (options.TimeForUserInactivityNotification > 0)
             {

@@ -19,31 +19,30 @@
 
         private readonly NavigationManager _navigationManager;
 
-        private readonly Dictionary<Type, object> _usersCache = new Dictionary<Type, object>();
+        private readonly Dictionary<Type, object?> _usersCache = new Dictionary<Type, object?>();
 
-        private DotNetObjectReference<UserManager> _objRef;
+        private DotNetObjectReference<UserManager>? _objRef;
 
         private bool _disposed;
 
         private DateTime? _inactivityStartTime;
 
         public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
-            : this(jsRuntime, navigationManager)
         {
+            ArgumentNullException.ThrowIfNull(jsRuntime);
+            ArgumentNullException.ThrowIfNull(navigationManager);
+            ArgumentNullException.ThrowIfNull(options);
+
+            _jsRuntime = jsRuntime;
+            _navigationManager = navigationManager;
             _options = options;
         }
 
-        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager)
-        {
-            _jsRuntime = jsRuntime;
-            _navigationManager = navigationManager;
-        }
+        public event EventHandler<UserActivityEventArgs>? UserActivity;
 
-        public event EventHandler<UserActivityEventArgs> UserActivity;
+        public event EventHandler<UserInactivityEventArgs>? UserInactivity;
 
-        public event EventHandler<UserInactivityEventArgs> UserInactivity;
-
-        public async Task<TUser> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions options = null)
+        public async Task<TUser?> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions? options = null)
         {
             var authenticationState = await authenticationStateTask;
             if (authenticationState?.User?.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
@@ -54,7 +53,7 @@
             return await GetUserAsync<TUser>(options: options);
         }
 
-        public async Task<TUser> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions options = null)
+        public async Task<TUser?> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions? options = null)
         {
             var userType = typeof(TUser);
 
@@ -80,6 +79,8 @@
 
         public async Task InitializeAsync(Func<Task<Dictionary<string, JsonElement>>> configurationResolver)
         {
+            ArgumentNullException.ThrowIfNull(configurationResolver);
+
             if (!await IsInitializedAsync())
             {
                 _objRef?.Dispose();
@@ -211,7 +212,17 @@
 
         private async Task InitializeAsync()
         {
-            await InitializeAsync(() => Task.FromResult(JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(JsonSerializer.Serialize(_options))));
+            await InitializeAsync(() =>
+            {
+                var serializedOptions = JsonSerializer.Serialize(_options);
+                var deserializedOptions = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(serializedOptions);
+                if (deserializedOptions is null)
+                {
+                    throw new InvalidOperationException("Cannot initialize user manager");
+                }
+
+                return Task.FromResult(deserializedOptions);
+            });
         }
 
         private async Task<bool> IsInitializedAsync()

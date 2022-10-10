@@ -42,7 +42,6 @@
                 }
             }
 
-
             [Test]
             public void Collects_Claims_From_Each_Item_Of_A_Collection()
             {

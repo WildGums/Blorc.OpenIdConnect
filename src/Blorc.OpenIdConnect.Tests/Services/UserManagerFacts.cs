@@ -149,7 +149,7 @@
                 navigationManagerStub.SetField("_uri", "http://localhost:5000/counter");
                 navigationManagerStub.SetField("_baseUri", new Uri("http://localhost:5000/"));
 
-                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance);
+                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, new OidcProviderOptions());
                 await userManager.SigninRedirectAsync("/fetchdata");
 
                 jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect", It.Is<object[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));

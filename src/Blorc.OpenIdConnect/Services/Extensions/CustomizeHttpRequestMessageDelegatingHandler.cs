@@ -8,16 +8,20 @@
     public class CustomizeHttpRequestMessageDelegatingHandler : DelegatingHandler
     {
         private readonly IServiceProvider _serviceProvider;
-        private readonly Func<IServiceProvider, HttpRequestMessage, Task> _customizeRequestFunction;
+        private readonly Func<IServiceProvider, HttpRequestMessage, Task>? _customizeRequestFunction;
 
-        public CustomizeHttpRequestMessageDelegatingHandler(IServiceProvider serviceProvider, Func<IServiceProvider, HttpRequestMessage, Task> customizeRequestFunction)
+        public CustomizeHttpRequestMessageDelegatingHandler(IServiceProvider serviceProvider, Func<IServiceProvider, HttpRequestMessage, Task>? customizeRequestFunction)
         {
+            ArgumentNullException.ThrowIfNull(serviceProvider);
+
             _serviceProvider = serviceProvider;
             _customizeRequestFunction = customizeRequestFunction;
         }
 
         protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
+            ArgumentNullException.ThrowIfNull(request);
+
             if (_customizeRequestFunction is not null)
             {
                 await _customizeRequestFunction(_serviceProvider, request);

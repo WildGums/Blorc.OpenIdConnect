@@ -1,12 +1,14 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System;
     using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
-    public class User<TProfile> : IHasRoles where TProfile : Profile
+    public class User<TProfile> : IHasRoles 
+        where TProfile : Profile
     {
         [JsonPropertyName("access_token")]
-        public string AccessToken
+        public string? AccessToken
         {
             get;
             set;
@@ -20,21 +22,21 @@
         }
 
         [JsonPropertyName("profile")]
-        public TProfile Profile
+        public TProfile? Profile
         {
             get;
             set;
         }
 
         [JsonPropertyName("session_state")]
-        public string SessionState
+        public string? SessionState
         {
             get;
             set;
         }
 
         [JsonPropertyName("token_type")]
-        public string TokenType
+        public string? TokenType
         {
             get;
             set;
@@ -45,7 +47,7 @@
         {
             get
             {
-                return Profile?.Roles;
+                return Profile?.Roles ?? Array.Empty<string>();
             }
         }
     }
