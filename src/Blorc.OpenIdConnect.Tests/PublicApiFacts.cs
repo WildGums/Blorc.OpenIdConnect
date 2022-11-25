@@ -3,8 +3,7 @@
     using System.IO;
     using System.Reflection;
     using System.Runtime.CompilerServices;
-    using ApprovalTests;
-    using ApprovalTests.Namers;
+    using System.Threading.Tasks;
     using NUnit.Framework;
     using PublicApiGenerator;
 
@@ -12,37 +11,20 @@
     public class PublicApiFacts
     {
         [Test, MethodImpl(MethodImplOptions.NoInlining)]
-        public void Blorc_OpenIdConnect_HasNoBreakingChanges()
+        public async Task Blorc_OpenIdConnect_HasNoBreakingChanges_Async()
         {
             var assembly = typeof(UserManager).Assembly;
 
-            PublicApiApprover.ApprovePublicApi(assembly);
+            await PublicApiApprover.ApprovePublicApiAsync(assembly);
         }
     }
 
     internal static class PublicApiApprover
     {
-        public static void ApprovePublicApi(Assembly assembly)
+        public static async Task ApprovePublicApiAsync(Assembly assembly)
         {
             var publicApi = assembly.GeneratePublicApi();
-            var writer = new ApprovalTextWriter(publicApi, "cs");
-            var approvalNamer = new AssemblyPathNamer(assembly.Location);
-            Approvals.Verify(writer, approvalNamer, Approvals.GetReporter());
-        }
-    }
-
-    internal class AssemblyPathNamer : UnitTestFrameworkNamer
-    {
-        private readonly string _name;
-
-        public AssemblyPathNamer(string assemblyPath)
-        {
-            _name = Path.GetFileNameWithoutExtension(assemblyPath);
-        }
-
-        public override string Name
-        {
-            get { return _name; }
+            await VerifyNUnit.Verifier.Verify(publicApi);
         }
     }
 }
