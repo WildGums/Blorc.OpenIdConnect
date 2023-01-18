@@ -19,3 +19,16 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+==============================================================================
+
+Additional licenses / components
+--------------------------------
+
+Some components in this library are based on other open-source components. Each component
+that is based on another component has a reference to the original component including
+the original license the code was delivered upon. Below is a list of these components:
+
+* oidc-client-ts
+  https://github.com/authts/oidc-client-ts
+  Original license: Apache License 2.0, compatible with the MIT license.
