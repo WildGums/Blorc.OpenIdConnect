@@ -5,6 +5,6 @@
   "devDependencies": {
   },
   "dependencies": {
-    "oidc-client-ts": "2.2.0"
+    "oidc-client-ts": "2.2.1"
   }
 }
