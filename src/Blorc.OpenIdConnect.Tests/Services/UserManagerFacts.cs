@@ -5,7 +5,6 @@
     using System.Text.Json;
     using System.Threading.Tasks;
     using Blorc.OpenIdConnect;
-    using Blorc.Services;
     using Microsoft.AspNetCore.Components;
     using Microsoft.JSInterop;
     using Moq;
@@ -22,11 +21,17 @@
             public async Task Returns_An_Instance_Of_The_Specified_User_Type_Async()
             {
                 var jsRuntimeMock = new Mock<IJSRuntime>();
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated", Array.Empty<object>())).ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsInitialized", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsAuthenticated", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Navigation.IsRedirected", It.IsAny<object?[]>()))
+                    .ReturnsAsync(false);
 
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>("{\r\n  \"access_token\": \"1234567890\"\r\n}");
 
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser", Array.Empty<object>())).ReturnsAsync(jsonElement);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.GetUser", It.IsAny<object?[]>()))
+                    .ReturnsAsync(jsonElement);
 
                 var oidcProviderOptions = new OidcProviderOptions();
 
@@ -45,31 +50,37 @@
             public async Task Returns_An_Instance_Of_The_Specified_User_Type_With_The_Expected_Values_In_All_Properties_Async()
             {
                 var jsRuntimeMock = new Mock<IJSRuntime>();
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated", Array.Empty<object>())).ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsInitialized", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsAuthenticated", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Navigation.IsRedirected", It.IsAny<object?[]>()))
+                    .ReturnsAsync(false);
 
                 var expectedUser = new User<Profile>
-                                   {
-                                       AccessToken = "1234567890",
-                                       Profile = new Profile
-                                                 {
-                                                     Roles = new[] { "Administrator", "System Administrator" },
-                                                     Email = "jane.doe@blorc.com",
-                                                     EmailVerified = true,
-                                                     FamilyName = "Doe",
-                                                     GivenName = "Jane",
-                                                     Name = "Jane Doe",
-                                                     PreferredUsername = "jane.doe"
-                                                 },
-                                       ExpiresAt = 10,
-                                       SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
-                                       TokenType = "Bearer"
-                                   };
+                {
+                    AccessToken = "1234567890",
+                    Profile = new Profile
+                                {
+                                    Roles = new[] { "Administrator", "System Administrator" },
+                                    Email = "jane.doe@blorc.com",
+                                    EmailVerified = true,
+                                    FamilyName = "Doe",
+                                    GivenName = "Jane",
+                                    Name = "Jane Doe",
+                                    PreferredUsername = "jane.doe"
+                                },
+                    ExpiresAt = 10,
+                    SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    TokenType = "Bearer"
+                };
 
                 var serializedExpectedUser = JsonSerializer.Serialize(expectedUser);
 
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(serializedExpectedUser);
 
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser", Array.Empty<object>())).ReturnsAsync(jsonElement);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.GetUser", It.IsAny<object?[]>()))
+                    .ReturnsAsync(jsonElement);
 
                 var oidcProviderOptions = new OidcProviderOptions();
 
@@ -88,32 +99,37 @@
             public async Task Calls_NavigationManager_With_An_Url_Without_Token_Information_When_Is_Redirected_Async()
             {
                 var jsRuntimeMock = new Mock<IJSRuntime>();
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated", Array.Empty<object>())).ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsInitialized", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.IsAuthenticated", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
 
                 var expectedUser = new User<Profile>
-                                   {
-                                       AccessToken = "1234567890",
-                                       Profile = new Profile
-                                                 {
-                                                     Roles = new[] { "Administrator", "System Administrator" },
-                                                     Email = "jane.doe@blorc.com",
-                                                     EmailVerified = true,
-                                                     FamilyName = "Doe",
-                                                     GivenName = "Jane",
-                                                     Name = "Jane Doe",
-                                                     PreferredUsername = "jane.doe"
-                                                 },
-                                       ExpiresAt = 10,
-                                       SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
-                                       TokenType = "Bearer"
-                                   };
+                {
+                    AccessToken = "1234567890",
+                    Profile = new Profile
+                                {
+                                    Roles = new[] { "Administrator", "System Administrator" },
+                                    Email = "jane.doe@blorc.com",
+                                    EmailVerified = true,
+                                    FamilyName = "Doe",
+                                    GivenName = "Jane",
+                                    Name = "Jane Doe",
+                                    PreferredUsername = "jane.doe"
+                                },
+                    ExpiresAt = 10,
+                    SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    TokenType = "Bearer"
+                };
 
                 var serializedExpectedUser = JsonSerializer.Serialize(expectedUser);
 
                 var jsonElement = JsonSerializer.Deserialize<JsonElement>(serializedExpectedUser);
 
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser", Array.Empty<object>())).ReturnsAsync(jsonElement);
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected", Array.Empty<object>())).ReturnsAsync(true);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.GetUser", It.IsAny<object?[]>()))
+                    .ReturnsAsync(jsonElement);
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Navigation.IsRedirected", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
 
                 var oidcProviderOptions = new OidcProviderOptions();
 
@@ -143,6 +159,8 @@
             public async Task Calls_SigninRedirect_With_The_Expected_Url_Async()
             {
                 var jsRuntimeMock = new Mock<IJSRuntime>();
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SigninRedirect", It.IsAny<object?[]>()))
+                    .ReturnsAsync(true);
 
                 var navigationManagerStub = new Stub<NavigationManager>(new NavigationManagerStub());
                 navigationManagerStub.SetField("_isInitialized", true);
@@ -152,7 +170,7 @@
                 using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, new OidcProviderOptions());
                 await userManager.SigninRedirectAsync("/fetchdata");
 
-                jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect", It.Is<object[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));
+                jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SigninRedirect", It.Is<object?[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));
             }
         }
     }

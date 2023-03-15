@@ -1,12 +1,12 @@
 ﻿window.BlorcOidc = {
     Navigation: {
-        IsRedirected: function () {
+        IsRedirected: function (promiseHandler) {
             return performance.getEntriesByType("navigation")[0].type === "navigate";
         }
     },
     Client: {
         UserManager: {
-            IsInitialized: function() {
+            IsInitialized: function (promiseHandler) {
                 return this.userManager !== undefined;
             },
             Initialize: function (config, userManagerHelper) {
@@ -91,7 +91,7 @@
                     });
                 }
             },
-            IsAuthenticated: function() {
+            IsAuthenticated: function (promiseHandler) {
                 if (this.userManager === undefined) {
                     return false;
                 }
@@ -101,7 +101,8 @@
                 }
 
                 let self = this;
-                return new Promise((resolve, _reject) => {
+
+                var promise = new Promise((resolve, _reject) => {
                     self.userManager.signinRedirectCallback().then(function(u) {
                         resolve(u !== null);
                     }).catch(function(e) {
@@ -114,8 +115,12 @@
                         });
                     });
                 });
+
+                promise.then((value) => {
+                    promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
+                });
             },
-            GetUser: function() {
+            GetUser: function (promiseHandler) {
                 if (this.userManager === undefined) {
                     return null;
                 }
@@ -125,7 +130,7 @@
                 }
 
                 let self = this;
-                return new Promise((resolve, _reject) => {
+                var promise = new Promise((resolve, _reject) => {
                     self.userManager.getUser().then(function(u) {
                         self.SetCurrentUser(u);
                         resolve(u);
@@ -137,14 +142,19 @@
                         resolve(null);
                     });
                 });
+
+                promise.then((value) => {
+                    promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
+                });
             },
-            SigninRedirect: function (redirectUri) {
+            SigninRedirect: function (promiseHandler, redirectUri) {
                 if (this.userManager === undefined) {
                     return false;
                 }
 
                 let self = this;
-                return new Promise((resolve, _reject) => {
+
+                var promise = new Promise((resolve, _reject) => {
                     let extraSigninRequestParams = {};
                     if (redirectUri != "" && redirectUri != null) {
                         extraSigninRequestParams.redirect_uri = redirectUri;
@@ -153,17 +163,26 @@
                     self.userManager.signinRedirect(extraSigninRequestParams);
                     resolve(true);
                 });
+
+                promise.then((value) => {
+                    promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
+                });
             },
-            SignoutRedirect: function() {
+            SignoutRedirect: function (promiseHandler) {
                 this.User = undefined;
                 if (this.userManager === undefined) {
                     return false;
                 }
 
                 let self = this;
-                return new Promise((resolve, _reject) => {
+
+                var promise = new Promise((resolve, _reject) => {
                     self.userManager.signoutRedirect();
                     resolve(true);
+                });
+
+                promise.then((value) => {
+                    promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
                 });
             },
             SetCurrentUser: function(u) {
