@@ -5,6 +5,7 @@
     using System.Linq;
     using System.Text.Json;
     using System.Threading.Tasks;
+    using Blorc.OpenIdConnect.JSInterop;
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.JSInterop;
@@ -85,6 +86,7 @@
             {
                 _objRef?.Dispose();
                 _objRef = DotNetObjectReference.Create(this);
+
                 await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
             }
         }
@@ -92,7 +94,9 @@
         public async Task<bool> IsAuthenticatedAsync()
         {
             await InitializeAsync();
-            return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsAuthenticated");
+
+            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool?>("BlorcOidc.Client.UserManager.IsAuthenticated", () => false);
+            return value ?? false;
         }
 
         public async Task SigninRedirectAsync(string redirectUri = "")
@@ -106,12 +110,12 @@
                 }
             }
 
-            await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect", redirectUri);
+            await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>("BlorcOidc.Client.UserManager.SigninRedirect", new[] { redirectUri });
         }
 
         public async Task SignoutRedirectAsync()
         {
-            await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.SignoutRedirect");
+            await _jsRuntime.InvokeWithPromiseHandlerAsync<bool?>("BlorcOidc.Client.UserManager.SignoutRedirect");
         }
 
         [JSInvokable]
@@ -165,15 +169,16 @@
             {
                 if (!await IsRedirectedAsync())
                 {
-                    return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
+                    var getUserResponse = await _jsRuntime.InvokeWithPromiseHandlerAsync<JsonElement?>("BlorcOidc.Client.UserManager.GetUser", () => null);
+                    return getUserResponse;
                 }
 
                 var redirectRequired = false;
                 var uri = new Uri(_navigationManager.Uri);
                 var parameters = uri.Query.TrimStart('?').Split('&')
                     .Select(s => s.Split('='))
-                    .Where(assigments => assigments.Length == 2)
-                    .Select(assigments => (Name: assigments[0], Value: assigments[1]))
+                    .Where(assignments => assignments.Length == 2)
+                    .Select(assignments => (Name: assignments[0], Value: assignments[1]))
                     .ToList();
 
                 for (var i = parameters.Count - 1; i >= 0; i--)
@@ -204,7 +209,8 @@
                     _navigationManager.NavigateTo(url);
                 }
 
-                return await _jsRuntime.InvokeAsync<JsonElement>("BlorcOidc.Client.UserManager.GetUser");
+                var jsonElement = await _jsRuntime.InvokeWithPromiseHandlerAsync<JsonElement?>("BlorcOidc.Client.UserManager.GetUser", () => null);
+                return jsonElement;
             }
 
             return null;
@@ -227,12 +233,14 @@
 
         private async Task<bool> IsInitializedAsync()
         {
-            return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Client.UserManager.IsInitialized");
+            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>("BlorcOidc.Client.UserManager.IsInitialized", () => false);
+            return value;
         }
 
         private async Task<bool> IsRedirectedAsync()
         {
-            return await _jsRuntime.InvokeAsync<bool>("BlorcOidc.Navigation.IsRedirected");
+            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>("BlorcOidc.Navigation.IsRedirected", () => false);
+            return value;
         }
 
         protected virtual void RaiseUserInactivity(UserInactivityEventArgs e)
