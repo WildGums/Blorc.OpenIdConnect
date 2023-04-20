@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
     <TargetFrameworks>net6.0</TargetFrameworks>
     <AssemblyName>Blorc.OpenIdConnect</AssemblyName>
@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blorc.Core" Version="1.2.0" />
-    <PackageReference Include="Fody" Version="6.6.4">
+    <PackageReference Include="Fody" Version="6.7.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
