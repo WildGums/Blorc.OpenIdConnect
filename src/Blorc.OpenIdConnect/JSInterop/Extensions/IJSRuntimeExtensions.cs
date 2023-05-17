@@ -6,7 +6,7 @@
     using System.Threading.Tasks;
     using Microsoft.JSInterop;
 
-    internal static class IJSRuntimeExtensions
+    public static class IJSRuntimeExtensions
     {
         public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, PromiseHandlerContext context, Func<T> defaultValue)
         {
@@ -17,7 +17,7 @@
             catch (Exception)
             {
 #if DEBUG
-                Trace(0, context.Identifier, $"Returning default value");
+                Trace(-1, context.Identifier, $"Returning default value");
 #endif
 
                 return defaultValue();
@@ -105,6 +105,10 @@
 
                 stopwatch.Stop();
 
+#if DEBUG
+                Trace(id, context.Identifier, $"Failed to await promise, timed out after {stopwatch.Elapsed}");
+#endif
+
                 throw new InvalidOperationException($"Failed to await promise, timed out after {stopwatch.Elapsed}");
             }
         }
@@ -124,7 +128,7 @@
         [Conditional("DEBUG")]
         private static void Trace(int id, string identifier, string message)
         {
-            Console.WriteLine($"[{id}] [{identifier}] {message}");
+            Console.WriteLine($"[ {DateTime.Now.ToString("HH:mm:ss.fff") }] [ {id} ] [ {identifier} ] {message}");
         }
 #endif
     }

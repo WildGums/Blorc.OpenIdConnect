@@ -8,6 +8,7 @@
     using Blorc.OpenIdConnect.JSInterop;
     using Microsoft.AspNetCore.Components;
     using Microsoft.AspNetCore.Components.Authorization;
+    using Microsoft.Extensions.Logging;
     using Microsoft.JSInterop;
 
     public class UserManager : IUserManager
@@ -16,8 +17,8 @@
 
         private static readonly string[] ExpectedParameters = { "state", "session_state", "code", "access_token", "id_token", "token_type" };
 
+        private readonly ILogger<UserManager> _logger;
         private readonly IJSRuntime _jsRuntime;
-
         private readonly NavigationManager _navigationManager;
 
         private readonly Dictionary<Type, object?> _usersCache = new Dictionary<Type, object?>();
@@ -25,15 +26,18 @@
         private DotNetObjectReference<UserManager>? _objRef;
 
         private bool _disposed;
+        private bool _isInitializing;
+        private bool _isInitializedCs;
+        private bool _isInitializedJs;
 
         private DateTime? _inactivityStartTime;
 
-        public UserManager(IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
+        public UserManager(ILogger<UserManager> logger, IJSRuntime jsRuntime, NavigationManager navigationManager, OidcProviderOptions options)
         {
             ArgumentNullException.ThrowIfNull(jsRuntime);
             ArgumentNullException.ThrowIfNull(navigationManager);
             ArgumentNullException.ThrowIfNull(options);
-
+            _logger = logger;
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
             _options = options;
@@ -43,7 +47,7 @@
 
         public event EventHandler<UserInactivityEventArgs>? UserInactivity;
 
-        public async Task<TUser?> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions? options = null)
+        public virtual async Task<TUser?> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions? options = null)
         {
             var authenticationState = await authenticationStateTask;
             if (authenticationState?.User?.Identity is not null && !authenticationState.User.Identity.IsAuthenticated)
@@ -54,7 +58,7 @@
             return await GetUserAsync<TUser>(options: options);
         }
 
-        public async Task<TUser?> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions? options = null)
+        public virtual async Task<TUser?> GetUserAsync<TUser>(bool reload = true, JsonSerializerOptions? options = null)
         {
             var userType = typeof(TUser);
 
@@ -62,7 +66,8 @@
             {
                 _usersCache.Remove(userType, out _);
             }
-            else if (_usersCache.TryGetValue(userType, out var value) && value is TUser cacheUser)
+            else if (_usersCache.TryGetValue(userType, out var value) && 
+                     value is TUser cacheUser)
             {
                 return cacheUser;
             }
@@ -78,29 +83,58 @@
             return default;
         }
 
-        public async Task InitializeAsync(Func<Task<Dictionary<string, JsonElement>>> configurationResolver)
+        public virtual async Task InitializeAsync(Func<Task<Dictionary<string, JsonElement>>> configurationResolver)
         {
             ArgumentNullException.ThrowIfNull(configurationResolver);
 
-            if (!await IsInitializedAsync())
+            if (_isInitializedCs)
             {
-                _objRef?.Dispose();
-                _objRef = DotNetObjectReference.Create(this);
+                return;
+            }
 
-                await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
+            var safetyCounter = 50;
+            while (_isInitializing &&
+                safetyCounter-- >= 0)
+            {
+                await Task.Delay(25);
+            }
+
+            if (!_isInitializedJs || !_isInitializedCs)
+            {
+                try
+                {
+                    _isInitializing = true;
+
+                    _logger.LogDebug("Initializing user manager");
+
+                    _objRef?.Dispose();
+                    _objRef = DotNetObjectReference.Create(this);
+
+                    await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
+
+                    _logger.LogDebug("Initialized user manager");
+
+                    _isInitializedCs = true;
+                }
+                finally
+                {
+                    _isInitializing = false;
+                }
             }
         }
 
-        public async Task<bool> IsAuthenticatedAsync()
+        public virtual async Task<bool> IsAuthenticatedAsync()
         {
             await InitializeAsync();
 
-            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.IsAuthenticated"), () => false);
+            var value = await InvokeWithPromiseHandlerAsync<bool?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.IsAuthenticated"), () => false);
             return value ?? false;
         }
 
-        public async Task SigninRedirectAsync(string redirectUri = "")
+        public virtual async Task SigninRedirectAsync(string redirectUri = "")
         {
+            _logger.LogDebug("Signing in");
+
             if (!string.IsNullOrWhiteSpace(redirectUri))
             {
                 var uri = new Uri(redirectUri, UriKind.RelativeOrAbsolute);
@@ -110,12 +144,14 @@
                 }
             }
 
-            await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SigninRedirect", new[] { redirectUri }));
+            await InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SigninRedirect", new[] { redirectUri }));
         }
 
-        public async Task SignoutRedirectAsync()
+        public virtual async Task SignoutRedirectAsync()
         {
-            await _jsRuntime.InvokeWithPromiseHandlerAsync<bool?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignoutRedirect"));
+            _logger.LogDebug("Signing out");
+
+            await InvokeWithPromiseHandlerAsync<bool?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignoutRedirect"));
         }
 
         [JSInvokable]
@@ -160,16 +196,19 @@
 
             _objRef?.Dispose();
 
+            _isInitializing = false;
+            _isInitializedCs = false;
+            _isInitializedJs = false;
             _disposed = true;
         }
 
-        private async Task<JsonElement?> GetUserJsonElementAsync()
+        protected virtual async Task<JsonElement?> GetUserJsonElementAsync()
         {
             if (await IsAuthenticatedAsync())
             {
                 if (!await IsRedirectedAsync())
                 {
-                    var getUserResponse = await _jsRuntime.InvokeWithPromiseHandlerAsync<JsonElement?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.GetUser"), () => null);
+                    var getUserResponse = await InvokeWithPromiseHandlerAsync<JsonElement?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.GetUser"), () => null);
                     return getUserResponse;
                 }
 
@@ -209,35 +248,74 @@
                     _navigationManager.NavigateTo(url);
                 }
 
-                var jsonElement = await _jsRuntime.InvokeWithPromiseHandlerAsync<JsonElement?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.GetUser"), () => null);
+                var jsonElement = await InvokeWithPromiseHandlerAsync<JsonElement?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.GetUser"), () => null);
                 return jsonElement;
             }
 
             return null;
         }
 
-        private async Task InitializeAsync()
+        protected virtual async Task<T> InvokeWithPromiseHandlerAsync<T>(PromiseHandlerContext context)
         {
+            var item = await _jsRuntime.InvokeWithPromiseHandlerAsync<T>(context);
+            return item;
+        }
+
+        protected virtual async Task<T> InvokeWithPromiseHandlerAsync<T>(PromiseHandlerContext context, Func<T> defaultValue)
+        {
+            var item = await _jsRuntime.InvokeWithPromiseHandlerAsync<T>(context, defaultValue);
+            return item;
+        }
+
+        protected virtual async Task InitializeAsync()
+        {
+            if (_isInitializedCs)
+            {
+                return;
+            }
+
             await InitializeAsync(() =>
             {
+                _logger.LogDebug("Serializing options");
+
                 var serializedOptions = JsonSerializer.Serialize(_options);
+
+                _logger.LogDebug("Deserializing options");
+
                 var deserializedOptions = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(serializedOptions);
                 if (deserializedOptions is null)
                 {
                     throw new InvalidOperationException("Cannot initialize user manager");
                 }
 
+                _logger.LogDebug("Returning '{Count}' options", deserializedOptions.Count);
+
                 return Task.FromResult(deserializedOptions);
             });
         }
 
-        private async Task<bool> IsInitializedAsync()
+        protected virtual async Task<bool> IsInitializedAsync()
         {
-            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.IsInitialized"), () => false);
+            if (_isInitializedJs)
+            {
+                return true;
+            }
+
+            var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.IsInitialized")
+            {
+                // Should be super fast
+                MaximumRetryCount = 1
+            }, () => false);
+
+            if (value)
+            {
+                _isInitializedJs = true;
+            }
+
             return value;
         }
 
-        private async Task<bool> IsRedirectedAsync()
+        protected virtual async Task<bool> IsRedirectedAsync()
         {
             var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Navigation.IsRedirected"), () => false);
             return value;

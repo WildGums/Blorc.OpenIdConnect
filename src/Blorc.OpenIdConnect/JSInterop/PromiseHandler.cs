@@ -9,7 +9,7 @@
     /// <summary>
     /// Idea comes from https://stackoverflow.com/questions/55993757/can-not-receive-promise-in-blazor
     /// </summary>
-    internal class PromiseHandler : IPromiseHandler
+    public class PromiseHandler : IPromiseHandler
     {
         private static readonly object _lockObject = new object();
         private static int IdCounter = 1;

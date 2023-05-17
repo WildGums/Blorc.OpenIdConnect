@@ -2,7 +2,7 @@
 {
     using System;
 
-    internal class PromiseHandlerContext
+    public class PromiseHandlerContext
     {
         // The defaults allow 100 * 50 = 5000 ms (5 seconds) of retries
         private const int DefaultMaxAwaitDurationInMilliseconds = 50;
