@@ -16,8 +16,6 @@
 
         private TaskCompletionSource<JsonElement> _taskCompletionSource { get; set; }
 
-        
-
         public PromiseHandler(TaskCompletionSource<JsonElement> taskCompletionSource)
         {
             ArgumentNullException.ThrowIfNull(taskCompletionSource);

@@ -8,39 +8,31 @@
 
     internal static class IJSRuntimeExtensions
     {
-        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, string identifier, Func<T> defaultValue)
-        {
-            return await InvokeWithPromiseHandlerAsync<T>(jsRuntime, identifier, Array.Empty<object?>(), defaultValue);
-        }
-
-        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, string identifier, object?[]? args, Func<T> defaultValue)
+        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, PromiseHandlerContext context, Func<T> defaultValue)
         {
             try
             {
-                return await InvokeWithPromiseHandlerAsync<T>(jsRuntime, identifier, args);
+                return await InvokeWithPromiseHandlerAsync<T>(jsRuntime, context);
             }
             catch (Exception)
             {
 #if DEBUG
-                Trace(0, identifier, $"Returning default value");
+                Trace(0, context.Identifier, $"Returning default value");
 #endif
 
                 return defaultValue();
             }
         }
 
-        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, string identifier)
-        {
-            return await InvokeWithPromiseHandlerAsync<T>(jsRuntime, identifier, Array.Empty<object?>());
-        }
-
-        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, string identifier, object?[]? args)
+        public static async Task<T> InvokeWithPromiseHandlerAsync<T>(this IJSRuntime jsRuntime, PromiseHandlerContext context)
         {
             var tcs = new TaskCompletionSource<JsonElement>();
 
             using (var promiseHandler = DotNetObjectReference.Create(new PromiseHandler(tcs)))
             {
                 var id = promiseHandler.Value.Id;
+
+                var args = context.Args;
 
                 var finalArgs = new object?[(args?.Length ?? 0) + 1];
                 finalArgs[0] = promiseHandler;
@@ -53,7 +45,7 @@
                     }
                 }
 
-                var returnedResult = await jsRuntime.InvokeAsync<object?>(identifier, finalArgs);
+                var returnedResult = await jsRuntime.InvokeAsync<object?>(context.Identifier, finalArgs);
                 if (returnedResult is JsonElement requestJsonResult)
                 {
                     returnedResult = JsonSerializer.Deserialize<T>(requestJsonResult);
@@ -67,40 +59,53 @@
                 // When no object is received, this is the promise that we need to "await"
 
 #if DEBUG
-                Trace(id, identifier, $"Returned object: {GetResultAsString(returnedResult)} (Type: {returnedResult?.GetType()}), awaiting promise...");
+                Trace(id, context.Identifier, $"Returned object: {GetResultAsString(returnedResult)} (Type: {returnedResult?.GetType()}), awaiting promise...");
 #endif
 
-                try
+                var stopwatch = Stopwatch.StartNew();
+
+                for (var i = 0; i < context.MaximumRetryCount; i++)
                 {
-                    var result = await tcs.Task.WaitAsync(TimeSpan.FromSeconds(10));
-
-#if DEBUG
-                    Trace(id, identifier, $"Successfully awaited promise, received: {GetResultAsString(result)} (Type: {result.GetType()})");
-#endif
-
-                    if (result is JsonElement promiseJsonResult)
+                    try
                     {
-                        var deserialized = JsonSerializer.Deserialize<T>(promiseJsonResult);
-                        if (deserialized is T typedDeserialized)
+                        var result = await tcs.Task.WaitAsync(TimeSpan.FromMilliseconds(context.MaximumAwaitIntervalInMilliseconds));
+
+#if DEBUG
+                        Trace(id, context.Identifier, $"Successfully awaited promise, received: {GetResultAsString(result)} (Type: {result.GetType()})");
+#endif
+
+                        if (result is JsonElement promiseJsonResult)
                         {
-                            return typedDeserialized;
+                            var deserialized = JsonSerializer.Deserialize<T>(promiseJsonResult);
+                            if (deserialized is T typedDeserialized)
+                            {
+                                return typedDeserialized;
+                            }
                         }
+
+                        throw new InvalidOperationException($"[{id}] [{context.Identifier}] Could not parse result of type '{result.GetType().Name ?? "null"}' into '{typeof(T).Name}'");
                     }
-
-                    throw new InvalidOperationException($"[{id}] [{identifier}] Could not parse result of type '{result.GetType().Name ?? "null"}' into '{typeof(T).Name}'");
-                }
+                    catch (TimeoutException)
+                    {
+                        // Allowed
+                    }
 #if DEBUG
-                catch (Exception ex)
+                    catch (Exception ex)
 #else
-                catch (Exception)
+                    catch (Exception)
 #endif
-                {
+                    {
 #if DEBUG
-                    Trace(id, identifier, $"Failed to await promise: {ex.Message}");
+                        Trace(id, context.Identifier, $"Failed to await promise: {ex.Message}");
 #endif
 
-                    throw;
+                        throw;
+                    }
                 }
+
+                stopwatch.Stop();
+
+                throw new InvalidOperationException($"Failed to await promise, timed out after {stopwatch.Elapsed}");
             }
         }
 
