@@ -6,6 +6,7 @@
     using System.Threading.Tasks;
     using Blorc.OpenIdConnect;
     using Microsoft.AspNetCore.Components;
+    using Microsoft.Extensions.Logging.Abstractions;
     using Microsoft.JSInterop;
     using Moq;
     using NUnit.Framework;
@@ -39,7 +40,7 @@
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost");
 
-                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
+                using var userManager = new UserManager(new NullLogger<UserManager>(), jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 
@@ -88,7 +89,7 @@
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost");
 
-                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
+                using var userManager = new UserManager(new NullLogger<UserManager>(), jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 
@@ -145,7 +146,7 @@
                 navigationManagerStub.SetField("_isInitialized", true);
                 navigationManagerStub.SetField("_uri", "http://localhost:5001/fetchdata?state=c52b9dee566c480bb91a206189023d5b&session_state=e9a1349a-7d8b-433c-adeb-93176accfc17&code=3bbbd897-8496-4401-9688-4873d5d3b7b8.e9a1349a-7d8b-433c-adeb-93176accfc17.demo-app");
 
-                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
+                using var userManager = new UserManager(new NullLogger<UserManager>(), jsRuntimeMock.Object, navigationManagerStub.Instance, oidcProviderOptions);
 
                 _ = await userManager.GetUserAsync<User<Profile>>();
 
@@ -167,10 +168,12 @@
                 navigationManagerStub.SetField("_uri", "http://localhost:5000/counter");
                 navigationManagerStub.SetField("_baseUri", new Uri("http://localhost:5000/"));
 
-                using var userManager = new UserManager(jsRuntimeMock.Object, navigationManagerStub.Instance, new OidcProviderOptions());
+                using var userManager = new UserManager(new NullLogger<UserManager>(), jsRuntimeMock.Object, navigationManagerStub.Instance, new OidcProviderOptions());
                 await userManager.SigninRedirectAsync("/fetchdata");
 
+#pragma warning disable IDISP013 // Await in using
                 jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SigninRedirect", It.Is<object?[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));
+#pragma warning restore IDISP013 // Await in using
             }
         }
     }

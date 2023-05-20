@@ -7,7 +7,7 @@
     Client: {
         UserManager: {
             IsInitialized: function (promiseHandler) {
-                return this.userManager !== undefined;
+                promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(this.userManager !== undefined));
             },
             Initialize: function (config, userManagerHelper) {
                 if (this.userManager !== undefined) {

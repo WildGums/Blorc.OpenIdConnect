@@ -11,6 +11,7 @@
             ArgumentNullException.ThrowIfNull(element);
 
             var bufferWriter = new ArrayBufferWriter<byte>();
+
             using (var writer = new Utf8JsonWriter(bufferWriter))
             {
                 element.WriteTo(writer);

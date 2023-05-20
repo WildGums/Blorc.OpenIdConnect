@@ -1,4 +1,4 @@
-﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName="")]
+﻿[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v6.0", FrameworkDisplayName=".NET 6.0")]
 namespace Blorc.OpenIdConnect
 {
     public class AccessTokenDelegatingHandler : System.Net.Http.DelegatingHandler
@@ -132,6 +132,15 @@ namespace Blorc.OpenIdConnect
         [System.Text.Json.Serialization.JsonPropertyName("roles")]
         public string[]? Roles { get; set; }
     }
+    public class PromiseHandlerContext
+    {
+        public PromiseHandlerContext(string identifier) { }
+        public PromiseHandlerContext(string identifier, object?[]? args) { }
+        public object?[]? Args { get; }
+        public string Identifier { get; }
+        public int MaximumAwaitIntervalInMilliseconds { get; set; }
+        public int MaximumRetryCount { get; set; }
+    }
     public static class ServiceCollectionExtensions
     {
         public static void AddBlorcOpenIdConnect(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, System.Action<Blorc.OpenIdConnect.OidcProviderOptions>? configure = null) { }
@@ -155,22 +164,28 @@ namespace Blorc.OpenIdConnect
     }
     public class UserManager : Blorc.OpenIdConnect.IUserManager, System.IDisposable
     {
-        public UserManager(Microsoft.JSInterop.IJSRuntime jsRuntime, Microsoft.AspNetCore.Components.NavigationManager navigationManager, Blorc.OpenIdConnect.OidcProviderOptions options) { }
+        public UserManager(Microsoft.Extensions.Logging.ILogger<Blorc.OpenIdConnect.UserManager> logger, Microsoft.JSInterop.IJSRuntime jsRuntime, Microsoft.AspNetCore.Components.NavigationManager navigationManager, Blorc.OpenIdConnect.OidcProviderOptions options) { }
         public event System.EventHandler<Blorc.OpenIdConnect.UserActivityEventArgs>? UserActivity;
         public event System.EventHandler<Blorc.OpenIdConnect.UserInactivityEventArgs>? UserInactivity;
         public virtual void Dispose() { }
-        public System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null) { }
-        public System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null) { }
-        public System.Threading.Tasks.Task InitializeAsync(System.Func<System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, System.Text.Json.JsonElement>>> configurationResolver) { }
-        public System.Threading.Tasks.Task<bool> IsAuthenticatedAsync() { }
+        public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null) { }
+        public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null) { }
+        protected virtual System.Threading.Tasks.Task<System.Text.Json.JsonElement?> GetUserJsonElementAsync() { }
+        protected virtual System.Threading.Tasks.Task InitializeAsync() { }
+        public virtual System.Threading.Tasks.Task InitializeAsync(System.Func<System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, System.Text.Json.JsonElement>>> configurationResolver) { }
+        protected virtual System.Threading.Tasks.Task<T> InvokeWithPromiseHandlerAsync<T>(Blorc.OpenIdConnect.PromiseHandlerContext context) { }
+        protected virtual System.Threading.Tasks.Task<T> InvokeWithPromiseHandlerAsync<T>(Blorc.OpenIdConnect.PromiseHandlerContext context, System.Func<T> defaultValue) { }
+        public virtual System.Threading.Tasks.Task<bool> IsAuthenticatedAsync() { }
+        protected virtual System.Threading.Tasks.Task<bool> IsInitializedAsync() { }
+        protected virtual System.Threading.Tasks.Task<bool> IsRedirectedAsync() { }
         [Microsoft.JSInterop.JSInvokable]
         public void OnUserActivity() { }
         [Microsoft.JSInterop.JSInvokable]
         public double OnUserInactivity() { }
         protected virtual void RaiseUserActivity(Blorc.OpenIdConnect.UserActivityEventArgs e) { }
         protected virtual void RaiseUserInactivity(Blorc.OpenIdConnect.UserInactivityEventArgs e) { }
-        public System.Threading.Tasks.Task SigninRedirectAsync(string redirectUri = "") { }
-        public System.Threading.Tasks.Task SignoutRedirectAsync() { }
+        public virtual System.Threading.Tasks.Task SigninRedirectAsync(string redirectUri = "") { }
+        public virtual System.Threading.Tasks.Task SignoutRedirectAsync() { }
     }
     public static class UserManagerExtensions
     {
@@ -193,5 +208,25 @@ namespace Blorc.OpenIdConnect
         public string? SessionState { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("token_type")]
         public string? TokenType { get; set; }
+    }
+}
+namespace Blorc.OpenIdConnect.JSInterop
+{
+    public static class IJSRuntimeExtensions
+    {
+        public static System.Threading.Tasks.Task<T> InvokeWithPromiseHandlerAsync<T>(this Microsoft.JSInterop.IJSRuntime jsRuntime, Blorc.OpenIdConnect.PromiseHandlerContext context) { }
+        public static System.Threading.Tasks.Task<T> InvokeWithPromiseHandlerAsync<T>(this Microsoft.JSInterop.IJSRuntime jsRuntime, Blorc.OpenIdConnect.PromiseHandlerContext context, System.Func<T> defaultValue) { }
+    }
+    public interface IPromiseHandler
+    {
+        int Id { get; }
+        void SetResult(string json);
+    }
+    public class PromiseHandler : Blorc.OpenIdConnect.JSInterop.IPromiseHandler
+    {
+        public PromiseHandler(System.Threading.Tasks.TaskCompletionSource<System.Text.Json.JsonElement> taskCompletionSource) { }
+        public int Id { get; }
+        [Microsoft.JSInterop.JSInvokable]
+        public void SetResult(string json) { }
     }
 }
