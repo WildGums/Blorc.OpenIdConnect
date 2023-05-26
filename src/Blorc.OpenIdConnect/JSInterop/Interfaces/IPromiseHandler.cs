@@ -1,6 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect.JSInterop
 {
-    internal interface IPromiseHandler
+    public interface IPromiseHandler
     {
         int Id { get; }
         void SetResult(string json);

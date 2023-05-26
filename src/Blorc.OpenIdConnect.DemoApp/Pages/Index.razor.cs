@@ -24,33 +24,33 @@
 
         private void OnUserManagerUserInactivity(object sender, UserInactivityEventArgs args)
         {
-            SignoutTimeSpan = args.SignoutTimeSpan;
+            SignOutTimeSpan = args.SignOutTimeSpan;
             StateHasChanged();
         }
 
         private void OnUserManagerUserActivity(object sender, UserActivityEventArgs args)
         {
-            SignoutTimeSpan = null;
+            SignOutTimeSpan = null;
             StateHasChanged();
         }
 
-        public TimeSpan? SignoutTimeSpan { get; set; }
+        public TimeSpan? SignOutTimeSpan { get; set; }
 
         public User<Profile> User { get; set; }
 
         private async Task OnLoginButtonClickAsync(MouseEventArgs obj)
         {
-            await UserManager.SigninRedirectAsync();
+            await UserManager.SignInRedirectAsync();
         }
 
         private async Task OnLoginAndRedirectFetchDataButtonClickAsync(MouseEventArgs obj)
         {
-            await UserManager.SigninRedirectAsync("/fetchdata");
+            await UserManager.SignInRedirectAsync("/fetchdata");
         }
 
         private async Task OnLogoutButtonClickAsync(MouseEventArgs obj)
         {
-            await UserManager.SignoutRedirectAsync();
+            await UserManager.SignOutRedirectAsync();
         }
 
         public void Dispose()

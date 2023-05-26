@@ -7,7 +7,7 @@
     Client: {
         UserManager: {
             IsInitialized: function (promiseHandler) {
-                return this.userManager !== undefined;
+                promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(this.userManager !== undefined));
             },
             Initialize: function (config, userManagerHelper) {
                 if (this.userManager !== undefined) {
@@ -27,10 +27,10 @@
 
                 let self = this;
 
-                if (config.timeForUserInactivityAutomaticSignout > 0) {
-                    var nextTimerTick = config.timeForUserInactivityAutomaticSignout;
+                if (config.timeForUserInactivityAutomaticSignOut > 0) {
+                    var nextTimerTick = config.timeForUserInactivityAutomaticSignOut;
                     if (config.timeForUserInactivityNotification > 0) {
-                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticSignout, config.timeForUserInactivityNotification);
+                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticSignOut, config.timeForUserInactivityNotification);
                     }
 
                     var userInactivityTimer;
@@ -93,6 +93,7 @@
             },
             IsAuthenticated: function (promiseHandler) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot determine whether user is authenticated");
                     return false;
                 }
 
@@ -122,6 +123,7 @@
             },
             GetUser: function (promiseHandler) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot return user");
                     return null;
                 }
 
@@ -147,8 +149,9 @@
                     promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
                 });
             },
-            SigninRedirect: function (promiseHandler, redirectUri) {
+            SignInRedirect: function (promiseHandler, redirectUri) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot sign in");
                     return false;
                 }
 
@@ -168,9 +171,10 @@
                     promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
                 });
             },
-            SignoutRedirect: function (promiseHandler) {
+            SignOutRedirect: function (promiseHandler) {
                 this.User = undefined;
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot sign out");
                     return false;
                 }
 
