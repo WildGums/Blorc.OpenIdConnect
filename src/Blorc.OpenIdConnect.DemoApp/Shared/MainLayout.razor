@@ -19,10 +19,10 @@
             @Body
         </div>
 
-        @if (_signoutTimeSpan is not null && _signoutTimeSpan.Value.TotalSeconds < 5)
+        @if (_signOutTimeSpan is not null && _signOutTimeSpan.Value.TotalSeconds < 5)
         {
             <div class="alert alert-danger mt-4" style="position: fixed; bottom: 0; width: 100%" role="alert">
-                    The user will be automatically signed out in @_signoutTimeSpan
+                    The user will be automatically signed out in @_signOutTimeSpan
             </div>
         }
     </div>

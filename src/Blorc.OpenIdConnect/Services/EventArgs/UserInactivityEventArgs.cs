@@ -4,12 +4,12 @@
 
     public class UserInactivityEventArgs
     {
-        public UserInactivityEventArgs(TimeSpan signoutTimeSpan)
+        public UserInactivityEventArgs(TimeSpan signOutTimeSpan)
         {
-            SignoutTimeSpan = signoutTimeSpan;
+            SignOutTimeSpan = signOutTimeSpan;
         }
 
-        public TimeSpan SignoutTimeSpan { get; }
+        public TimeSpan SignOutTimeSpan { get; }
 
         public TimeSpan? InactivityNotificationTimeSpan { get; set; } = null;
     }

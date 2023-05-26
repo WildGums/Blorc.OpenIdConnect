@@ -11,9 +11,9 @@
 
         event EventHandler<UserInactivityEventArgs>? UserInactivity;
 
-        Task SigninRedirectAsync(string redirectUri = "");
+        Task<bool> SignInRedirectAsync(string redirectUri = "");
 
-        Task SignoutRedirectAsync();
+        Task<bool> SignOutRedirectAsync();
 
         Task<bool> IsAuthenticatedAsync();
         
