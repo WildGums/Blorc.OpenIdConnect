@@ -93,6 +93,7 @@
             },
             IsAuthenticated: function (promiseHandler) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot determine whether user is authenticated");
                     return false;
                 }
 
@@ -122,6 +123,7 @@
             },
             GetUser: function (promiseHandler) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot return user");
                     return null;
                 }
 
@@ -149,6 +151,7 @@
             },
             SignInRedirect: function (promiseHandler, redirectUri) {
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot sign in");
                     return false;
                 }
 
@@ -171,6 +174,7 @@
             SignOutRedirect: function (promiseHandler) {
                 this.User = undefined;
                 if (this.userManager === undefined) {
+                    console.log("No userManager available, cannot sign out");
                     return false;
                 }
 
