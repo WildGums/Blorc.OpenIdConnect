@@ -85,11 +85,17 @@
         {
             ArgumentNullException.ThrowIfNull(configurationResolver);
 
-            var safetyCounter = 50;
+            // Max wait time is 5 seconds
+            var safetyCounter = 1000;
             while (_isInitializing &&
                 safetyCounter-- >= 0)
             {
                 await Task.Delay(50);
+            }
+
+            if (await IsInitializedAsync())
+            {
+                return;
             }
 
             try
