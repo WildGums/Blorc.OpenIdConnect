@@ -27,8 +27,6 @@
 
         private bool _disposed;
         private bool _isInitializing;
-        private bool _isInitializedCs;
-        private bool _isInitializedJs;
 
         private DateTime? _inactivityStartTime;
 
@@ -66,7 +64,7 @@
             {
                 _usersCache.Remove(userType, out _);
             }
-            else if (_usersCache.TryGetValue(userType, out var value) && 
+            else if (_usersCache.TryGetValue(userType, out var value) &&
                      value is TUser cacheUser)
             {
                 return cacheUser;
@@ -87,39 +85,29 @@
         {
             ArgumentNullException.ThrowIfNull(configurationResolver);
 
-            if (_isInitializedCs)
-            {
-                return;
-            }
-
             var safetyCounter = 50;
             while (_isInitializing &&
                 safetyCounter-- >= 0)
             {
-                await Task.Delay(25);
+                await Task.Delay(50);
             }
 
-            if (!_isInitializedJs || !_isInitializedCs)
+            try
             {
-                try
-                {
-                    _isInitializing = true;
+                _isInitializing = true;
 
-                    _logger.LogDebug("Initializing user manager");
+                _logger.LogDebug("Initializing user manager");
 
-                    _objRef?.Dispose();
-                    _objRef = DotNetObjectReference.Create(this);
+                _objRef?.Dispose();
+                _objRef = DotNetObjectReference.Create(this);
 
-                    await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
+                await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
 
-                    _logger.LogDebug("Initialized user manager");
-
-                    _isInitializedCs = true;
-                }
-                finally
-                {
-                    _isInitializing = false;
-                }
+                _logger.LogDebug("Initialized user manager");
+            }
+            finally
+            {
+                _isInitializing = false;
             }
         }
 
@@ -145,7 +133,7 @@
             }
 
             var result = await InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignInRedirect", new[] { redirectUri }));
-            
+
             _logger.LogDebug("Sign in result: '{Result}'", result);
 
             return result;
@@ -205,8 +193,6 @@
             _objRef?.Dispose();
 
             _isInitializing = false;
-            _isInitializedCs = false;
-            _isInitializedJs = false;
             _disposed = true;
         }
 
@@ -277,11 +263,6 @@
 
         protected virtual async Task InitializeAsync()
         {
-            if (_isInitializedCs)
-            {
-                return;
-            }
-
             await InitializeAsync(() =>
             {
                 _logger.LogDebug("Serializing options");
@@ -304,21 +285,11 @@
 
         protected virtual async Task<bool> IsInitializedAsync()
         {
-            if (_isInitializedJs)
-            {
-                return true;
-            }
-
             var value = await _jsRuntime.InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.IsInitialized")
             {
                 // Should be super fast
                 MaximumRetryCount = 1
             }, () => false);
-
-            if (value)
-            {
-                _isInitializedJs = true;
-            }
 
             return value;
         }
