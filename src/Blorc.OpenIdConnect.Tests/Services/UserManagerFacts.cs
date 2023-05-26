@@ -154,13 +154,13 @@
             }
         }
 
-        public class The_SigninRedirectAsync_Method
+        public class The_SignInRedirectAsync_Method
         {
             [Test]
-            public async Task Calls_SigninRedirect_With_The_Expected_Url_Async()
+            public async Task Calls_SignInRedirect_With_The_Expected_Url_Async()
             {
                 var jsRuntimeMock = new Mock<IJSRuntime>();
-                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SigninRedirect", It.IsAny<object?[]>()))
+                jsRuntimeMock.Setup(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SignInRedirect", It.IsAny<object?[]>()))
                     .ReturnsAsync(true);
 
                 var navigationManagerStub = new Stub<NavigationManager>(new NavigationManagerStub());
@@ -169,10 +169,10 @@
                 navigationManagerStub.SetField("_baseUri", new Uri("http://localhost:5000/"));
 
                 using var userManager = new UserManager(new NullLogger<UserManager>(), jsRuntimeMock.Object, navigationManagerStub.Instance, new OidcProviderOptions());
-                await userManager.SigninRedirectAsync("/fetchdata");
+                await userManager.SignInRedirectAsync("/fetchdata");
 
 #pragma warning disable IDISP013 // Await in using
-                jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SigninRedirect", It.Is<object?[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));
+                jsRuntimeMock.Verify(runtime => runtime.InvokeAsync<object?>("BlorcOidc.Client.UserManager.SignInRedirect", It.Is<object?[]>(objects => objects.Contains("http://localhost:5000/fetchdata"))));
 #pragma warning restore IDISP013 // Await in using
             }
         }

@@ -27,10 +27,10 @@
 
                 let self = this;
 
-                if (config.timeForUserInactivityAutomaticSignout > 0) {
-                    var nextTimerTick = config.timeForUserInactivityAutomaticSignout;
+                if (config.timeForUserInactivityAutomaticSignOut > 0) {
+                    var nextTimerTick = config.timeForUserInactivityAutomaticSignOut;
                     if (config.timeForUserInactivityNotification > 0) {
-                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticSignout, config.timeForUserInactivityNotification);
+                        nextTimerTick = Math.min(config.timeForUserInactivityAutomaticSignOut, config.timeForUserInactivityNotification);
                     }
 
                     var userInactivityTimer;
@@ -147,7 +147,7 @@
                     promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
                 });
             },
-            SigninRedirect: function (promiseHandler, redirectUri) {
+            SignInRedirect: function (promiseHandler, redirectUri) {
                 if (this.userManager === undefined) {
                     return false;
                 }
@@ -168,7 +168,7 @@
                     promiseHandler.invokeMethodAsync('SetResult', JSON.stringify(value));
                 });
             },
-            SignoutRedirect: function (promiseHandler) {
+            SignOutRedirect: function (promiseHandler) {
                 this.User = undefined;
                 if (this.userManager === undefined) {
                     return false;

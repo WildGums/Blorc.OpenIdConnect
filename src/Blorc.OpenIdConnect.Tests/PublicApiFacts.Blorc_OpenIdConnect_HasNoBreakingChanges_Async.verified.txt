@@ -50,8 +50,8 @@ namespace Blorc.OpenIdConnect
         System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null);
         System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null);
         System.Threading.Tasks.Task<bool> IsAuthenticatedAsync();
-        System.Threading.Tasks.Task SigninRedirectAsync(string redirectUri = "");
-        System.Threading.Tasks.Task SignoutRedirectAsync();
+        System.Threading.Tasks.Task<bool> SignInRedirectAsync(string redirectUri = "");
+        System.Threading.Tasks.Task<bool> SignOutRedirectAsync();
     }
     public static class JsonElementExtensions
     {
@@ -88,14 +88,14 @@ namespace Blorc.OpenIdConnect
         public string? Scope { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("silent_redirect_uri")]
         public string? SilentRedirectUri { get; set; }
-        [System.Text.Json.Serialization.JsonPropertyName("timeForUserInactivityAutomaticSignout")]
-        public int TimeForUserInactivityAutomaticSignout { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("timeForUserInactivityAutomaticSignOut")]
+        public int TimeForUserInactivityAutomaticSignOut { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("timeForUserInactivityNotification")]
         public int TimeForUserInactivityNotification { get; set; }
     }
     public static class OidcProviderOptionsExtensions
     {
-        public static System.TimeSpan GetTimeForUserInactivityAutomaticSignout(this Blorc.OpenIdConnect.OidcProviderOptions options) { }
+        public static System.TimeSpan GetTimeForUserInactivityAutomaticSignOut(this Blorc.OpenIdConnect.OidcProviderOptions options) { }
         public static System.TimeSpan GetTimeForUserInactivityNotification(this Blorc.OpenIdConnect.OidcProviderOptions options) { }
     }
     public class OpenIdConnectAuthenticationStateProvider : Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider
@@ -158,9 +158,9 @@ namespace Blorc.OpenIdConnect
     }
     public class UserInactivityEventArgs
     {
-        public UserInactivityEventArgs(System.TimeSpan signoutTimeSpan) { }
+        public UserInactivityEventArgs(System.TimeSpan signOutTimeSpan) { }
         public System.TimeSpan? InactivityNotificationTimeSpan { get; set; }
-        public System.TimeSpan SignoutTimeSpan { get; }
+        public System.TimeSpan SignOutTimeSpan { get; }
     }
     public class UserManager : Blorc.OpenIdConnect.IUserManager, System.IDisposable
     {
@@ -184,8 +184,8 @@ namespace Blorc.OpenIdConnect
         public double OnUserInactivity() { }
         protected virtual void RaiseUserActivity(Blorc.OpenIdConnect.UserActivityEventArgs e) { }
         protected virtual void RaiseUserInactivity(Blorc.OpenIdConnect.UserInactivityEventArgs e) { }
-        public virtual System.Threading.Tasks.Task SigninRedirectAsync(string redirectUri = "") { }
-        public virtual System.Threading.Tasks.Task SignoutRedirectAsync() { }
+        public virtual System.Threading.Tasks.Task<bool> SignInRedirectAsync(string redirectUri = "") { }
+        public virtual System.Threading.Tasks.Task<bool> SignOutRedirectAsync() { }
     }
     public static class UserManagerExtensions
     {

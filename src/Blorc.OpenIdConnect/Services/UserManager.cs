@@ -131,7 +131,7 @@
             return value ?? false;
         }
 
-        public virtual async Task SigninRedirectAsync(string redirectUri = "")
+        public virtual async Task<bool> SignInRedirectAsync(string redirectUri = "")
         {
             _logger.LogDebug("Signing in");
 
@@ -144,14 +144,22 @@
                 }
             }
 
-            await InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SigninRedirect", new[] { redirectUri }));
+            var result = await InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignInRedirect", new[] { redirectUri }));
+            
+            _logger.LogDebug("Sign in result: '{Result}'", result);
+
+            return result;
         }
 
-        public virtual async Task SignoutRedirectAsync()
+        public virtual async Task<bool> SignOutRedirectAsync()
         {
             _logger.LogDebug("Signing out");
 
-            await InvokeWithPromiseHandlerAsync<bool?>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignoutRedirect"));
+            var result = await InvokeWithPromiseHandlerAsync<bool>(new PromiseHandlerContext("BlorcOidc.Client.UserManager.SignOutRedirect"));
+
+            _logger.LogDebug("Sign out result: '{Result}'", result);
+
+            return result;
         }
 
         [JSInvokable]
@@ -160,10 +168,10 @@
             var now = DateTime.Now;
             _inactivityStartTime ??= now.Subtract(_options.GetTimeForUserInactivityNotification());
             var elapsedTime = now.Subtract(_inactivityStartTime.Value);
-            var remainingTime = _options.GetTimeForUserInactivityAutomaticSignout() - elapsedTime;
+            var remainingTime = _options.GetTimeForUserInactivityAutomaticSignOut() - elapsedTime;
             if (remainingTime <= TimeSpan.Zero)
             {
-                _ = Task.Run(SignoutRedirectAsync);
+                _ = Task.Run(SignOutRedirectAsync);
             }
 
             var userInactivityEventArgs = new UserInactivityEventArgs(remainingTime);
