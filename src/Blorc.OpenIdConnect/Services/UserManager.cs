@@ -23,7 +23,7 @@
 
         private readonly Dictionary<Type, object?> _usersCache = new Dictionary<Type, object?>();
 
-        private DotNetObjectReference<UserManager>? _objRef;
+        private readonly DotNetObjectReference<UserManager> _objRef;
 
         private bool _disposed;
         private bool _isInitializing;
@@ -35,10 +35,13 @@
             ArgumentNullException.ThrowIfNull(jsRuntime);
             ArgumentNullException.ThrowIfNull(navigationManager);
             ArgumentNullException.ThrowIfNull(options);
+
             _logger = logger;
             _jsRuntime = jsRuntime;
             _navigationManager = navigationManager;
             _options = options;
+
+            _objRef = DotNetObjectReference.Create(this);
         }
 
         public event EventHandler<UserActivityEventArgs>? UserActivity;
@@ -103,9 +106,6 @@
                 _isInitializing = true;
 
                 _logger.LogDebug("Initializing user manager");
-
-                _objRef?.Dispose();
-                _objRef = DotNetObjectReference.Create(this);
 
                 await _jsRuntime.InvokeVoidAsync("BlorcOidc.Client.UserManager.Initialize", await configurationResolver(), _objRef);
 
@@ -196,7 +196,7 @@
                 return;
             }
 
-            _objRef?.Dispose();
+            _objRef.Dispose();
 
             _isInitializing = false;
             _disposed = true;
