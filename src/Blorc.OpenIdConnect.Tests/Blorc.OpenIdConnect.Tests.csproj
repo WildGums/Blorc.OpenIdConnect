@@ -1,6 +1,6 @@
 <Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>Blorc.OpenIdConnect.Tests</AssemblyName>
     <RootNamespace>Blorc.OpenIdConnect.Tests</RootNamespace>
     <PackageId>Blorc.OpenIdConnect.Tests</PackageId>
