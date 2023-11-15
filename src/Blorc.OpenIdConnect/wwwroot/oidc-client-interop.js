@@ -77,6 +77,14 @@
                     }
                 }
 
+                // Never replace existing instance
+                if (this.userManager !== undefined) {
+                    console.debug("Prevented duplicate initialization of userManager");
+                    return;
+                }
+
+                console.debug("Creating userManager");
+
                 this.userManager = new oidc.UserManager(config);
 
                 if (config.automaticSilentRenew) {
@@ -86,14 +94,14 @@
                                 self.SetCurrentUser(u);
                             })
                             .catch(function(e) {
-                                console.log(e);
+                                console.error(e);
                             });
                     });
                 }
             },
             IsAuthenticated: function (promiseHandler) {
                 if (this.userManager === undefined) {
-                    console.log("No userManager available, cannot determine whether user is authenticated");
+                    console.debug("No userManager available, cannot determine whether user is authenticated");
                     return false;
                 }
 
@@ -104,11 +112,24 @@
                 let self = this;
 
                 var promise = new Promise((resolve, _reject) => {
-                    self.userManager.signinRedirectCallback().then(function(u) {
+                    // Make sure to only have 1 signinRedirectCallback at a time
+                    if (self.isSigningIn) {
+                        console.debug("Already signing in, returning false for now");
+                        resolve(false);
+                        return;
+                    }
+
+                    self.isSigningIn = true;
+
+                    console.debug("Signing in");
+
+                    self.userManager.signinRedirectCallback().then(function (u) {
+                        self.isSigningIn = false;
                         resolve(u !== null);
-                    }).catch(function(e) {
+                    }).catch(function (e) {
+                        self.isSigningIn = false;
                         if (e.message !== "No state in response") {
-                            console.log(e);
+                            console.error(e);
                         }
 
                         self.userManager.getUser().then(function(u) {
@@ -123,7 +144,7 @@
             },
             GetUser: function (promiseHandler) {
                 if (this.userManager === undefined) {
-                    console.log("No userManager available, cannot return user");
+                    console.debug("No userManager available, cannot return user");
                     return null;
                 }
 
@@ -138,7 +159,7 @@
                         resolve(u);
                     }).catch(function(e) {
                         if (e.message !== "No state in response") {
-                            console.log(e);
+                            console.error(e);
                         }
 
                         resolve(null);
@@ -151,7 +172,7 @@
             },
             SignInRedirect: function (promiseHandler, redirectUri) {
                 if (this.userManager === undefined) {
-                    console.log("No userManager available, cannot sign in");
+                    console.debug("No userManager available, cannot sign in");
                     return false;
                 }
 
@@ -174,7 +195,7 @@
             SignOutRedirect: function (promiseHandler) {
                 this.User = undefined;
                 if (this.userManager === undefined) {
-                    console.log("No userManager available, cannot sign out");
+                    console.debug("No userManager available, cannot sign out");
                     return false;
                 }
 

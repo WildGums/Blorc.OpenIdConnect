@@ -1,6 +1,6 @@
 <Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>Blorc.OpenIdConnect.Tests</AssemblyName>
     <RootNamespace>Blorc.OpenIdConnect.Tests</RootNamespace>
     <PackageId>Blorc.OpenIdConnect.Tests</PackageId>
@@ -18,7 +18,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Keycloak.Net" Version="1.0.18" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
     <PackageReference Include="Moq" Version="4.20.69" />
     <PackageReference Include="NUnit" Version="3.14.0" PrivateAssets="all" />
@@ -28,7 +28,7 @@
     </PackageReference>
     <PackageReference Include="NUnit.DeepObjectCompare" Version="2.0.1" />
     <PackageReference Include="PublicApiGenerator" Version="11.0.0" PrivateAssets="all" />
-    <PackageReference Include="Verify.NUnit" Version="22.1.4" />
+    <PackageReference Include="Verify.NUnit" Version="22.4.0" />
   </ItemGroup>
 
   <ItemGroup>
