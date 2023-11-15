@@ -2,7 +2,7 @@ name: openidconnect
 network: openidconnect-network
 services:
 - name:  openidconnect-keycloak
-  image: quay.io/keycloak/keycloak:22.0.3
+  image: quay.io/keycloak/keycloak:22.0.5
   args: start-dev
   bindings:
   - port: 5002
