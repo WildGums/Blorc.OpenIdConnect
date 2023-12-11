@@ -44,7 +44,7 @@
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 
-                Assert.IsNotNull(user);
+                Assert.That(user, Is.Not.Null);
             }
 
             [Test]
@@ -150,7 +150,7 @@
 
                 _ = await userManager.GetUserAsync<User<Profile>>();
 
-                Assert.AreEqual("http://localhost:5001/fetchdata", navigateUri);
+                Assert.That(navigateUri, Is.EqualTo("http://localhost:5001/fetchdata"));
             }
         }
 
