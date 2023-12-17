@@ -34,11 +34,12 @@
 
                 var claims = user.AsClaims().Where(claim => claim.Type == ClaimTypes.Role).ToList();
 
-                Assert.IsNotEmpty(claims);
+                Assert.That(claims, Is.Not.Empty);
+
                 foreach (var role in user.Profile.Roles)
                 {
                     var claim = claims.FirstOrDefault(c => c.Value == role);
-                    Assert.IsNotNull(claim);
+                    Assert.That(claim, Is.Not.Null);
                 }
             }
 
@@ -69,7 +70,7 @@
 
                 var claims = users.AsClaims().ToList();
 
-                Assert.AreEqual(14, claims.Count);
+                Assert.That(claims.Count, Is.EqualTo(14));
             }
 
             [Test]
@@ -111,7 +112,7 @@
 
                 var claims = complexType.AsClaims().ToList();
 
-                Assert.AreEqual(18, claims.Count);
+                Assert.That(claims.Count, Is.EqualTo(18));
             }
 
             public class ComplexType

@@ -23,7 +23,7 @@
             [TestCase(typeof(Profile), false)]
             public void Returns_The_Expected_Value(Type type, bool result)
             {
-                Assert.AreEqual(result, type.IsPrimitiveEx());
+                Assert.That(type.IsPrimitiveEx(), Is.EqualTo(result));
             }
         }
     }
