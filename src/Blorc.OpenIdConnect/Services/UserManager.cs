@@ -15,7 +15,16 @@
     {
         private readonly OidcProviderOptions _options;
 
-        private static readonly string[] ExpectedParameters = { "state", "session_state", "code", "access_token", "id_token", "token_type" };
+        private static readonly string[] ExpectedParameters =
+        {
+            "state",
+            "session_state",
+            "code",
+            "access_token",
+            "id_token",
+            "token_type",
+            "iss"
+        };
 
         private readonly ILogger<UserManager> _logger;
         private readonly IJSRuntime _jsRuntime;
@@ -47,6 +56,11 @@
         public event EventHandler<UserActivityEventArgs>? UserActivity;
 
         public event EventHandler<UserInactivityEventArgs>? UserInactivity;
+
+        protected virtual IReadOnlyList<string> GetExpectedParameters()
+        {
+            return ExpectedParameters;
+        }
 
         public virtual async Task<TUser?> GetUserAsync<TUser>(Task<AuthenticationState> authenticationStateTask, JsonSerializerOptions? options = null)
         {
@@ -220,9 +234,11 @@
                     .Select(assignments => (Name: assignments[0], Value: assignments[1]))
                     .ToList();
 
+                var expectedParameters = GetExpectedParameters();
+
                 for (var i = parameters.Count - 1; i >= 0; i--)
                 {
-                    if (ExpectedParameters.Contains(parameters[i].Name, StringComparer.InvariantCultureIgnoreCase))
+                    if (expectedParameters.Contains(parameters[i].Name, StringComparer.InvariantCultureIgnoreCase))
                     {
                         parameters.RemoveAt(i);
                         redirectRequired = true;

@@ -168,6 +168,7 @@ namespace Blorc.OpenIdConnect
         public event System.EventHandler<Blorc.OpenIdConnect.UserActivityEventArgs>? UserActivity;
         public event System.EventHandler<Blorc.OpenIdConnect.UserInactivityEventArgs>? UserInactivity;
         public virtual void Dispose() { }
+        protected virtual System.Collections.Generic.IReadOnlyList<string> GetExpectedParameters() { }
         public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null) { }
         public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null) { }
         protected virtual System.Threading.Tasks.Task<System.Text.Json.JsonElement?> GetUserJsonElementAsync() { }
