@@ -1,5 +1,6 @@
 ﻿namespace Blorc.OpenIdConnect
 {
+    using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
     public class OidcProviderOptions
@@ -52,5 +53,14 @@
 
         [JsonPropertyName("accessTokenExpiringNotificationTimeInSeconds")]
         public int AccessTokenExpiringNotificationTimeInSeconds { get; set; }
+
+        [JsonPropertyName("resource")]
+        public string? Resource { get; set; }
+
+        [JsonPropertyName("extraQueryParams")]
+        public IDictionary<string, string>? ExtraQueryParams { get; set; }
+
+        [JsonPropertyName("extraTokenParams")]
+        public IDictionary<string, string>? ExtraTokenParams { get; set; }
     }
 }
