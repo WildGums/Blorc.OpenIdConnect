@@ -44,6 +44,20 @@ builder.Services.AddBlorcOpenIdConnect(
         options.Scope = "openid profile demo-api";
         options.TimeForUserInactivityAutomaticSignOut = 15000;
         options.TimeForUserInactivityNotification = 10000;
+        /* Options below are not required */
+
+        // The resource parameter that will be sent to the auth request
+        options.Resource = "https://your-api.com";
+        // The extra query parameters that will be sent to the auth request
+        options.ExtraQueryParams = new Dictionary<string, string>
+        {
+            { "foo", "bar" }
+        };
+        // The extra parameters that will be sent to the token request
+        options.ExtraTokenParams = new Dictionary<string, string>
+        {
+            { "resource", "https://your-api.com" }
+        };
     });
 
 // Logging
