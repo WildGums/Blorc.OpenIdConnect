@@ -54,7 +54,7 @@ builder.Services.AddBlorcOpenIdConnect(
         {
             { "foo", "bar" }
         };
-        // The extra parameters that will be sent to the token request
+        // The extra parameters that will be sent to the token endpoint
         options.ExtraTokenParams = new Dictionary<string, string>
         {
             { "resource", "https://your-api.com" }
