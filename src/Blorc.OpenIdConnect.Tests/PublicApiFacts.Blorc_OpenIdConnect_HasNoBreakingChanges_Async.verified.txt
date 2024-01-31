@@ -55,6 +55,7 @@ namespace Blorc.OpenIdConnect
     }
     public static class JsonElementExtensions
     {
+        public static System.Collections.Generic.IEnumerable<System.Security.Claims.Claim> AsClaims(this System.Text.Json.JsonElement element, string claimType = "") { }
         public static TObject? ToObject<TObject>(this System.Text.Json.JsonElement element, System.Text.Json.JsonSerializerOptions? options = null) { }
     }
     public static class ObjectExtensions
@@ -117,26 +118,63 @@ namespace Blorc.OpenIdConnect
     public class Profile
     {
         public Profile() { }
+        [System.Text.Json.Serialization.JsonExtensionData]
+        public System.Collections.Generic.Dictionary<string, System.Text.Json.JsonElement>? AdditionalData { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("aud")]
+        [System.Text.Json.Serialization.JsonPropertyName("aud")]
+        public System.Text.Json.JsonElement Aud { get; set; }
+        public string[] Audiences { get; }
         [Blorc.OpenIdConnect.ClaimType("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress")]
         [System.Text.Json.Serialization.JsonPropertyName("email")]
         public string? Email { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("email_verified")]
         [System.Text.Json.Serialization.JsonPropertyName("email_verified")]
         public bool EmailVerified { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("http://schemas.microsoft.com/ws/2008/06/identity/claims/expiration")]
+        [System.Text.Json.Serialization.JsonPropertyName("exp")]
+        public long Exp { get; set; }
         [Blorc.OpenIdConnect.ClaimType("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname")]
         [System.Text.Json.Serialization.JsonPropertyName("family_name")]
         public string? FamilyName { get; set; }
         [Blorc.OpenIdConnect.ClaimType("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname")]
         [System.Text.Json.Serialization.JsonPropertyName("given_name")]
         public string? GivenName { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("iat")]
+        [System.Text.Json.Serialization.JsonPropertyName("iat")]
+        public long Iat { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("iss")]
+        [System.Text.Json.Serialization.JsonPropertyName("iss")]
+        public string Iss { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("jti")]
+        [System.Text.Json.Serialization.JsonPropertyName("jti")]
+        public string? Jti { get; set; }
         [Blorc.OpenIdConnect.ClaimType("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")]
         [System.Text.Json.Serialization.JsonPropertyName("name")]
         public string? Name { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("nickname")]
+        [System.Text.Json.Serialization.JsonPropertyName("nickname")]
+        public string? Nickname { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("nonce")]
+        [System.Text.Json.Serialization.JsonPropertyName("nonce")]
+        public string? Nonce { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("phone_number")]
+        [System.Text.Json.Serialization.JsonPropertyName("phone_number")]
+        public string? PhoneNumber { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("phone_number_verified")]
+        [System.Text.Json.Serialization.JsonPropertyName("phone_number_verified")]
+        public bool PhoneNumberVerified { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("picture")]
+        [System.Text.Json.Serialization.JsonPropertyName("picture")]
+        public string? Picture { get; set; }
         [Blorc.OpenIdConnect.ClaimType("preferred_username")]
         [System.Text.Json.Serialization.JsonPropertyName("preferred_username")]
         public string? PreferredUsername { get; set; }
         [Blorc.OpenIdConnect.ClaimType("http://schemas.microsoft.com/ws/2008/06/identity/claims/role")]
         [System.Text.Json.Serialization.JsonPropertyName("roles")]
         public string[]? Roles { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("sub")]
+        [System.Text.Json.Serialization.JsonPropertyName("sub")]
+        public string Sub { get; set; }
     }
     public class PromiseHandlerContext
     {
@@ -207,10 +245,16 @@ namespace Blorc.OpenIdConnect
         public string? AccessToken { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("expires_at")]
         public long ExpiresAt { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("id_token")]
+        public string IdToken { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("profile")]
         public TProfile Profile { get; set; }
+        [System.Text.Json.Serialization.JsonPropertyName("refresh_token")]
+        public string? RefreshToken { get; set; }
         [System.Text.Json.Serialization.JsonIgnore]
         public System.Collections.Generic.IEnumerable<string> Roles { get; }
+        [System.Text.Json.Serialization.JsonPropertyName("scope")]
+        public string? Scope { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("session_state")]
         public string? SessionState { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("token_type")]
