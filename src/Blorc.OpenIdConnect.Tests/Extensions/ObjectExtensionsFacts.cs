@@ -176,7 +176,7 @@
 
                 var claims = complexType.AsClaims().ToList();
 
-                Assert.That(claims.Count, Is.EqualTo(32));
+                Assert.That(claims.Count, Is.EqualTo(30));
             }
 
             public class ComplexType

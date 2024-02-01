@@ -13,7 +13,7 @@
         {
             get;
             set;
-        } = JsonDocument.Parse("\"\"").RootElement;
+        } = JsonDocument.Parse("[]").RootElement;
 
         public string[] Audiences
         {

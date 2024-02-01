@@ -59,7 +59,6 @@ public class UserFacts
                 ""access_token"": ""access_token_value"",
                 ""expires_at"": 10,
                 ""profile"": {
-                    ""aud"": ""https://localhost:5001"",
                     ""sub"": ""1234567890"",
                     ""some_additional_data"": ""some_additional_data_value""
                 },
@@ -69,6 +68,7 @@ public class UserFacts
             var user = JsonSerializer.Deserialize<User<Profile>>(json);
 
             Assert.That(user, Is.Not.Null);
+            Assert.That(user.Profile!.Audiences, Is.Empty);
             Assert.That(user.Profile!.AdditionalData, Is.Not.Null);
             Assert.That(user.Profile!.AdditionalData!["some_additional_data"].GetString(), Is.EqualTo("some_additional_data_value"));
         }
