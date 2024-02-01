@@ -1,6 +1,5 @@
 namespace Blorc.OpenIdConnect.Tests;
 
-using System.Collections.Generic;
 using System.Text.Json;
 using NUnit.Framework;
 using Is = NUnit.DeepObjectCompare.Is;
@@ -54,7 +53,8 @@ public class UserFacts
         }
 
         [Test]
-        public void Can_Deserialize_Additional_Data() {
+        public void Can_Deserialize_Additional_Data()
+        {
             var json = @"{
                 ""access_token"": ""access_token_value"",
                 ""expires_at"": 10,
@@ -74,7 +74,8 @@ public class UserFacts
         }
 
         [Test]
-        public void Can_Deserialize_Aud_Array() {
+        public void Can_Deserialize_Aud_Array()
+        {
             var json = @"{
                 ""access_token"": ""access_token_value"",
                 ""expires_at"": 10,

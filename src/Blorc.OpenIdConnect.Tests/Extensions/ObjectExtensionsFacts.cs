@@ -20,7 +20,7 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = [ "Administrator", "System Administrator" ],
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -53,7 +53,7 @@
                     Profile = new Profile
                     {
                         Aud = JsonDocument.Parse("\"http://localhost\"").RootElement,
-                        Roles = [ "Administrator", "System Administrator" ],
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -72,6 +72,7 @@
                 Assert.That(claim, Is.Not.Null);
             }
 
+            [Test]
             public void Collects_Aud_AsClaims_Array()
             {
                 var user = new User<Profile>
@@ -80,7 +81,7 @@
                     Profile = new Profile
                     {
                         Aud = JsonDocument.Parse("[\"http://localhost\", \"http://example.com\"]").RootElement,
-                        Roles = [ "Administrator", "System Administrator" ],
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -113,7 +114,7 @@
                     Profile = new Profile
                     {
                         Aud = JsonDocument.Parse("\"http://localhost\"").RootElement,
-                        Roles = [ "Administrator", "System Administrator" ],
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -145,7 +146,7 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = 
+                        Roles =
                         [
                             "Administrator", "System Administrator"
                         ],

@@ -7,62 +7,63 @@ namespace Blorc.OpenIdConnect
 
     public static partial class JsonElementExtensions
     {
-      public static IEnumerable<Claim> AsClaims(this JsonElement element, string claimType = "") {
-        switch (element.ValueKind)
+        public static IEnumerable<Claim> AsClaims(this JsonElement element, string claimType = "")
         {
-            case JsonValueKind.Object:
-                {
-                    using var enumerator = element.EnumerateObject();
-                    foreach (JsonProperty property in enumerator)
+            switch (element.ValueKind)
+            {
+                case JsonValueKind.Object:
                     {
-                        // For objects, recursively process each property.
-                        // Use the property name as part of the claim type.
-                        string nestedClaimType = string.IsNullOrEmpty(claimType) ? property.Name : $"{claimType}.{property.Name}";
-                        foreach (var claim in AsClaims(property.Value, nestedClaimType))
+                        using var enumerator = element.EnumerateObject();
+                        foreach (JsonProperty property in enumerator)
                         {
-                            yield return claim;
+                            // For objects, recursively process each property.
+                            // Use the property name as part of the claim type.
+                            string nestedClaimType = string.IsNullOrEmpty(claimType) ? property.Name : $"{claimType}.{property.Name}";
+                            foreach (var claim in AsClaims(property.Value, nestedClaimType))
+                            {
+                                yield return claim;
+                            }
                         }
                     }
-                }
-                break;
+                    break;
 
-            case JsonValueKind.Array:
-                {
-                    using var enumerator = element.EnumerateArray();
-                    int index = 0;
-                    foreach (JsonElement item in enumerator)
+                case JsonValueKind.Array:
                     {
-                        // For arrays, process each item and use the index in the claim type.
-                        string indexedClaimType = $"{claimType}[{index}]";
-                        foreach (var claim in AsClaims(item, indexedClaimType))
+                        using var enumerator = element.EnumerateArray();
+                        int index = 0;
+                        foreach (JsonElement item in enumerator)
                         {
-                            yield return claim;
+                            // For arrays, process each item and use the index in the claim type.
+                            string indexedClaimType = $"{claimType}[{index}]";
+                            foreach (var claim in AsClaims(item, indexedClaimType))
+                            {
+                                yield return claim;
+                            }
+                            index++;
                         }
-                        index++;
                     }
-                }
-                break;
+                    break;
 
-            case JsonValueKind.String:
-                yield return new Claim(claimType, element.GetString()!);
-                break;
+                case JsonValueKind.String:
+                    yield return new Claim(claimType, element.GetString()!);
+                    break;
 
-            case JsonValueKind.Number:
-                yield return new Claim(claimType, element.GetRawText());
-                break;
+                case JsonValueKind.Number:
+                    yield return new Claim(claimType, element.GetRawText());
+                    break;
 
-            case JsonValueKind.True:
-            case JsonValueKind.False:
-                yield return new Claim(claimType, element.GetBoolean().ToString());
-                break;
+                case JsonValueKind.True:
+                case JsonValueKind.False:
+                    yield return new Claim(claimType, element.GetBoolean().ToString());
+                    break;
 
-            case JsonValueKind.Null:
-                // Ignore null values.
-                break;
+                case JsonValueKind.Null:
+                    // Ignore null values.
+                    break;
 
-            default:
-                throw new InvalidOperationException($"Unknown JSON token: {element.ValueKind}");
+                default:
+                    throw new InvalidOperationException($"Unknown JSON token: {element.ValueKind}");
+            }
         }
-      }
     }
 }
