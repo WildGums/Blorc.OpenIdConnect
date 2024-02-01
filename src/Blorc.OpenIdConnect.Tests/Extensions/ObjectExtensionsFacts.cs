@@ -2,27 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
     using System.Security.Claims;
     using System.Text.Json;
     using NUnit.Framework;
-
-    [SetUpFixture]
-    public class SetupTrace
-    {
-        [OneTimeSetUp]
-        public void StartTest()
-        {
-            Trace.Listeners.Add(new ConsoleTraceListener());
-        }
-
-        [OneTimeTearDown]
-        public void EndTest()
-        {
-            Trace.Flush();
-        }
-    }
 
     [TestFixture]
     public class ObjectExtensionsFacts
@@ -162,10 +145,10 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = new[]
-                        {
+                        Roles = 
+                        [
                             "Administrator", "System Administrator"
-                        },
+                        ],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
