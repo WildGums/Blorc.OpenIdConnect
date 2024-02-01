@@ -49,6 +49,19 @@
             set;
         }
 
+        public string[] Scopes
+        {
+            get
+            {
+                if (Scope is not null)
+                {
+                    return Scope.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                }
+
+                return Array.Empty<string>();
+            }
+        }
+
 
         [JsonPropertyName("session_state")]
         public string? SessionState

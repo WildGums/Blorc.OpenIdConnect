@@ -176,6 +176,14 @@
             set;
         } = string.Empty;
 
+        [ClaimType("username")]
+        [JsonPropertyName("username")]
+        public string? Username
+        {
+            get;
+            set;
+        }
+
         [JsonExtensionData]
         public Dictionary<string, JsonElement>? AdditionalData
         {

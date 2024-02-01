@@ -175,6 +175,9 @@ namespace Blorc.OpenIdConnect
         [Blorc.OpenIdConnect.ClaimType("sub")]
         [System.Text.Json.Serialization.JsonPropertyName("sub")]
         public string Sub { get; set; }
+        [Blorc.OpenIdConnect.ClaimType("username")]
+        [System.Text.Json.Serialization.JsonPropertyName("username")]
+        public string? Username { get; set; }
     }
     public class PromiseHandlerContext
     {
@@ -255,6 +258,7 @@ namespace Blorc.OpenIdConnect
         public System.Collections.Generic.IEnumerable<string> Roles { get; }
         [System.Text.Json.Serialization.JsonPropertyName("scope")]
         public string? Scope { get; set; }
+        public string[] Scopes { get; }
         [System.Text.Json.Serialization.JsonPropertyName("session_state")]
         public string? SessionState { get; set; }
         [System.Text.Json.Serialization.JsonPropertyName("token_type")]
