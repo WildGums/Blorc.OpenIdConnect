@@ -1,0 +1,34 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - develop
+      - master
+  pull_request:
+
+jobs:
+  main:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Build
+        working-directory: src/Blorc.OpenIdConnect
+        run: |
+          dotnet build
+
+      - name: Test
+        working-directory: src/Blorc.OpenIdConnect.Tests
+        run: |
+          dotnet test
