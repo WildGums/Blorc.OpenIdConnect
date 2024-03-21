@@ -63,7 +63,7 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                                 {
-                                    Roles = new[] { "Administrator", "System Administrator" },
+                                    Roles = [ "Administrator", "System Administrator" ],
                                     Email = "jane.doe@blorc.com",
                                     EmailVerified = true,
                                     FamilyName = "Doe",
@@ -93,7 +93,7 @@
 
                 var user = await userManager.GetUserAsync<User<Profile>>();
 
-                Assert.That(user, Is.DeepEqualTo(expectedUser));
+                Assert.That(JsonSerializer.Serialize(user), Is.EqualTo(JsonSerializer.Serialize(expectedUser)));
             }
 
             [Test]
@@ -110,7 +110,7 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                                 {
-                                    Roles = new[] { "Administrator", "System Administrator" },
+                                    Roles = [ "Administrator", "System Administrator" ],
                                     Email = "jane.doe@blorc.com",
                                     EmailVerified = true,
                                     FamilyName = "Doe",
