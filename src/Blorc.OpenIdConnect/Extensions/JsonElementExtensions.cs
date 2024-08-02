@@ -1,4 +1,4 @@
-namespace Blorc.OpenIdConnect
+﻿namespace Blorc.OpenIdConnect
 {
     using System;
     using System.Collections.Generic;
@@ -7,6 +7,9 @@ namespace Blorc.OpenIdConnect
 
     public static partial class JsonElementExtensions
     {
+        private static readonly string TrueAsString = bool.TrueString;
+        private static readonly string FalseAsString = bool.FalseString;
+
         public static IEnumerable<Claim> AsClaims(this JsonElement element, string claimType = "")
         {
             switch (element.ValueKind)
@@ -53,8 +56,11 @@ namespace Blorc.OpenIdConnect
                     break;
 
                 case JsonValueKind.True:
+                    yield return new Claim(claimType, TrueAsString);
+                    break;
+
                 case JsonValueKind.False:
-                    yield return new Claim(claimType, element.GetBoolean().ToString());
+                    yield return new Claim(claimType, FalseAsString);
                     break;
 
                 case JsonValueKind.Null:
