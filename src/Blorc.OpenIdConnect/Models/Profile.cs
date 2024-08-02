@@ -15,6 +15,7 @@
             set;
         } = JsonDocument.Parse("[]").RootElement;
 
+        [ClaimType("aud")]
         public string[] Audiences
         {
             get
