@@ -26,14 +26,22 @@
 
                     foreach (var item in enumerator)
                     {
-                        result.Add(item.GetString()!);
+                        var itemString = item.GetString();
+                        if (itemString is not null)
+                        {
+                            result.Add(itemString);
+                        }
                     }
 
-                    return result.ToArray();
-                } 
+                    return [.. result];
+                }
                 else if (Aud.ValueKind == JsonValueKind.String)
                 {
-                    return [ Aud.GetString()! ];
+                    var audienceAsString = Aud.GetString();
+                    if (!string.IsNullOrWhiteSpace(audienceAsString))
+                    {
+                        return [audienceAsString];
+                    }
                 }
 
                 return [];
