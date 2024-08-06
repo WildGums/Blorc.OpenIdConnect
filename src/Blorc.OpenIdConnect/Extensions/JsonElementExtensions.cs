@@ -7,9 +7,6 @@
 
     public static partial class JsonElementExtensions
     {
-        private static readonly string TrueAsString = bool.TrueString;
-        private static readonly string FalseAsString = bool.FalseString;
-
         public static IEnumerable<Claim> AsClaims(this JsonElement element, string claimType = "")
         {
             switch (element.ValueKind)
@@ -56,11 +53,11 @@
                     break;
 
                 case JsonValueKind.True:
-                    yield return new Claim(claimType, TrueAsString);
+                    yield return new Claim(claimType, bool.TrueString);
                     break;
 
                 case JsonValueKind.False:
-                    yield return new Claim(claimType, FalseAsString);
+                    yield return new Claim(claimType, bool.FalseString);
                     break;
 
                 case JsonValueKind.Null:
