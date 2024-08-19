@@ -27,17 +27,16 @@
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Obsolete.Fody" Version="5.3.0" PrivateAssets="all" />
-    <PackageReference Include="System.Net.Http.Json" Version="8.0.0" />
   </ItemGroup>
   
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net6.0')) ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="6.0.33" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0" />
   </ItemGroup>
   
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net7.0')) ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="7.0.20" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
   </ItemGroup>
   
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net8.0')) ">
