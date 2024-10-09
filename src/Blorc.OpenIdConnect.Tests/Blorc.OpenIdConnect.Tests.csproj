@@ -13,22 +13,23 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="12.0.1" />
-    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all">
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="Fody" Version="6.8.2" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Keycloak.Net" Version="1.0.18" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
-    <PackageReference Include="Moq" Version="4.20.70" />
-    <PackageReference Include="NUnit" Version="4.0.1" PrivateAssets="all" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.5.0">
+    <PackageReference Include="Moq" Version="4.20.72" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="NUnit" Version="4.2.2" PrivateAssets="all" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="NUnit.DeepObjectCompare" Version="2.0.1" />
     <PackageReference Include="PublicApiGenerator" Version="11.1.0" PrivateAssets="all" />
-    <PackageReference Include="Verify.NUnit" Version="23.0.1" />
+    <PackageReference Include="Verify.NUnit" Version="26.6.0" />
   </ItemGroup>
 
   <ItemGroup>
