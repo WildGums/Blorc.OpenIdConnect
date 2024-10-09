@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>Blorc.OpenIdConnect</AssemblyName>
     <RootNamespace>Blorc.OpenIdConnect</RootNamespace>
     <PackageId>Blorc.OpenIdConnect</PackageId>
@@ -24,26 +24,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.8" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.10" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Obsolete.Fody" Version="5.3.0" PrivateAssets="all" />
   </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net6.0')) ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net7.0')) ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-  </ItemGroup>
-  
-  <ItemGroup Condition=" $(TargetFramework.StartsWith('net8.0')) ">
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
-  </ItemGroup>
-  
+
   <ItemGroup>
     <Content Remove="package.json" />
     <None Include="package.json" />
