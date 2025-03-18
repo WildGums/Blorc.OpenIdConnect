@@ -11,6 +11,7 @@
         {
             ArgumentNullException.ThrowIfNull(services);
 
+            services.AddSingleton(TimeProvider.System);
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
             services.AddScoped<AccessTokenDelegatingHandler>();

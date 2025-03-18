@@ -9,11 +9,15 @@ public class AccessTokenExpirationDelegatingHandler : DelegatingHandler
 {
     private readonly IUserManager _userManager;
 
-    public AccessTokenExpirationDelegatingHandler(IUserManager userManager)
+    private readonly TimeProvider _timeProvider;
+
+    public AccessTokenExpirationDelegatingHandler(IUserManager userManager, TimeProvider timeProvider)
     {
         ArgumentNullException.ThrowIfNull(userManager);
+        ArgumentNullException.ThrowIfNull(timeProvider);
 
         _userManager = userManager;
+        _timeProvider = timeProvider;
     }
 
     protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
@@ -24,7 +28,7 @@ public class AccessTokenExpirationDelegatingHandler : DelegatingHandler
         if (user?.ExpiresAt is not null)
         {
             var expiryDateTime = DateTimeOffset.FromUnixTimeSeconds(user.ExpiresAt).UtcDateTime;
-            if (DateTime.UtcNow > expiryDateTime)
+            if (_timeProvider.GetUtcNow() > expiryDateTime)
             {
                 await _userManager.SignOutRedirectAsync();
             }

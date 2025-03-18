@@ -1,11 +1,13 @@
 ﻿namespace Blorc.OpenIdConnect.Tests.Services
 {
     using System;
+    using System.Net;
     using System.Net.Http;
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
     using Moq;
+    using Moq.Protected;
     using NUnit.Framework;
 
     [TestFixture]
@@ -18,6 +20,20 @@
             public async Task Sets_The_Access_Token_As_Authorization_Header_Async()
             {
                 // Arrange
+                var mockHttpMessageHandler = new Mock<HttpMessageHandler>();
+
+                using var httpResponseMessage = new HttpResponseMessage
+                {
+                    StatusCode = HttpStatusCode.OK,
+                    Content = new StringContent("Fake response")
+                };
+
+                mockHttpMessageHandler.Protected()
+                    .Setup<Task<HttpResponseMessage>>("SendAsync",
+                        ItExpr.IsAny<HttpRequestMessage>(),
+                        ItExpr.IsAny<CancellationToken>())
+                    .ReturnsAsync(httpResponseMessage);
+
                 var userManagerMock = new Mock<IUserManager>();
                 var user = new User<Profile>
                 {
@@ -27,7 +43,7 @@
                 userManagerMock.Setup(userManager => userManager.GetUserAsync<User<Profile>>(It.IsAny<bool>(), It.IsAny<JsonSerializerOptions>())).ReturnsAsync(user);
 
                 using var handler = new TestableAccessTokenDelegatingHandler(userManagerMock.Object);
-                handler.InnerHandler = new HttpClientHandler();
+                handler.InnerHandler = mockHttpMessageHandler.Object;
 
                 using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
 
