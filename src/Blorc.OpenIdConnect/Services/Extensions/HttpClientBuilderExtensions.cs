@@ -7,19 +7,26 @@
 
     public static class HttpClientBuilderExtensions
     {
-        public static void AddAccessToken(this IHttpClientBuilder @this)
+        public static IHttpClientBuilder AddAccessToken(this IHttpClientBuilder @this)
         {
             ArgumentNullException.ThrowIfNull(@this);
 
-            @this.AddHttpMessageHandler<AccessTokenDelegatingHandler>();
+            return @this.AddHttpMessageHandler<AccessTokenDelegatingHandler>();
         }
 
-        public static void CustomizeHttpRequestMessage(this IHttpClientBuilder @this, Func<IServiceProvider, HttpRequestMessage, Task> customizationRequest)
+        public static IHttpClientBuilder AddAccessTokenExpiration(this IHttpClientBuilder @this)
+        {
+            ArgumentNullException.ThrowIfNull(@this);
+
+            return @this.AddHttpMessageHandler<AccessTokenExpirationDelegatingHandler>();
+        }
+
+        public static IHttpClientBuilder CustomizeHttpRequestMessage(this IHttpClientBuilder @this, Func<IServiceProvider, HttpRequestMessage, Task> customizationRequest)
         {
             ArgumentNullException.ThrowIfNull(@this);
             ArgumentNullException.ThrowIfNull(customizationRequest);
 
-            @this.AddHttpMessageHandler(provider => ActivatorUtilities.CreateInstance<CustomizeHttpRequestMessageDelegatingHandler>(provider, customizationRequest));
+            return @this.AddHttpMessageHandler(provider => ActivatorUtilities.CreateInstance<CustomizeHttpRequestMessageDelegatingHandler>(provider, customizationRequest));
         }
     }
 }
