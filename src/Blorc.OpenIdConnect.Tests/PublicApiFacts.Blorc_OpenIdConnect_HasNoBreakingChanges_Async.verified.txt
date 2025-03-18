@@ -6,6 +6,11 @@ namespace Blorc.OpenIdConnect
         public AccessTokenDelegatingHandler(Blorc.OpenIdConnect.IUserManager userManager) { }
         protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
     }
+    public class AccessTokenExpirationDelegatingHandler : System.Net.Http.DelegatingHandler
+    {
+        public AccessTokenExpirationDelegatingHandler(Blorc.OpenIdConnect.IUserManager userManager, System.TimeProvider timeProvider) { }
+        protected override System.Threading.Tasks.Task<System.Net.Http.HttpResponseMessage> SendAsync(System.Net.Http.HttpRequestMessage request, System.Threading.CancellationToken cancellationToken) { }
+    }
     [System.AttributeUsage(System.AttributeTargets.Property)]
     public class ClaimTypeAttribute : System.Attribute
     {
@@ -31,8 +36,9 @@ namespace Blorc.OpenIdConnect
     }
     public static class HttpClientBuilderExtensions
     {
-        public static void AddAccessToken(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder @this) { }
-        public static void CustomizeHttpRequestMessage(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder @this, System.Func<System.IServiceProvider, System.Net.Http.HttpRequestMessage, System.Threading.Tasks.Task> customizationRequest) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddAccessToken(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder @this) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder AddAccessTokenExpiration(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder @this) { }
+        public static Microsoft.Extensions.DependencyInjection.IHttpClientBuilder CustomizeHttpRequestMessage(this Microsoft.Extensions.DependencyInjection.IHttpClientBuilder @this, System.Func<System.IServiceProvider, System.Net.Http.HttpRequestMessage, System.Threading.Tasks.Task> customizationRequest) { }
     }
     public static class HttpClientExtensions
     {
