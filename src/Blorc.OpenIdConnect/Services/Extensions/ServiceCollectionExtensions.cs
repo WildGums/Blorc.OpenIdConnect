@@ -1,7 +1,7 @@
 ﻿namespace Blorc.OpenIdConnect
 {
     using System;
-
+    using Blorc.OpenIdConnect;
     using Microsoft.AspNetCore.Components.Authorization;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -14,6 +14,7 @@
             services.AddSingleton<IUserManager, UserManager>();
             services.AddSingleton<AuthenticationStateProvider, OpenIdConnectAuthenticationStateProvider>();
             services.AddScoped<AccessTokenDelegatingHandler>();
+            services.AddScoped<AccessTokenExpirationDelegatingHandler>();
 
             if (configure is not null)
             {
