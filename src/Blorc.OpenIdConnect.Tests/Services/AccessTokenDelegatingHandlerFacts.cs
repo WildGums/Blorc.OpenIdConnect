@@ -57,7 +57,7 @@
                 Assert.That(request.Headers.Authorization.Parameter, Is.EqualTo(user.AccessToken));
             }
 
-            private class TestableAccessTokenDelegatingHandler : AccessTokenDelegatingHandler
+            private sealed class TestableAccessTokenDelegatingHandler : AccessTokenDelegatingHandler
             {
                 public TestableAccessTokenDelegatingHandler(IUserManager userManager)
                     : base(userManager) { }
