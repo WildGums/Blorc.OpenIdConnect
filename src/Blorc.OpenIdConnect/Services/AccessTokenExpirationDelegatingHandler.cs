@@ -1,6 +1,7 @@
 ﻿namespace Blorc.OpenIdConnect;
 
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,7 +9,6 @@ using System.Threading.Tasks;
 public class AccessTokenExpirationDelegatingHandler : DelegatingHandler
 {
     private readonly IUserManager _userManager;
-
     private readonly TimeProvider _timeProvider;
 
     public AccessTokenExpirationDelegatingHandler(IUserManager userManager, TimeProvider timeProvider)
@@ -31,6 +31,10 @@ public class AccessTokenExpirationDelegatingHandler : DelegatingHandler
             if (_timeProvider.GetUtcNow() > expiryDateTime)
             {
                 await _userManager.SignOutRedirectAsync();
+                return new HttpResponseMessage(HttpStatusCode.Unauthorized)
+                {
+                    ReasonPhrase = "Access token expired"
+                };
             }
         }
 
