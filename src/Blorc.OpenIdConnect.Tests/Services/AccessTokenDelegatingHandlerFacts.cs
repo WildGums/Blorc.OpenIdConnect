@@ -51,7 +51,6 @@
                 await handler.SendAsync(request, CancellationToken.None);
 
                 // Assert
-
                 Assert.That(request.Headers.Authorization, Is.Not.Null);
                 Assert.That(request.Headers.Authorization.Scheme, Is.EqualTo("Bearer"));
                 Assert.That(request.Headers.Authorization.Parameter, Is.EqualTo(user.AccessToken));
@@ -72,6 +71,4 @@
             }
         }
     }
-
-
 }
