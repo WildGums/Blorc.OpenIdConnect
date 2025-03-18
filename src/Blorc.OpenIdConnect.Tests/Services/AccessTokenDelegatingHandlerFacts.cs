@@ -62,6 +62,9 @@
                 public TestableAccessTokenDelegatingHandler(IUserManager userManager)
                     : base(userManager) { }
 
+                // NOTE: The 'new' keyword is used here to define the 'SendAsync'
+                // method with the same name as the protected method in the base class,
+                // but to make it publicly accessible within this testable implementation.
                 public new Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
                 {
                     return base.SendAsync(request, cancellationToken);
@@ -69,4 +72,6 @@
             }
         }
     }
+
+
 }
