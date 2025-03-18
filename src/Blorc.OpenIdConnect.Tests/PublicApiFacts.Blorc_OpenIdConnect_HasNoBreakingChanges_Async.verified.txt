@@ -47,8 +47,8 @@ namespace Blorc.OpenIdConnect
     {
         event System.EventHandler<Blorc.OpenIdConnect.UserActivityEventArgs>? UserActivity;
         event System.EventHandler<Blorc.OpenIdConnect.UserInactivityEventArgs>? UserInactivity;
-        System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null);
         System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null);
+        System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null);
         System.Threading.Tasks.Task<bool> IsAuthenticatedAsync();
         System.Threading.Tasks.Task<bool> SignInRedirectAsync(string redirectUri = "");
         System.Threading.Tasks.Task<bool> SignOutRedirectAsync();
@@ -175,8 +175,8 @@ namespace Blorc.OpenIdConnect
         public event System.EventHandler<Blorc.OpenIdConnect.UserInactivityEventArgs>? UserInactivity;
         public virtual void Dispose() { }
         protected virtual System.Collections.Generic.IReadOnlyList<string> GetExpectedParameters() { }
-        public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null) { }
         public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(System.Threading.Tasks.Task<Microsoft.AspNetCore.Components.Authorization.AuthenticationState> authenticationStateTask, System.Text.Json.JsonSerializerOptions? options = null) { }
+        public virtual System.Threading.Tasks.Task<TUser?> GetUserAsync<TUser>(bool reload = true, System.Text.Json.JsonSerializerOptions? options = null) { }
         protected virtual System.Threading.Tasks.Task<System.Text.Json.JsonElement?> GetUserJsonElementAsync() { }
         protected virtual System.Threading.Tasks.Task InitializeAsync() { }
         public virtual System.Threading.Tasks.Task InitializeAsync(System.Func<System.Threading.Tasks.Task<System.Collections.Generic.Dictionary<string, System.Text.Json.JsonElement>>> configurationResolver) { }
