@@ -6,7 +6,6 @@
     using System.Text.Json;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Time.Testing;
     using Moq;
     using Moq.Protected;
     using NUnit.Framework;
@@ -30,10 +29,10 @@
 
                 userManagerMock.Setup(userManager => userManager.GetUserAsync<User<Profile>>(It.IsAny<bool>(), It.IsAny<JsonSerializerOptions>())).ReturnsAsync(user);
 
-                var fakeTimeProvider = new FakeTimeProvider();
-                fakeTimeProvider.SetUtcNow(now);
+                var timeProviderMock = new Mock<TimeProvider>();
+                timeProviderMock.Setup(provider => provider.GetUtcNow()).Returns(now);
 
-                using var handler = new TestableAccessTokenExpirationDelegatingHandler(userManagerMock.Object, fakeTimeProvider);
+                using var handler = new TestableAccessTokenExpirationDelegatingHandler(userManagerMock.Object, timeProviderMock.Object);
 
                 using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
 
@@ -73,10 +72,10 @@
 
                 userManagerMock.Setup(userManager => userManager.GetUserAsync<User<Profile>>(It.IsAny<bool>(), It.IsAny<JsonSerializerOptions>())).ReturnsAsync(user);
 
-                var fakeTimeProvider = new FakeTimeProvider();
-                fakeTimeProvider.SetUtcNow(now);
+                var timeProviderMock = new Mock<TimeProvider>();
+                timeProviderMock.Setup(provider => provider.GetUtcNow()).Returns(now);
 
-                using var handler = new TestableAccessTokenExpirationDelegatingHandler(userManagerMock.Object, fakeTimeProvider);
+                using var handler = new TestableAccessTokenExpirationDelegatingHandler(userManagerMock.Object, timeProviderMock.Object);
                 handler.InnerHandler = mockHttpMessageHandler.Object;
 
                 using var request = new HttpRequestMessage(HttpMethod.Get, "https://example.com");
