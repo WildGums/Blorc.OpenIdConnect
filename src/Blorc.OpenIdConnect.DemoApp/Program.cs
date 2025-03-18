@@ -14,7 +14,8 @@ var baseUrl = builder.HostEnvironment.BaseAddress;
 builder.Services
     .AddHttpClient<WeatherForecastHttpClient>(client => client.BaseAddress = new Uri(baseUrl))
     // Add access token using this
-    .AddAccessToken();
+    .AddAccessToken()
+    .AddAccessTokenExpiration();
 
     // Or using this 
     // .CustomizeHttpRequestMessage(
