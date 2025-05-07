@@ -21,12 +21,47 @@
             set;
         }
 
+        [JsonPropertyName("id_token")]
+        public string IdToken
+        {
+            get;
+            set;
+        } = string.Empty;
+
         [JsonPropertyName("profile")]
         public TProfile? Profile
         {
             get;
             set;
         }
+
+        [JsonPropertyName("refresh_token")]
+        public string? RefreshToken
+        {
+            get;
+            set;
+        }
+
+        [JsonPropertyName("scope")]
+        public string? Scope
+        {
+            get;
+            set;
+        }
+
+        public string[] Scopes
+        {
+            get
+            {
+                if (Scope is not null)
+                {
+                    return Scope.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                }
+
+                return Array.Empty<string>();
+            }
+        }
+
 
         [JsonPropertyName("session_state")]
         public string? SessionState

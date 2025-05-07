@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Security.Claims;
+    using System.Text.Json;
     using NUnit.Framework;
 
     [TestFixture]
@@ -19,7 +20,7 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = new[] { "Administrator", "System Administrator" },
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -44,15 +45,15 @@
             }
 
             [Test]
-            public void Collects_Claims_From_Each_Item_Of_A_Collection()
+            public void Collects_Aud_AsClaims()
             {
-                var users = new List<User<Profile>>();
                 var user = new User<Profile>
                 {
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = new[] { "Administrator", "System Administrator" },
+                        Aud = JsonDocument.Parse("\"http://localhost\"").RootElement,
+                        Roles = ["Administrator", "System Administrator"],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -65,12 +66,76 @@
                     TokenType = "Bearer"
                 };
 
+                var claims = user.AsClaims().Where(claim => claim.Type == "aud").ToList();
+                Assert.That(claims.Count, Is.EqualTo(1));
+                var claim = claims.FirstOrDefault(c => c.Value == user.Profile.Aud.GetString());
+                Assert.That(claim, Is.Not.Null);
+            }
+
+            [Test]
+            public void Collects_Aud_AsClaims_Array()
+            {
+                var user = new User<Profile>
+                {
+                    AccessToken = "1234567890",
+                    Profile = new Profile
+                    {
+                        Aud = JsonDocument.Parse("[\"http://localhost\", \"http://example.com\"]").RootElement,
+                        Roles = ["Administrator", "System Administrator"],
+                        Email = "jane.doe@blorc.com",
+                        EmailVerified = true,
+                        FamilyName = "Doe",
+                        GivenName = "Jane",
+                        Name = "Jane Doe",
+                        PreferredUsername = "jane.doe"
+                    },
+                    ExpiresAt = 10,
+                    SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    TokenType = "Bearer"
+                };
+
+                var claims = user.AsClaims().Where(claim => claim.Type == "aud").ToList();
+                Assert.That(claims.Count, Is.EqualTo(2));
+
+                foreach (var audience in user.Profile.Audiences)
+                {
+                    var claim = claims.FirstOrDefault(c => c.Value == audience);
+                    Assert.That(claim, Is.Not.Null);
+                }
+            }
+
+            [Test]
+            public void Collects_Claims_From_Each_Item_Of_A_Collection()
+            {
+                var users = new List<User<Profile>>();
+                var user = new User<Profile>
+                {
+                    AccessToken = "1234567890",
+                    Profile = new Profile
+                    {
+                        Aud = JsonDocument.Parse("\"http://localhost\"").RootElement,
+                        Roles = ["Administrator", "System Administrator"],
+                        Email = "jane.doe@blorc.com",
+                        EmailVerified = true,
+                        FamilyName = "Doe",
+                        GivenName = "Jane",
+                        Name = "Jane Doe",
+                        PreferredUsername = "jane.doe"
+                    },
+                    ExpiresAt = 10,
+                    SessionState = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    TokenType = "Bearer",
+                    RefreshToken = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    IdToken = "alskjdhflaskjdhflaksjdhqwpoyir",
+                    Scope = "openid profile email"
+                };
+
                 users.Add(user);
                 users.Add(user);
 
                 var claims = users.AsClaims().ToList();
 
-                Assert.That(claims.Count, Is.EqualTo(14));
+                Assert.That(claims.Count, Is.EqualTo(28));
             }
 
             [Test]
@@ -81,10 +146,10 @@
                     AccessToken = "1234567890",
                     Profile = new Profile
                     {
-                        Roles = new[]
-                        {
+                        Roles =
+                        [
                             "Administrator", "System Administrator"
-                        },
+                        ],
                         Email = "jane.doe@blorc.com",
                         EmailVerified = true,
                         FamilyName = "Doe",
@@ -112,7 +177,7 @@
 
                 var claims = complexType.AsClaims().ToList();
 
-                Assert.That(claims.Count, Is.EqualTo(18));
+                Assert.That(claims.Count, Is.EqualTo(30));
             }
 
             public class ComplexType
