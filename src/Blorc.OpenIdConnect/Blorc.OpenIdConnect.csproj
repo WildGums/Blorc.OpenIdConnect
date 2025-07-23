@@ -30,12 +30,12 @@
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net8.0')) ">
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="8.0.14" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup Condition=" $(TargetFramework.StartsWith('net9.0')) ">
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.4" />
-    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.7" />
   </ItemGroup>
 
   <ItemGroup>
