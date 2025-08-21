@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.ILLink.Tasks" Version="8.0.19" />
     <ProjectReference Include="..\Blorc.OpenIdConnect\Blorc.OpenIdConnect.csproj" />
   </ItemGroup>
 
