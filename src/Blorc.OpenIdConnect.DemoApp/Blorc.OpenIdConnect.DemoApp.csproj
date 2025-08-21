@@ -14,6 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Sdk.WebAssembly.Pack" Version="9.0.8" />
     <ProjectReference Include="..\Blorc.OpenIdConnect\Blorc.OpenIdConnect.csproj" />
   </ItemGroup>
 
