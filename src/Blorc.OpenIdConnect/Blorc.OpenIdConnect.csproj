@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <PackageReference Include="Blorc.Core" Version="1.5.0" />
-    <PackageReference Include="Fody" Version="6.9.2">
+    <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

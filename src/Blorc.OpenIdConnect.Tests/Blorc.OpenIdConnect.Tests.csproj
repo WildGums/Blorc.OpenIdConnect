@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="14.0.0" />
-    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
+    <PackageReference Include="Fody" Version="6.9.3" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Keycloak.Net" Version="1.0.18" />
