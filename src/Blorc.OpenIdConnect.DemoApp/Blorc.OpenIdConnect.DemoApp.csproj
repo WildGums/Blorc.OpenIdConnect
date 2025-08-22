@@ -10,7 +10,7 @@
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Serilog.Extensions.Logging" Version="9.0.2" />
     <PackageReference Include="Serilog.Sinks.BrowserConsole" Version="8.0.0" />
-    <PackageReference Include="System.Net.Http.Json" Version="8.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.8" />
   </ItemGroup>
 
   <ItemGroup>
