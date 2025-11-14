@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/misc/" />
+  <Folder Name="/src/" />
+  <Folder Name="/src/Core/">
+    <Project Path="Blorc.OpenIdConnect/Blorc.OpenIdConnect.csproj" />
+  </Folder>
+  <Folder Name="/src/Demo/">
+    <Project Path="Blorc.OpenIdConnect.DemoApp.Server/Blorc.OpenIdConnect.DemoApp.Server.csproj" />
+    <Project Path="Blorc.OpenIdConnect.DemoApp/Blorc.OpenIdConnect.DemoApp.csproj" />
+  </Folder>
+  <Folder Name="/src/Tests/">
+    <Project Path="Blorc.OpenIdConnect.Tests/Blorc.OpenIdConnect.Tests.csproj" />
+  </Folder>
+</Solution>
