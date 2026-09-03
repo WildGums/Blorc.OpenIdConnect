@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.Reflection;
     using System.Security.Claims;
+    using System.Text.Json;
     using Blorc.Reflection;
 
     public static class ObjectExtensions
@@ -22,6 +23,11 @@
             if (instance.GetType().IsPrimitiveEx())
             {
                 return instance.EnumClaimsFromPrimitive(claimType);
+            }
+
+            if (instance is JsonElement jsonElement)
+            {
+                return jsonElement.AsClaims(claimType);
             }
 
             return instance.EnumClaimsFromObjectProperties();
@@ -70,6 +76,3 @@
         }
     }
 }
-
-
-
